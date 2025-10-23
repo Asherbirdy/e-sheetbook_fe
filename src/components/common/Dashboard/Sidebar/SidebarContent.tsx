@@ -1,6 +1,7 @@
 import {
-  Box, CloseButton, Flex, Text, useColorModeValue, BoxProps,
+  Box, CloseButton, Flex, Text, BoxProps,
 } from '@chakra-ui/react'
+import { useColorModeValue } from '@/components/ui/color-mode'
 import { LinkItems } from './LinkItems'
 import { NavItem } from './NavItem'
 

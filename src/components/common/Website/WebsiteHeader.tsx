@@ -3,7 +3,7 @@ import {
 } from 'react'
 
 import {
-  Box, Flex, Text, useColorMode,
+  Box, Flex, Text,
 } from '@chakra-ui/react'
 // We need to use Chakra UI's <Link> component for consistency with the rest of the UI.
 // But we need to use React Router's <Link> component for the routing to work properly.
@@ -12,6 +12,7 @@ import {
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher'
 import { useCounterStore } from '@/stores/counterStore'
+import { useColorMode } from '@/components/ui/color-mode'
 
 export const WebsiteHeader: FunctionComponent = (): ReactElement => {
   const { colorMode } = useColorMode()

@@ -3,12 +3,11 @@ import {
 } from 'react-router-dom'
 import routes from '~react-pages'
 import ReactDOM from 'react-dom/client'
-import { ColorModeScript } from '@chakra-ui/react'
 import React, { Suspense } from 'react'
-import theme from './theme'
 import {
-  ChakraProvider, Spinner, Center,
+  Spinner, Center,
 } from '@chakra-ui/react'
+import { Provider } from './components/ui/provider'
 
 export function App() {
   return (
@@ -26,11 +25,10 @@ export function App() {
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <ColorModeScript />
+    <Provider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </ChakraProvider>
+    </Provider>
   </React.StrictMode>,
 )

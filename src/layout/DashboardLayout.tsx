@@ -2,7 +2,7 @@ import {
   ReactElement, useEffect,
 } from 'react'
 import {
-  Box, useColorModeValue, useDisclosure, Drawer, DrawerOverlay, DrawerContent,
+  Box, useDisclosure,
 } from '@chakra-ui/react'
 import {
   SidebarContent, DashboardHeader,
@@ -14,10 +14,16 @@ import {
   useLocation, useNavigate,
 } from 'react-router-dom'
 import { dashboardBeforeEnter } from '@/router'
+import { useColorModeValue } from '@/components/ui/color-mode'
+import {
+  DrawerRoot,
+  DrawerBackdrop,
+  DrawerContent,
+} from '@/components/ui/drawer'
 
 export const DashboardLayout = ({ children }: { children: ReactElement }) => {
   const {
-    isOpen, onOpen, onClose,
+    open, onOpen, onClose,
   } = useDisclosure()
   const location = useLocation()
   const navigate = useNavigate()
@@ -40,19 +46,17 @@ export const DashboardLayout = ({ children }: { children: ReactElement }) => {
         }}
       />
 
-      <Drawer
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
+      <DrawerRoot
+        open={open}
+        placement="start"
+        onOpenChange={(e: { open: boolean }) => e.open ? onOpen() : onClose()}
         size="full"
       >
-        <DrawerOverlay />
+        <DrawerBackdrop />
         <DrawerContent>
           <SidebarContent onClose={onClose} />
         </DrawerContent>
-      </Drawer>
+      </DrawerRoot>
       <Box
         ml={{
           base: 0,

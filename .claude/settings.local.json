@@ -6,7 +6,13 @@
       "Bash(pnpm install:*)",
       "Bash(pnpm run build)",
       "Bash(npm run dev:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npm run build:*)",
+      "WebSearch",
+      "WebFetch(domain:www.chakra-ui.com)",
+      "Bash(npx @chakra-ui/cli@latest snippet add)",
+      "Bash(npx @chakra-ui/cli@latest snippet add:*)",
+      "Bash(npx vite build:*)"
     ],
     "deny": [],
     "ask": []
