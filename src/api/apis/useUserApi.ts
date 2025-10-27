@@ -1,10 +1,10 @@
 import { useApiRequest } from '../http'
 
-export const useAuthApi = {
+export const useUserApi = {
   /*
    * 登入
   */
-  login: (payload: any): Promise<any> => {
+  sample: (payload: any): Promise<any> => {
     return useApiRequest.post({
       url: '/tw/member/doLogin',
       data: payload,
