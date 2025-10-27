@@ -1,11 +1,14 @@
-import { Dialog as ChakraDialog, Portal } from "@chakra-ui/react"
-import { CloseButton } from "./close-button"
-import * as React from "react"
+import {
+  Dialog as ChakraDialog, Portal,
+} from '@chakra-ui/react'
+import { CloseButton } from './close-button'
+import * as React from 'react'
 
 interface DialogContentProps extends ChakraDialog.ContentProps {
   portalled?: boolean
   portalRef?: React.RefObject<HTMLElement | null>
   backdrop?: boolean
+  children?: React.ReactNode
 }
 
 export const DialogContent = React.forwardRef<
@@ -21,10 +24,20 @@ export const DialogContent = React.forwardRef<
   } = props
 
   return (
-    <Portal disabled={!portalled} container={portalRef}>
+    <Portal
+      disabled={!portalled}
+      container={portalRef}
+    >
       {backdrop && <ChakraDialog.Backdrop />}
-      <ChakraDialog.Positioner>
-        <ChakraDialog.Content ref={ref} {...rest} asChild={false}>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <ChakraDialog.Positioner {...({} as any)}>
+        <ChakraDialog.Content
+          ref={ref}
+          {...rest}
+          asChild={false}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          {...({} as any)}
+        >
           {children}
         </ChakraDialog.Content>
       </ChakraDialog.Positioner>
@@ -34,18 +47,26 @@ export const DialogContent = React.forwardRef<
 
 export const DialogCloseTrigger = React.forwardRef<
   HTMLButtonElement,
-  ChakraDialog.CloseTriggerProps
+  ChakraDialog.CloseTriggerProps & { children?: React.ReactNode }
 >(function DialogCloseTrigger(props, ref) {
+  const {
+    children, ...rest
+  } = props
   return (
     <ChakraDialog.CloseTrigger
       position="absolute"
       top="2"
       insetEnd="2"
-      {...props}
+      {...rest}
       asChild
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      {...({} as any)}
     >
-      <CloseButton size="sm" ref={ref}>
-        {props.children}
+      <CloseButton
+        size="sm"
+        ref={ref}
+      >
+        {children}
       </CloseButton>
     </ChakraDialog.CloseTrigger>
   )

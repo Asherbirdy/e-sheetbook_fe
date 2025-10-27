@@ -33,7 +33,7 @@ const Home: FunctionComponent = (): ReactElement => {
         >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Example Modal</DialogTitle>
+              <DialogTitle {...({} as any)}>Example Modal</DialogTitle>
             </DialogHeader>
             <DialogCloseTrigger />
             <DialogBody>
