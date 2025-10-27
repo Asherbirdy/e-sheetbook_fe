@@ -11,8 +11,8 @@ const useApiRequest = new Axios({
   abortRepetitiveRequest: true,
   retryConfig: {
     count: 0,
-    waitTime: 0
-  }
+    waitTime: 0,
+  },
 })
 
 export { useApiRequest }

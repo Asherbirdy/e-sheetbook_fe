@@ -1,7 +1,7 @@
 export function handleErrorStatus (
   status: number | undefined,
   message: string | undefined,
-  callback: (errorMessage: string)=> any
+  callback: (errorMessage: string)=> any,
 ) {
   let errorMessage = message ?? ''
   switch (status) {

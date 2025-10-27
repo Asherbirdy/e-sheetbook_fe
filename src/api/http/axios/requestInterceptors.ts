@@ -23,12 +23,12 @@ const _RequstInterceptors: RequstInterceptors = {
     }
     console.log(err)
 
-     // 檢查各種 http status
+    // 檢查各種 http status
     handleErrorStatus((err as AxiosError).response?.status, message, (message) => console.error(message))
 
-     // 響應錯誤 實現 重連功能
+    // 響應錯誤 實現 重連功能
     return retry(axiosInstance, err as AxiosError)
-  }
+  },
 }
 
 export default _RequstInterceptors

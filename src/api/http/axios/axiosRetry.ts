@@ -1,9 +1,13 @@
-import type { AxiosError, AxiosInstance } from 'axios'
+import type {
+  AxiosError, AxiosInstance,
+} from 'axios'
 
 export function retry (instance: AxiosInstance, err: AxiosError) {
   const config: any = err.config
   // 獲取配置內容(請求間隔時間、請求次數)
-  const { waitTime, count } = config.retryConfig ?? {}
+  const {
+    waitTime, count,
+  } = config.retryConfig ?? {}
 
   // 當前重複請求的次數
   config.currentCount = config.currentCount ?? 0

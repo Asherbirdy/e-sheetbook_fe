@@ -1,8 +1,12 @@
-import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import type {
+  AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig,
+} from 'axios'
 import axios from 'axios'
 
 import AbortAxios from './AbortAxios'
-import type { AxiosOptions, RequstInterceptors, Respones } from './type'
+import type {
+  AxiosOptions, RequstInterceptors, Respones,
+} from './type'
 
 // ** 創建一個 class, 後續可以通過 const useRequest = new Axios(...) 直接使用
 class Axios {
@@ -13,7 +17,7 @@ class Axios {
     console.log()
     const option_withCredentials = {
       ...options,
-      withCredentials: true
+      withCredentials: true,
     }
     this.axiosInstance = axios.create(option_withCredentials)
     this.options = option_withCredentials
@@ -31,7 +35,7 @@ class Axios {
       requestInterceptors,
       requestInterceptorsCatch,
       responseInterceptor,
-      responseInterceptorsCatch
+      responseInterceptorsCatch,
     } = this.interceptors
 
     const abortAxios = new AbortAxios()
@@ -72,7 +76,7 @@ class Axios {
 
       return res
     }, (err: AxiosError) => {
-       // 如果存在請求攔截器，則將 config 先交給 requestInterceptors 做對應的配置
+      // 如果存在請求攔截器，則將 config 先交給 requestInterceptors 做對應的配置
       if (responseInterceptorsCatch) {
         return responseInterceptorsCatch(this.axiosInstance, err)
       }
@@ -92,16 +96,28 @@ class Axios {
   }
 
   get<T = any> (config: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: 'GET' })
+    return this.request<T>({
+      ...config,
+      method: 'GET',
+    })
   }
   post<T = any> (config: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: 'POST' })
+    return this.request<T>({
+      ...config,
+      method: 'POST',
+    })
   }
   put<T = any> (config: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: 'PUT' })
+    return this.request<T>({
+      ...config,
+      method: 'PUT',
+    })
   }
   delete<T = any> (config: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: 'DELETE' })
+    return this.request<T>({
+      ...config,
+      method: 'DELETE',
+    })
   }
 }
 
