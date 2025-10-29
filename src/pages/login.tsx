@@ -134,9 +134,10 @@ const Login = () => {
 
   // 處理表單提交
   const handleSubmit = (e: React.FormEvent) => {
+    const { data } = state
     console.log({
-      email: state.data.email.value,
-      password: state.data.password.value,
+      email: data.email.value,
+      password: data.password.value,
     })
     e.preventDefault()
 
