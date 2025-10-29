@@ -1,0 +1,205 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is an e-SheetBook frontend application built with React, Vite, Chakra UI v3, Zustand, and TanStack Query. It provides a spreadsheet/file management interface with authentication and dashboard features.
+
+## Technology Stack
+
+- **Build Tool**: Vite 5.x with SWC for fast React compilation
+- **UI Framework**: Chakra UI v3 with Emotion for styling
+- **State Management**: Zustand for global state
+- **Data Fetching**: TanStack Query (React Query) for server state
+- **Routing**: React Router v6 with file-based routing via `vite-plugin-pages`
+- **Forms**: Formik for form handling
+- **Testing**: Vitest with React Testing Library
+- **Type Checking**: TypeScript with strict mode enabled
+
+## Development Commands
+
+```bash
+# Start development server (opens at http://localhost:3000)
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm test:coverage
+
+# Type check without emitting files
+npm run type-check
+
+# Lint code
+npm run lint
+
+# Detect unused dependencies
+npm run knip
+```
+
+## Code Architecture
+
+### File-based Routing
+
+Routes are automatically generated from `src/pages/**/*.tsx` files using `vite-plugin-pages`. The convention:
+- `src/pages/index.tsx` → `/`
+- `src/pages/login.tsx` → `/login`
+- `src/pages/dashboard/index.tsx` → `/dashboard`
+- `src/pages/[...all].tsx` → catch-all 404 route
+
+Routes are imported via `~react-pages` (auto-generated) and used with `useRoutes()` in `App.tsx`.
+
+### Route Guards System
+
+The project implements a comprehensive route protection system in `src/router/`:
+
+**Available Guards** (`src/router/guards.ts`):
+- `dashboardBeforeEnter`: Checks token, redirects to `/` if missing
+- `authBeforeEnter`: Verifies authentication status
+- `guestBeforeEnter`: Allows only unauthenticated users (redirects authenticated users to `/dashboard`)
+- `adminBeforeEnter`: Requires both authentication and `userRole === 'admin'`
+
+**Usage with ProtectedRoute component** (recommended):
+```tsx
+<Route path="/dashboard" element={
+  <ProtectedRoute guard={dashboardBeforeEnter}>
+    <Dashboard />
+  </ProtectedRoute>
+} />
+```
+
+Guards support async operations and return `boolean | Promise<boolean>`. See `src/router/README.md` for complete documentation.
+
+### API Layer Architecture
+
+**Custom Axios Wrapper** (`src/api/http/axios/Axios.ts`):
+- Class-based Axios instance with interceptor support
+- Automatic abort for duplicate requests via `AbortAxios`
+- Configurable retry mechanism (currently disabled: `count: 0`)
+- Request/response interceptors defined in `requestInterceptors.ts`
+- Base URL configured in `src/api/http/config.ts` as `localhost:8080`
+
+**API Modules** (`src/api/apis/`):
+- `useAuthApi`: Login, register, send OTP
+- `useFileApi`: File CRUD operations
+- `useSheetApi`: Spreadsheet operations
+- `useUserApi`: User profile operations
+
+All API functions return `AxiosPromise<T>` for proper type inference with TanStack Query.
+
+### State Management with Zustand
+
+Stores are located in `src/stores/`. Example pattern:
+```typescript
+import { create } from 'zustand'
+
+interface Store {
+  state: Type
+  action: () => void
+}
+
+export const useStore = create<Store>((set) => ({
+  state: initialValue,
+  action: () => set((state) => ({ ... })),
+}))
+```
+
+See `src/stores/counterStore.ts` for reference implementation.
+
+### Layout System
+
+Two main layouts in `src/layout/`:
+
+1. **DashboardLayout** (`DashboardLayout.tsx`):
+   - Responsive sidebar (drawer on mobile, persistent on desktop)
+   - Dashboard header with color mode toggle and user menu
+   - Page transitions using Framer Motion
+   - Sidebar collapse at `md` breakpoint (60 units margin-left)
+   - Currently has dashboard guard commented out in useEffect
+
+2. **DefaultLayout** (`DefaultLayout.tsx`):
+   - Simple layout for public pages
+
+### Type Organization
+
+Types are organized by domain in `src/types/`:
+- `api/auth/`: Login, Register, SendOTP types
+- `api/file/`: File CRUD operation types
+- `api/sheet/`: Sheet CRUD operation types
+- `api/user/`: User-related types
+- `app/`: Application-level types
+- `common/`: Shared types
+
+All types are re-exported from `src/types/index.ts` for centralized imports.
+
+### Path Aliases
+
+The project uses `@/*` alias pointing to `src/*`:
+- Configured in `tsconfig.json` (`baseUrl: "./src"`)
+- Configured in `vite.config.ts` using `vite-tsconfig-paths`
+- Always use `@/` imports for src files
+
+### Auto-imports
+
+React hooks are auto-imported via `unplugin-auto-import`:
+- No need to manually import `useState`, `useEffect`, etc.
+- Generates `auto-imports.d.ts` for TypeScript
+
+## Component Patterns
+
+### Chakra UI v3 Components
+
+Located in `src/components/ui/`, these are Chakra v3 "composition" components:
+- `provider.tsx`: Chakra theme provider setup
+- `color-mode.tsx`: Color mode utilities
+- `dialog.tsx`, `drawer.tsx`, `menu.tsx`: Composed overlay components
+- `toaster.tsx`: Toast notification system
+
+Always use these composed components instead of importing directly from `@chakra-ui/react`.
+
+### Common Components
+
+In `src/components/common/`:
+- `Dashboard/`: Sidebar, header, and navigation components
+- `Website/`: Public website header
+- `ColorModeSwitcher.tsx`: Theme toggle button
+
+## Authentication Flow
+
+1. Token stored in `localStorage.getItem('token')`
+2. User role stored in `localStorage.getItem('userRole')`
+3. Axios interceptor adds token to requests (see `requestInterceptors.ts`)
+4. Guards check localStorage for route protection
+5. API endpoints at `localhost:8080` (configured in `src/api/http/config.ts`)
+
+## Testing
+
+Tests use Vitest with jsdom environment:
+- Test files: `*.test.ts` or `*.test.tsx`
+- Coverage reports with `@vitest/coverage-v8`
+- React Testing Library for component tests
+
+## Important Conventions
+
+1. **Component Files**: Use PascalCase for component files (e.g., `DashboardLayout.tsx`)
+2. **Utility Files**: Use camelCase for utility files (e.g., `counterStore.ts`)
+3. **Type Files**: Suffix with `Type.ts` for type definitions (e.g., `LoginType.ts`)
+4. **Enum Files**: Suffix with `Enum.ts` for enums (e.g., `RoutesEnum.ts`)
+5. **API Exports**: Use object with methods pattern (e.g., `export const useAuthApi = { login, register }`)
+6. **Store Exports**: Use `useXxxStore` naming for Zustand stores
+
+## Known Configuration
+
+- Dev server opens automatically on port 3000
+- TypeScript strict mode enabled
+- ESLint configured for React with TypeScript
+- Knip for detecting unused dependencies (config in `knip.config.ts`)
+- All API requests include `withCredentials: true` for cookies/sessions
