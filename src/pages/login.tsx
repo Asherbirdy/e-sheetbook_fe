@@ -8,13 +8,14 @@ import { useAuthApi } from '@/api/apis/useAuthApi'
 import { LoginPayload } from '@/types'
 import { toaster } from '@/components/ui/toaster'
 import { AxiosError } from 'axios'
-import CLoginForm, { validateEmail, validatePassword } from '@/components/page/login/CLoginForm'
+import { CLoginForm } from '@/components'
 
-// 登入數據狀態 (業務數據)
 // eslint-disable-next-line react-refresh/only-export-components
 export const state = {
-  email: signal(''),
-  password: signal(''),
+  data: {
+    email: signal(''),
+    password: signal(''),
+  },
 }
 
 const Login = () => {
@@ -40,8 +41,8 @@ const Login = () => {
       })
 
       // 清空表單
-      state.email.value = ''
-      state.password.value = ''
+      state.data.email.value = ''
+      state.data.password.value = ''
 
       // 導航到 dashboard
       navigate('/dashboard')
@@ -62,29 +63,14 @@ const Login = () => {
     e.preventDefault()
 
     console.log({
-      email: state.email.value,
-      password: state.password.value,
+      email: state.data.email.value,
+      password: state.data.password.value,
     })
-
-    // 驗證所有欄位
-    const emailErr = validateEmail(state.email.value)
-    const passwordErr = validatePassword(state.password.value)
-
-    // 如果有錯誤，不提交
-    if (emailErr || passwordErr) {
-      toaster.create({
-        title: '表單驗證失敗',
-        description: emailErr || passwordErr,
-        type: 'error',
-        duration: 3000,
-      })
-      return
-    }
 
     // 提交表單
     loginMutation.mutate({
-      email: state.email.value,
-      password: state.password.value,
+      email: state.data.email.value,
+      password: state.data.password.value,
     })
   }
 

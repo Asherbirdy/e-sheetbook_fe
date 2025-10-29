@@ -1,4 +1,5 @@
-// ** app
+// ** pages
+export * from './page/login/CLoginForm'
 
 // ** common
 export * from './common/Dashboard/Sidebar/SidebarContent'
