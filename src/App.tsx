@@ -5,6 +5,9 @@ import routes from '~react-pages'
 import ReactDOM from 'react-dom/client'
 import React, { Suspense } from 'react'
 import {
+  QueryClient, QueryClientProvider,
+} from '@tanstack/react-query'
+import {
   Spinner, Center,
 } from '@chakra-ui/react'
 import { Provider } from './components/ui/provider'
@@ -23,12 +26,15 @@ export function App() {
   )
 }
 
+const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   </React.StrictMode>,
 )
