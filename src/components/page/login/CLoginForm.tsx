@@ -2,7 +2,7 @@ import {
   Box, Flex, Input, Stack, IconButton, Link as ChakraLink,
 } from '@chakra-ui/react'
 import { Field } from '@/components/ui/field'
-import { signal } from '@preact/signals-react'
+import { signal, useSignal } from '@preact/signals-react'
 import { LuEye, LuEyeOff } from 'react-icons/lu'
 import { state } from '@/pages/login'
 
@@ -29,25 +29,28 @@ export const validatePassword = (passwordValue: string) => {
 }
 
 // 表單驗證和 UI 狀態
-const loginFeatures = {
-  showPassword: signal(false),
+
+const CLoginForm = () => {
+
+const features = {
+  showPassword: useSignal(false),
   errors: {
-    email: signal(''),
-    password: signal(''),
+    email: useSignal(''),
+    password: useSignal(''),
   },
   touched: {
-    email: signal(false),
-    password: signal(false),
+    email: useSignal(false),
+    password: useSignal(false),
   },
 }
 
-const CLoginForm = () => {
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     state.email.value = e.target.value
 
     // 即時驗證 (只在已觸碰時)
-    if (loginFeatures.touched.email.value) {
-      loginFeatures.errors.email.value = validateEmail(e.target.value)
+    if (features.touched.email.value) {
+      features.errors.email.value = validateEmail(e.target.value)
     }
   }
 
@@ -55,19 +58,19 @@ const CLoginForm = () => {
     state.password.value = e.target.value
 
     // 即時驗證 (只在已觸碰時)
-    if (loginFeatures.touched.password.value) {
-      loginFeatures.errors.password.value = validatePassword(e.target.value)
+    if (features.touched.password.value) {
+      features.errors.password.value = validatePassword(e.target.value)
     }
   }
 
   const handleEmailBlur = () => {
-    loginFeatures.touched.email.value = true
-    loginFeatures.errors.email.value = validateEmail(state.email.value)
+    features.touched.email.value = true
+    features.errors.email.value = validateEmail(state.email.value)
   }
 
   const handlePasswordBlur = () => {
-    loginFeatures.touched.password.value = true
-    loginFeatures.errors.password.value = validatePassword(state.password.value)
+    features.touched.password.value = true
+    features.errors.password.value = validatePassword(state.password.value)
   }
 
   return (
@@ -75,8 +78,8 @@ const CLoginForm = () => {
       {/* Email 輸入 */}
       <Field
         label="電子郵件"
-        invalid={!!(loginFeatures.errors.email.value && loginFeatures.touched.email.value)}
-        errorText={loginFeatures.errors.email.value}
+        invalid={!!(features.errors.email.value && features.touched.email.value)}
+        errorText={features.errors.email.value}
       >
         <Input
           name="email"
@@ -93,13 +96,13 @@ const CLoginForm = () => {
       {/* Password 輸入 */}
       <Field
         label="密碼"
-        invalid={!!(loginFeatures.errors.password.value && loginFeatures.touched.password.value)}
-        errorText={loginFeatures.errors.password.value}
+        invalid={!!(features.errors.password.value && features.touched.password.value)}
+        errorText={features.errors.password.value}
       >
         <Box position="relative">
           <Input
             name="password"
-            type={loginFeatures.showPassword.value ? 'text' : 'password'}
+            type={features.showPassword.value ? 'text' : 'password'}
             placeholder="請輸入您的密碼"
             value={state.password.value}
             onChange={handlePasswordChange}
@@ -116,11 +119,11 @@ const CLoginForm = () => {
             variant="ghost"
             size="sm"
             onClick={() => {
-              loginFeatures.showPassword.value = !loginFeatures.showPassword.value
+              features.showPassword.value = !features.showPassword.value
             }}
-            aria-label={loginFeatures.showPassword.value ? '隱藏密碼' : '顯示密碼'}
+            aria-label={features.showPassword.value ? '隱藏密碼' : '顯示密碼'}
           >
-            {loginFeatures.showPassword.value ? <LuEyeOff /> : <LuEye />}
+            {features.showPassword.value ? <LuEyeOff /> : <LuEye />}
           </IconButton>
         </Box>
       </Field>

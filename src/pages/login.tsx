@@ -11,6 +11,7 @@ import { AxiosError } from 'axios'
 import CLoginForm, { validateEmail, validatePassword } from '@/components/page/login/CLoginForm'
 
 // 登入數據狀態 (業務數據)
+// eslint-disable-next-line react-refresh/only-export-components
 export const state = {
   email: signal(''),
   password: signal(''),
