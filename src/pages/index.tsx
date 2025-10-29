@@ -2,51 +2,59 @@ import {
   FunctionComponent, ReactElement,
 } from 'react'
 import {
-  Text, Button, Box, Tooltip, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
+  Text, Button, Box, useDisclosure,
 } from '@chakra-ui/react'
 import { DefaultLayout } from '@/layout'
+import {
+  DialogRoot,
+  DialogContent,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  DialogTitle,
+  DialogCloseTrigger,
+} from '@/components/ui/dialog'
+import { Tooltip } from '@/components/ui/tooltip'
 
 const Home: FunctionComponent = (): ReactElement => {
   const {
-    isOpen, onOpen, onClose,
+    open, onOpen, onClose,
   } = useDisclosure()
   return (
     <DefaultLayout>
       <Box>
-        <Tooltip
-          label="This will open a modal"
-          placement="top"
-        >
+        <Tooltip content="This will open a modal">
           <Button onClick={onOpen}>Click this button</Button>
         </Tooltip>
 
-        <Modal
-          isOpen={isOpen}
-          onClose={onClose}
+        <DialogRoot
+          open={open}
+          onOpenChange={(e: { open: boolean }) => e.open ? onOpen() : onClose()}
         >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Example Modal</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle {...({} as any)}>Example Modal</DialogTitle>
+            </DialogHeader>
+            <DialogCloseTrigger />
+            <DialogBody>
               <Text>
                 Here&apos;s a Chakra UI modal. You can close it by
                 clicking &quot;Close&quot;
               </Text>
-            </ModalBody>
+            </DialogBody>
 
-            <ModalFooter>
+            <DialogFooter>
               <Button
-                colorScheme="blue"
+                colorPalette="blue"
                 mr={3}
                 onClick={onClose}
               >
                 Close
               </Button>
               <Button variant="ghost">Secondary Action</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+            </DialogFooter>
+          </DialogContent>
+        </DialogRoot>
       </Box>
     </DefaultLayout>
   )
