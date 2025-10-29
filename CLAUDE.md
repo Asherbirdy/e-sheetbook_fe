@@ -165,6 +165,33 @@ Located in `src/components/ui/`, these are Chakra v3 "composition" components:
 
 Always use these composed components instead of importing directly from `@chakra-ui/react`.
 
+### UI Styling Best Practices
+
+**Priority order for styling:**
+1. **Chakra UI props** (primary approach): Use Chakra's built-in style props (e.g., `bg`, `color`, `p`, `m`, `w`, `h`, etc.)
+2. **Chakra's styling utilities**: Use `sx` prop or styled system when needed
+3. **Avoid**: Inline styles (`style={{}}`) and CSS classes (`className`) unless absolutely necessary
+
+**Examples:**
+```tsx
+// ✅ Good - Use Chakra props
+<Box bg="gray.100" p={4} borderRadius="md">
+  <Text fontSize="lg" color="brand.primary">Hello</Text>
+</Box>
+
+// ❌ Avoid - Inline styles
+<div style={{ backgroundColor: '#f0f0f0', padding: '16px' }}>
+  <p style={{ fontSize: '18px' }}>Hello</p>
+</div>
+
+// ❌ Avoid - CSS classes
+<div className="container">
+  <p className="text-large">Hello</p>
+</div>
+```
+
+This ensures consistency with Chakra's theming system, responsive design, and color mode support.
+
 ### Common Components
 
 In `src/components/common/`:
@@ -195,6 +222,7 @@ Tests use Vitest with jsdom environment:
 4. **Enum Files**: Suffix with `Enum.ts` for enums (e.g., `RoutesEnum.ts`)
 5. **API Exports**: Use object with methods pattern (e.g., `export const useAuthApi = { login, register }`)
 6. **Store Exports**: Use `useXxxStore` naming for Zustand stores
+7. **UI Styling**: Always prioritize Chakra UI style props over inline styles or CSS classes (see UI Styling Best Practices)
 
 ## Known Configuration
 
