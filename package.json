@@ -7,6 +7,7 @@
     "build": "tsc && vite build --mode production",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
+    "knip": "knip",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "vitest",
     "test:coverage": "vitest run --coverage --watch=false"
@@ -18,6 +19,7 @@
     "axios": "^1.12.2",
     "formik": "^2.4.6",
     "framer-motion": "^11.5.4",
+    "knip": "^5.66.4",
     "next-themes": "^0.4.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
