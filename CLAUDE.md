@@ -140,59 +140,6 @@ This enables automatic tracking of signals in React components. Without this, in
 
 **Note**: Must use `@vitejs/plugin-react` (not `@vitejs/plugin-react-swc`) to support Babel plugins.
 
-**Standard Component State Structure (REQUIRED)**:
-
-Every TSX component MUST follow this standardized state structure for consistency and maintainability:
-
-```typescript
-import { useSignal } from '@preact/signals-react'
-
-const MyComponent = () => {
-  // ✅ REQUIRED: Standard state structure with 'data' and 'features'
-  const state = {
-    // data: Business data / form data
-    data: {
-      email: useSignal(''),
-      password: useSignal(''),
-      username: useSignal(''),
-      // ... other business data
-    },
-    // features: UI state / interaction state
-    features: {
-      showPassword: useSignal(false),
-      isLoading: useSignal(false),
-      // Validation errors
-      errors: {
-        email: useSignal(''),
-        password: useSignal(''),
-      },
-      // Touch tracking for validation
-      touched: {
-        email: useSignal(false),
-        password: useSignal(false),
-      },
-    },
-  }
-
-  // ✅ REQUIRED: Destructure state in functions for cleaner code
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { data, features } = state
-    data.email.value = e.target.value
-
-    if (features.touched.email.value) {
-      features.errors.email.value = validateEmail(e.target.value)
-    }
-  }
-
-  return (
-    <input
-      value={state.data.email.value}
-      onChange={handleChange}
-    />
-  )
-}
-```
-
 **Structure Rules**:
 1. **state.data**: Contains all business data, form inputs, and user data
 2. **state.features**: Contains UI state (loading, visibility), validation (errors, touched), and interaction state
@@ -201,24 +148,6 @@ const MyComponent = () => {
 5. **Group related signals**: errors and touched should be nested objects under `features`
 6. **Destructure in functions (REQUIRED)**: Every function that accesses `state.data` or `state.features` MUST destructure them at the start: `const { data, features } = state`. This improves code readability and reduces repetitive `state.` prefixes
 
-**Alternative for simple components** (when only data or only features):
-```typescript
-// For components with only data (no UI state)
-const state = {
-  data: {
-    name: useSignal(''),
-    age: useSignal(0),
-  },
-}
-
-// For components with only features (no business data)
-const state = {
-  features: {
-    isOpen: useSignal(false),
-    activeTab: useSignal(0),
-  },
-}
-```
 
 **Key Rules**:
 1. **Use useSignal()**: Always use `useSignal()` hook inside components (not `signal()` outside)

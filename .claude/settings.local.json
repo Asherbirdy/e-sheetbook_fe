@@ -16,7 +16,8 @@
       "mcp__ide__getDiagnostics",
       "Bash(mkdir:*)",
       "mcp__chakra-ui__get_component_props",
-      "mcp__chakra-ui__get_component_example"
+      "mcp__chakra-ui__get_component_example",
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": []

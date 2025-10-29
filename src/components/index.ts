@@ -1,5 +1,5 @@
 // ** pages
-export * from './page/login/CLoginForm'
+export * from './page/login/LoginForm'
 
 // ** common
 export * from './common/Dashboard/Sidebar/SidebarContent'

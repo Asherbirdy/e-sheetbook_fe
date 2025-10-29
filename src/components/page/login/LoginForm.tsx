@@ -1,35 +1,12 @@
 import {
-  Box, Flex, Input, Stack, IconButton, Link as ChakraLink, Field, Text,
+  Box, Flex, Input, Stack, IconButton, Link as ChakraLink, Field,
 } from '@chakra-ui/react'
 import { useSignal } from '@preact/signals-react'
 import { LuEye, LuEyeOff } from 'react-icons/lu'
 import { state } from '@/pages/login'
+import { formValidate } from '@/utils'
 
-const validate = {
-  email: (emailValue: string) => {
-    if (!emailValue) {
-      return '電子郵件為必填'
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(emailValue)) {
-      return '請輸入有效的電子郵件'
-    }
-    return ''
-  },
-  password: (passwordValue: string) => {
-    if (!passwordValue) {
-      return '密碼為必填'
-    }
-    if (passwordValue.length < 6) {
-      return '密碼至少需要 6 個字元'
-    }
-    return ''
-  },
-}
-
-// 表單驗證和 UI 狀態
-
-export const CLoginForm = () => {
+export const LoginForm = () => {
 
   const features = {
     showPassword: useSignal(false),
@@ -48,7 +25,7 @@ export const CLoginForm = () => {
 
     // 即時驗證 (只在已觸碰時)
     if (features.touched.email.value) {
-      features.errors.email.value = validate.email(e.target.value)
+      features.errors.email.value = formValidate.email(e.target.value)
     }
   }
 
@@ -57,18 +34,18 @@ export const CLoginForm = () => {
 
     // 即時驗證 (只在已觸碰時)
     if (features.touched.password.value) {
-      features.errors.password.value = validate.password(e.target.value)
+      features.errors.password.value = formValidate.password(e.target.value)
     }
   }
 
   const handleEmailBlur = () => {
     features.touched.email.value = true
-    features.errors.email.value = validate.email(state.data.email.value)
+    features.errors.email.value = formValidate.email(state.data.email.value)
   }
 
   const handlePasswordBlur = () => {
     features.touched.password.value = true
-    features.errors.password.value = validate.password(state.data.password.value)
+    features.errors.password.value = formValidate.password(state.data.password.value)
   }
 
   return (
@@ -144,5 +121,4 @@ export const CLoginForm = () => {
     </Stack>
   )
 }
-
 

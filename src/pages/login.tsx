@@ -8,7 +8,7 @@ import { useAuthApi } from '@/api/apis/useAuthApi'
 import { LoginPayload } from '@/types'
 import { toaster } from '@/components/ui/toaster'
 import { AxiosError } from 'axios'
-import { CLoginForm } from '@/components'
+import { LoginForm } from '@/components'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const state = {
@@ -21,17 +21,13 @@ export const state = {
 const Login = () => {
   const navigate = useNavigate()
 
+  /*
+    * 登入 mutation
+  */
   const loginMutation = useMutation({
     mutationFn: (payload: LoginPayload) => useAuthApi.login(payload),
     onSuccess: (response) => {
-      const { user, token } = response.data
-
-      // 儲存 token 和 user role
-      localStorage.setItem('token', token.accessTokenJWT)
-      localStorage.setItem('refreshToken', token.refreshTokenJWT)
-      localStorage.setItem('userRole', user.role)
-      localStorage.setItem('userId', user.userId)
-      localStorage.setItem('userName', user.name)
+      const { user } = response.data
 
       toaster.create({
         title: '登入成功',
@@ -39,10 +35,6 @@ const Login = () => {
         type: 'success',
         duration: 3000,
       })
-
-      // 清空表單
-      state.data.email.value = ''
-      state.data.password.value = ''
 
       // 導航到 dashboard
       navigate('/dashboard')
@@ -59,15 +51,11 @@ const Login = () => {
     },
   })
 
+  /*
+    * 登入
+  */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
-    console.log({
-      email: state.data.email.value,
-      password: state.data.password.value,
-    })
-
-    // 提交表單
     loginMutation.mutate({
       email: state.data.email.value,
       password: state.data.password.value,
@@ -122,7 +110,7 @@ const Login = () => {
           {/* 登入表單 */}
           <form onSubmit={handleSubmit}>
             <Stack gap={5}>
-              <CLoginForm />
+              <LoginForm />
 
               {/* 登入按鈕 */}
               <Button
