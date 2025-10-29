@@ -32,18 +32,17 @@ export const validatePassword = (passwordValue: string) => {
 
 const CLoginForm = () => {
 
-const features = {
-  showPassword: useSignal(false),
-  errors: {
-    email: useSignal(''),
-    password: useSignal(''),
-  },
-  touched: {
-    email: useSignal(false),
-    password: useSignal(false),
-  },
-}
-
+  const features = {
+    showPassword: useSignal(false),
+    errors: {
+      email: useSignal(''),
+      password: useSignal(''),
+    },
+    touched: {
+      email: useSignal(false),
+      password: useSignal(false),
+    },
+  }
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     state.email.value = e.target.value
