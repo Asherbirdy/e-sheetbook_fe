@@ -1,63 +1,27 @@
 import {
-  Box, Button, Card, Container, Flex, Heading, Input, Stack, Text, Link as ChakraLink, IconButton,
+  Box, Button, Card, Container, Flex, Heading, Stack, Text, Link as ChakraLink,
 } from '@chakra-ui/react'
-import { Field } from '@/components/ui/field'
-import { toaster } from '@/components/ui/toaster'
+import { useNavigate } from 'react-router-dom'
+import { signal } from '@preact/signals-react'
 import { useMutation } from '@tanstack/react-query'
 import { useAuthApi } from '@/api/apis/useAuthApi'
 import { LoginPayload } from '@/types'
-import { useNavigate } from 'react-router-dom'
-import { useSignal } from '@preact/signals-react'
-import { LuEye, LuEyeOff } from 'react-icons/lu'
+import { toaster } from '@/components/ui/toaster'
 import { AxiosError } from 'axios'
+import CLoginForm, { validateEmail, validatePassword } from '@/components/page/login/CLoginForm'
 
-// 驗證函數
-const validateEmail = (emailValue: string) => {
-  if (!emailValue) {
-    return '電子郵件為必填'
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(emailValue)) {
-    return '請輸入有效的電子郵件'
-  }
-  return ''
-}
-
-const validatePassword = (passwordValue: string) => {
-  if (!passwordValue) {
-    return '密碼為必填'
-  }
-  if (passwordValue.length < 6) {
-    return '密碼至少需要 6 個字元'
-  }
-  return ''
+// 登入數據狀態 (業務數據)
+export const state = {
+  email: signal(''),
+  password: signal(''),
 }
 
 const Login = () => {
   const navigate = useNavigate()
 
-  const state = {
-    data: {
-      email: useSignal(''),
-      password: useSignal(''),
-    },
-    features: {
-      showPassword: useSignal(false),
-      errors: {
-        email: useSignal(''),
-        password: useSignal(''),
-      },
-      touched: {
-        email: useSignal(false),
-        password: useSignal(false),
-      },
-    },
-  }
-
   const loginMutation = useMutation({
     mutationFn: (payload: LoginPayload) => useAuthApi.login(payload),
     onSuccess: (response) => {
-      const { data, features } = state
       const { user, token } = response.data
 
       // 儲存 token 和 user role
@@ -75,13 +39,8 @@ const Login = () => {
       })
 
       // 清空表單
-      data.email.value = ''
-      data.password.value = ''
-      features.showPassword.value = false
-      features.errors.email.value = ''
-      features.errors.password.value = ''
-      features.touched.email.value = false
-      features.touched.password.value = false
+      state.email.value = ''
+      state.password.value = ''
 
       // 導航到 dashboard
       navigate('/dashboard')
@@ -98,68 +57,33 @@ const Login = () => {
     },
   })
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { data, features } = state
-    data.email.value = e.target.value
-
-    // 即時驗證 (只在已觸碰時)
-    if (features.touched.email.value) {
-      features.errors.email.value = validateEmail(e.target.value)
-    }
-  }
-
-  // 處理 Password 輸入變更
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { data, features } = state
-    data.password.value = e.target.value
-
-    // 即時驗證 (只在已觸碰時)
-    if (features.touched.password.value) {
-      features.errors.password.value = validatePassword(e.target.value)
-    }
-  }
-
-  // 處理 Email 失焦
-  const handleEmailBlur = () => {
-    const { data, features } = state
-    features.touched.email.value = true
-    features.errors.email.value = validateEmail(data.email.value)
-  }
-
-  // 處理 Password 失焦
-  const handlePasswordBlur = () => {
-    const { data, features } = state
-    features.touched.password.value = true
-    features.errors.password.value = validatePassword(data.password.value)
-  }
-
-  // 處理表單提交
   const handleSubmit = (e: React.FormEvent) => {
-    const { data, features } = state
-    console.log({
-      email: data.email.value,
-      password: data.password.value,
-    })
     e.preventDefault()
 
-    // 驗證所有欄位
-    const emailErr = validateEmail(data.email.value)
-    const passwordErr = validatePassword(data.password.value)
+    console.log({
+      email: state.email.value,
+      password: state.password.value,
+    })
 
-    features.errors.email.value = emailErr
-    features.errors.password.value = passwordErr
-    features.touched.email.value = true
-    features.touched.password.value = true
+    // 驗證所有欄位
+    const emailErr = validateEmail(state.email.value)
+    const passwordErr = validatePassword(state.password.value)
 
     // 如果有錯誤，不提交
     if (emailErr || passwordErr) {
+      toaster.create({
+        title: '表單驗證失敗',
+        description: emailErr || passwordErr,
+        type: 'error',
+        duration: 3000,
+      })
       return
     }
 
     // 提交表單
     loginMutation.mutate({
-      email: data.email.value,
-      password: data.password.value,
+      email: state.email.value,
+      password: state.password.value,
     })
   }
 
@@ -211,71 +135,7 @@ const Login = () => {
           {/* 登入表單 */}
           <form onSubmit={handleSubmit}>
             <Stack gap={5}>
-              {/* Email 輸入 */}
-              <Field
-                label="電子郵件"
-                invalid={!!(state.features.errors.email.value && state.features.touched.email.value)}
-                errorText={state.features.errors.email.value}
-              >
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={state.data.email.value}
-                  onChange={handleEmailChange}
-                  onBlur={handleEmailBlur}
-                  size="lg"
-                  borderRadius="md"
-                />
-              </Field>
-
-              {/* Password 輸入 */}
-              <Field
-                label="密碼"
-                invalid={!!(state.features.errors.password.value && state.features.touched.password.value)}
-                errorText={state.features.errors.password.value}
-              >
-                <Box position="relative">
-                  <Input
-                    name="password"
-                    type={state.features.showPassword.value ? 'text' : 'password'}
-                    placeholder="請輸入您的密碼"
-                    value={state.data.password.value}
-                    onChange={handlePasswordChange}
-                    onBlur={handlePasswordBlur}
-                    size="lg"
-                    borderRadius="md"
-                    pr={12}
-                  />
-                  <IconButton
-                    position="absolute"
-                    right={2}
-                    top="50%"
-                    transform="translateY(-50%)"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      const { features } = state
-                      features.showPassword.value = !features.showPassword.value
-                    }}
-                    aria-label={state.features.showPassword.value ? '隱藏密碼' : '顯示密碼'}
-                  >
-                    {state.features.showPassword.value ? <LuEyeOff /> : <LuEye />}
-                  </IconButton>
-                </Box>
-              </Field>
-
-              {/* 忘記密碼連結 */}
-              <Flex justify="flex-end">
-                <ChakraLink
-                  href="/forgot-password"
-                  fontSize="sm"
-                  color="blue.500"
-                  _hover={{ color: 'blue.600' }}
-                >
-                  忘記密碼？
-                </ChakraLink>
-              </Flex>
+              <CLoginForm />
 
               {/* 登入按鈕 */}
               <Button
