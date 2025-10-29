@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import react from '@vitejs/plugin-react'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 import AutoImport from 'unplugin-auto-import/vite'
 import Pages from 'vite-plugin-pages'
@@ -9,7 +9,10 @@ import * as path from 'path'
 export default defineConfig({
   base: '/',
   plugins: [
-    react(),
+    react({
+      // 啟用 Preact Signals 自動追蹤
+      babel: { plugins: [['module:@preact/signals-react-transform']] },
+    }),
     AutoImport({
       imports: ['react'],
       dts: true,

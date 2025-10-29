@@ -4,13 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an e-SheetBook frontend application built with React, Vite, Chakra UI v3, Zustand, and TanStack Query. It provides a spreadsheet/file management interface with authentication and dashboard features.
+This is an e-SheetBook frontend application built with React, Vite, Chakra UI v3, Preact Signals, Zustand, and TanStack Query. It provides a spreadsheet/file management interface with authentication and dashboard features.
 
 ## Technology Stack
 
 - **Build Tool**: Vite 5.x with SWC for fast React compilation
 - **UI Framework**: Chakra UI v3 with Emotion for styling
-- **State Management**: Zustand for global state
+- **State Management**:
+  - Zustand for global state
+  - Preact Signals for component-level state
 - **Data Fetching**: TanStack Query (React Query) for server state
 - **Routing**: React Router v6 with file-based routing via `vite-plugin-pages`
 - **Testing**: Vitest with React Testing Library
@@ -112,6 +114,112 @@ export const useStore = create<Store>((set) => ({
 ```
 
 See `src/stores/counterStore.ts` for reference implementation.
+
+### State Management with Preact Signals (REQUIRED)
+
+**IMPORTANT**: For component-level state (form inputs, UI toggles, etc.), you MUST use Preact Signals with `useSignal()` instead of React's `useState`. This is a project-wide standard.
+
+**Installation**: `@preact/signals-react` and `@preact/signals-react-transform` are already installed as dev dependencies.
+
+**Critical Setup**: The Vite config (`vite.config.ts`) MUST include the Preact Signals transform plugin:
+```typescript
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [
+    react({
+      // 啟用 Preact Signals 自動追蹤
+      babel: {
+        plugins: [['@preact/signals-react-transform']],
+      },
+    }),
+  ],
+})
+```
+This enables automatic tracking of signals in React components. Without this, input fields and other reactive elements will not update properly.
+
+**Note**: Must use `@vitejs/plugin-react` (not `@vitejs/plugin-react-swc`) to support Babel plugins.
+
+**Pattern** (organized object structure with multiple useSignal hooks):
+```typescript
+import { useSignal } from '@preact/signals-react'
+
+const MyComponent = () => {
+  // ✅ REQUIRED: Group related signals in an object structure
+  const formState = {
+    email: useSignal(''),
+    password: useSignal(''),
+    showPassword: useSignal(false),
+    errors: {
+      email: useSignal(''),
+      password: useSignal(''),
+    },
+    touched: {
+      email: useSignal(false),
+      password: useSignal(false),
+    },
+  }
+
+  // ✅ Fine-grained updates (like Vue 3)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    formState.email.value = e.target.value
+
+    // ✅ Can use in conditions
+    if (formState.email.value === '') {
+      formState.errors.email.value = 'Required'
+    }
+  }
+
+  return (
+    <input
+      value={formState.email.value}
+      onChange={handleChange}
+    />
+  )
+}
+```
+
+**Key Rules**:
+1. **Use useSignal()**: Always use `useSignal()` hook inside components (not `signal()` outside)
+2. **Organized Structure**: Group related signals in an object structure for clarity
+3. **Fine-grained Updates**: Each signal updates independently - `formState.email.value = 'new value'`
+4. **Direct Access**: Read and compare values directly - `if (formState.email.value === '') { ... }`
+5. **Each Instance Independent**: Every component instance has its own independent state
+6. **Use Cases**:
+   - ✅ Form inputs and validation
+   - ✅ UI toggles (modals, dropdowns, tooltips)
+   - ✅ Component-specific state
+   - ❌ Don't use for global app state (use Zustand)
+   - ❌ Don't use for server data (use TanStack Query)
+
+**Benefits**:
+- ✅ Fine-grained reactivity like Vue 3 (only re-renders affected parts)
+- ✅ Direct property access and updates
+- ✅ No spread operators or immutability concerns
+- ✅ Each component instance has independent state
+- ✅ Simpler, more intuitive code
+- ✅ Better performance than useState
+
+**Reference Implementation**: See `src/pages/login.tsx` for a complete example.
+
+**Migration from useState**:
+```typescript
+// ❌ Old way (DO NOT USE)
+const [email, setEmail] = useState('')
+const [password, setPassword] = useState('')
+
+setEmail('new@email.com')
+if (email === '') { ... }
+
+// ✅ New way (REQUIRED)
+const formState = {
+  email: useSignal(''),
+  password: useSignal(''),
+}
+
+formState.email.value = 'new@email.com'
+if (formState.email.value === '') { ... }
+```
 
 ### Layout System
 
@@ -222,6 +330,8 @@ Tests use Vitest with jsdom environment:
 5. **API Exports**: Use object with methods pattern (e.g., `export const useAuthApi = { login, register }`)
 6. **Store Exports**: Use `useXxxStore` naming for Zustand stores
 7. **UI Styling**: Always prioritize Chakra UI style props over inline styles or CSS classes (see UI Styling Best Practices)
+8. **Component State (REQUIRED)**: Use Preact Signals for ALL component-level state instead of `useState`. Always group related signals in a single state object defined outside the component (see State Management with Preact Signals)
+9. **Form Handling**: DO NOT use Formik, Yup, or other form libraries. Use Chakra UI components with Preact Signals for form state management
 
 ## Known Configuration
 
