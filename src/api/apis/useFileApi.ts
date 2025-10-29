@@ -1,7 +1,7 @@
 import { AxiosPromise } from 'axios'
 import { useApiRequest } from '../http'
 import {
-  CreateFilePayload, CreateFileResponse, GetFileResponse,
+  CreateFilePayload, CreateFileResponse, DeleteFilePayload, DeleteFileResponse, EditFilePayload, EditFileResponse, GetFileResponse,
 } from '@/types'
 
 export const useFileApi = {
@@ -15,15 +15,15 @@ export const useFileApi = {
     })
   },
 
-  edit: (payload: any): Promise<any> => {
-    return useApiRequest.post({
-      url: '/tw/member/doLogin',
+  edit: (payload: EditFilePayload): AxiosPromise<EditFileResponse> => {
+    return useApiRequest.put({
+      url: '/file',
       data: payload,
     })
   },
-  delete: (payload: any): Promise<any> => {
+  delete: (payload: DeleteFilePayload): AxiosPromise<DeleteFileResponse> => {
     return useApiRequest.post({
-      url: '/tw/member/doLogin',
+      url: '/file',
       data: payload,
     })
   },
