@@ -1,23 +1,9 @@
+import { AxiosPromise } from 'axios'
 import { useApiRequest } from '../http'
+import { ShowCurrentResponse } from '@/types'
 
 export const useUserApi = {
-  showCurrent: (payload: any): Promise<any> => {
-    return useApiRequest.post({
-      url: '/tw/member/doLogin',
-      data: payload,
-    })
+  showCurrent: (): AxiosPromise<ShowCurrentResponse> => {
+    return useApiRequest.get({ url: '/tw/member/doLogin' })
   },
-  edit: (payload: any): Promise<any> => {
-    return useApiRequest.post({
-      url: '/tw/member/doLogin',
-      data: payload,
-    })
-  },
-  updatePassword: (payload: any): Promise<any> => {
-    return useApiRequest.post({
-      url: '/tw/member/doLogin',
-      data: payload,
-    })
-  },
-
 }
