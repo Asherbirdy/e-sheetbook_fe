@@ -7,7 +7,6 @@ import { useMutation } from '@tanstack/react-query'
 import { useAuthApi } from '@/api/apis/useAuthApi'
 import { LoginPayload } from '@/types'
 import { toaster } from '@/components/ui/toaster'
-import { AxiosError } from 'axios'
 import { LoginForm } from '@/components'
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -24,30 +23,27 @@ const Login = () => {
   /*
     * 登入 mutation
   */
-  const loginMutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (payload: LoginPayload) => useAuthApi.login(payload),
     onSuccess: (response) => {
-      const { user } = response.data
-
       toaster.create({
         title: '登入成功',
-        description: `歡迎回來，${user.name}！`,
+        description: `歡迎回來，${response.data.user.name}！`,
         type: 'success',
         duration: 3000,
       })
 
-      // 導航到 dashboard
       navigate('/dashboard')
     },
-    onError: (error: AxiosError<{ message?: string }>) => {
-      const errorMessage = error.response?.data?.message || '登入失敗，請檢查您的帳號和密碼'
-
+    onError: () => {
       toaster.create({
         title: '登入失敗',
-        description: errorMessage,
+        description: '登入失敗，請檢查您的帳號和密碼',
         type: 'error',
         duration: 5000,
       })
+
+      state.data.password.value = ''
     },
   })
 
@@ -56,7 +52,7 @@ const Login = () => {
   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    loginMutation.mutate({
+    mutate({
       email: state.data.email.value,
       password: state.data.password.value,
     })
@@ -125,7 +121,7 @@ const Login = () => {
                   gradientFrom: 'blue.500',
                   gradientTo: 'purple.600',
                 }}
-                loading={loginMutation.isPending}
+                loading={isPending}
                 loadingText="登入中..."
                 w="full"
                 mt={2}
