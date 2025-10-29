@@ -1,14 +1,16 @@
 import { AxiosPromise } from 'axios'
 import { useApiRequest } from '../http'
-import { GetFileResponse } from '@/types'
+import {
+  CreateFilePayload, CreateFileResponse, GetFileResponse,
+} from '@/types'
 
 export const useFileApi = {
   get: (): AxiosPromise<GetFileResponse> => {
     return useApiRequest.get({ url: '/file' })
   },
-  create: (payload: any): Promise<any> => {
+  create: (payload: CreateFilePayload): AxiosPromise<CreateFileResponse> => {
     return useApiRequest.post({
-      url: '/tw/member/doLogin',
+      url: '/file',
       data: payload,
     })
   },
