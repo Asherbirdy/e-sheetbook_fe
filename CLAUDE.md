@@ -13,7 +13,6 @@ This is an e-SheetBook frontend application built with React, Vite, Chakra UI v3
 - **State Management**: Zustand for global state
 - **Data Fetching**: TanStack Query (React Query) for server state
 - **Routing**: React Router v6 with file-based routing via `vite-plugin-pages`
-- **Forms**: Formik for form handling
 - **Testing**: Vitest with React Testing Library
 - **Type Checking**: TypeScript with strict mode enabled
 
