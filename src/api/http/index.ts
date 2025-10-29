@@ -4,7 +4,7 @@ import { urlApi } from './config'
 
 // ** 建立個 API 東東
 const useApiRequest = new Axios({
-  directlyGetData: true,
+  directlyGetData: false,
   baseURL: urlApi,
   timeout: 1000 * 60 * 5,
   interceptors: _RequstInterceptors,
