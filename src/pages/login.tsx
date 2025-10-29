@@ -2,7 +2,9 @@ import {
   Box, Button, Card, Container, Flex, Heading, Stack, Text, Link as ChakraLink,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { signal } from '@preact/signals-react'
+import {
+  effect, signal, useSignal,
+} from '@preact/signals-react'
 import { useMutation } from '@tanstack/react-query'
 import { useAuthApi } from '@/api/apis/useAuthApi'
 import { LoginPayload } from '@/types'
@@ -20,6 +22,7 @@ export const state = {
 const Login = () => {
   const navigate = useNavigate()
 
+  const feature = { button: { disabled: useSignal(false) } }
   /*
     * 登入 mutation
   */
@@ -57,6 +60,14 @@ const Login = () => {
       password: state.data.password.value,
     })
   }
+
+  effect(() => {
+    const check = (
+      !state.data.email.value ||
+      !state.data.password.value
+    )
+    feature.button.disabled.value = check
+  })
 
   return (
     <Flex
@@ -126,6 +137,7 @@ const Login = () => {
                 w="full"
                 mt={2}
                 onClick={handleSubmit}
+                disabled={feature.button.disabled.value}
               >
                 登入
               </Button>
