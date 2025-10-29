@@ -8,9 +8,7 @@ import { useAuthApi } from '@/api/apis/useAuthApi'
 import { LoginPayload } from '@/types'
 import { useNavigate } from 'react-router-dom'
 import { useSignal } from '@preact/signals-react'
-import {
-  LuEye, LuEyeOff,
-} from 'react-icons/lu'
+import { LuEye, LuEyeOff } from 'react-icons/lu'
 import { AxiosError } from 'axios'
 
 // 驗證函數
@@ -59,9 +57,8 @@ const Login = () => {
   const loginMutation = useMutation({
     mutationFn: (payload: LoginPayload) => useAuthApi.login(payload),
     onSuccess: (response) => {
-      const {
-        user, token,
-      } = response.data
+      const { data, features } = state
+      const { user, token } = response.data
 
       // 儲存 token 和 user role
       localStorage.setItem('token', token.accessTokenJWT)
@@ -78,13 +75,13 @@ const Login = () => {
       })
 
       // 清空表單
-      state.data.email.value = ''
-      state.data.password.value = ''
-      state.features.showPassword.value = false
-      state.features.errors.email.value = ''
-      state.features.errors.password.value = ''
-      state.features.touched.email.value = false
-      state.features.touched.password.value = false
+      data.email.value = ''
+      data.password.value = ''
+      features.showPassword.value = false
+      features.errors.email.value = ''
+      features.errors.password.value = ''
+      features.touched.email.value = false
+      features.touched.password.value = false
 
       // 導航到 dashboard
       navigate('/dashboard')
@@ -102,39 +99,43 @@ const Login = () => {
   })
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    state.data.email.value = e.target.value
+    const { data, features } = state
+    data.email.value = e.target.value
 
     // 即時驗證 (只在已觸碰時)
-    if (state.features.touched.email.value) {
-      state.features.errors.email.value = validateEmail(e.target.value)
+    if (features.touched.email.value) {
+      features.errors.email.value = validateEmail(e.target.value)
     }
   }
 
   // 處理 Password 輸入變更
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    state.data.password.value = e.target.value
+    const { data, features } = state
+    data.password.value = e.target.value
 
     // 即時驗證 (只在已觸碰時)
-    if (state.features.touched.password.value) {
-      state.features.errors.password.value = validatePassword(e.target.value)
+    if (features.touched.password.value) {
+      features.errors.password.value = validatePassword(e.target.value)
     }
   }
 
   // 處理 Email 失焦
   const handleEmailBlur = () => {
-    state.features.touched.email.value = true
-    state.features.errors.email.value = validateEmail(state.data.email.value)
+    const { data, features } = state
+    features.touched.email.value = true
+    features.errors.email.value = validateEmail(data.email.value)
   }
 
   // 處理 Password 失焦
   const handlePasswordBlur = () => {
-    state.features.touched.password.value = true
-    state.features.errors.password.value = validatePassword(state.data.password.value)
+    const { data, features } = state
+    features.touched.password.value = true
+    features.errors.password.value = validatePassword(data.password.value)
   }
 
   // 處理表單提交
   const handleSubmit = (e: React.FormEvent) => {
-    const { data } = state
+    const { data, features } = state
     console.log({
       email: data.email.value,
       password: data.password.value,
@@ -142,13 +143,13 @@ const Login = () => {
     e.preventDefault()
 
     // 驗證所有欄位
-    const emailErr = validateEmail(state.data.email.value)
-    const passwordErr = validatePassword(state.data.password.value)
+    const emailErr = validateEmail(data.email.value)
+    const passwordErr = validatePassword(data.password.value)
 
-    state.features.errors.email.value = emailErr
-    state.features.errors.password.value = passwordErr
-    state.features.touched.email.value = true
-    state.features.touched.password.value = true
+    features.errors.email.value = emailErr
+    features.errors.password.value = passwordErr
+    features.touched.email.value = true
+    features.touched.password.value = true
 
     // 如果有錯誤，不提交
     if (emailErr || passwordErr) {
@@ -157,8 +158,8 @@ const Login = () => {
 
     // 提交表單
     loginMutation.mutate({
-      email: state.data.email.value,
-      password: state.data.password.value,
+      email: data.email.value,
+      password: data.password.value,
     })
   }
 
@@ -254,7 +255,8 @@ const Login = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => {
-                      state.features.showPassword.value = !state.features.showPassword.value
+                      const { features } = state
+                      features.showPassword.value = !features.showPassword.value
                     }}
                     aria-label={state.features.showPassword.value ? '隱藏密碼' : '顯示密碼'}
                   >

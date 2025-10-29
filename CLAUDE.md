@@ -140,42 +140,83 @@ This enables automatic tracking of signals in React components. Without this, in
 
 **Note**: Must use `@vitejs/plugin-react` (not `@vitejs/plugin-react-swc`) to support Babel plugins.
 
-**Pattern** (organized object structure with multiple useSignal hooks):
+**Standard Component State Structure (REQUIRED)**:
+
+Every TSX component MUST follow this standardized state structure for consistency and maintainability:
+
 ```typescript
 import { useSignal } from '@preact/signals-react'
 
 const MyComponent = () => {
-  // ✅ REQUIRED: Group related signals in an object structure
-  const formState = {
-    email: useSignal(''),
-    password: useSignal(''),
-    showPassword: useSignal(false),
-    errors: {
+  // ✅ REQUIRED: Standard state structure with 'data' and 'features'
+  const state = {
+    // data: Business data / form data
+    data: {
       email: useSignal(''),
       password: useSignal(''),
+      username: useSignal(''),
+      // ... other business data
     },
-    touched: {
-      email: useSignal(false),
-      password: useSignal(false),
+    // features: UI state / interaction state
+    features: {
+      showPassword: useSignal(false),
+      isLoading: useSignal(false),
+      // Validation errors
+      errors: {
+        email: useSignal(''),
+        password: useSignal(''),
+      },
+      // Touch tracking for validation
+      touched: {
+        email: useSignal(false),
+        password: useSignal(false),
+      },
     },
   }
 
-  // ✅ Fine-grained updates (like Vue 3)
+  // ✅ REQUIRED: Destructure state in functions for cleaner code
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    formState.email.value = e.target.value
+    const { data, features } = state
+    data.email.value = e.target.value
 
-    // ✅ Can use in conditions
-    if (formState.email.value === '') {
-      formState.errors.email.value = 'Required'
+    if (features.touched.email.value) {
+      features.errors.email.value = validateEmail(e.target.value)
     }
   }
 
   return (
     <input
-      value={formState.email.value}
+      value={state.data.email.value}
       onChange={handleChange}
     />
   )
+}
+```
+
+**Structure Rules**:
+1. **state.data**: Contains all business data, form inputs, and user data
+2. **state.features**: Contains UI state (loading, visibility), validation (errors, touched), and interaction state
+3. **Single useSignal per field**: Each individual value uses its own `useSignal()` - never use `useState`
+4. **Consistent naming**: Always use `state` as the root object name
+5. **Group related signals**: errors and touched should be nested objects under `features`
+6. **Destructure in functions (REQUIRED)**: Every function that accesses `state.data` or `state.features` MUST destructure them at the start: `const { data, features } = state`. This improves code readability and reduces repetitive `state.` prefixes
+
+**Alternative for simple components** (when only data or only features):
+```typescript
+// For components with only data (no UI state)
+const state = {
+  data: {
+    name: useSignal(''),
+    age: useSignal(0),
+  },
+}
+
+// For components with only features (no business data)
+const state = {
+  features: {
+    isOpen: useSignal(false),
+    activeTab: useSignal(0),
+  },
 }
 ```
 
