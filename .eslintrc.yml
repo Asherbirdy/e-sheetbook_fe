@@ -58,7 +58,7 @@ rules:
 
   object-property-newline:
     - error
-    - allowAllPropertiesOnSameLine: false
+    - allowAllPropertiesOnSameLine: true
 
   object-curly-spacing:
     - error
@@ -107,7 +107,7 @@ rules:
 
   react/jsx-max-props-per-line:
     - error
-    - maximum: 1
+    - maximum: 3
   react/jsx-indent:
     - error
     - 2

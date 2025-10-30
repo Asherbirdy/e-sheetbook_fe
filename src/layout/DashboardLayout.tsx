@@ -1,14 +1,12 @@
 import { ReactElement } from 'react'
-import { Box, useDisclosure } from '@chakra-ui/react'
-import { SidebarContent, DashboardHeader } from '@/components'
+import { Box } from '@chakra-ui/react'
+import { SidebarFileContent, DashboardHeader } from '@/components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
 import { useColorModeValue } from '@/components/ui/color-mode'
 
 export const DashboardLayout = ({ children }: { children: ReactElement }) => {
-  const {
-    open, onOpen, onClose,
-  } = useDisclosure()
+
   const location = useLocation()
 
   return (
@@ -16,40 +14,16 @@ export const DashboardLayout = ({ children }: { children: ReactElement }) => {
       minH="100vh"
       bg={useColorModeValue('gray.100', 'gray.900')}
     >
-      <SidebarContent
-        onClose={() => onClose}
-        display={{
-          base: 'none',
-          md: 'block',
-        }}
-      />
-
-      <Box
-        ml={{
-          base: 0,
-          md: 60,
-        }}
-      >
-        <DashboardHeader onOpen={onOpen} />
-        <Box
-          as="main"
-          p="4"
-        >
+      <SidebarFileContent />
+      <Box ml={{ base: 0, md: 60 }}>
+        <DashboardHeader />
+        <Box as="main" p="4">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                y: -20,
-              }}
+              initial={{  opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
               style={{ width: '100%' }}
             >
