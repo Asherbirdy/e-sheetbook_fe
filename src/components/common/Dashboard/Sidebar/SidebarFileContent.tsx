@@ -10,10 +10,7 @@ export const SidebarFileContent = () => {
       bg={useColorModeValue('white', 'gray.900')}
       borderRight="1px"
       borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{
-        base: 'full',
-        md: 60,
-      }}
+      w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
     >
@@ -30,12 +27,7 @@ export const SidebarFileContent = () => {
         >
           Logo
         </Text>
-        <CloseButton
-          display={{
-            base: 'flex',
-            md: 'none',
-          }}
-        />
+        <CloseButton display={{ base: 'flex', md: 'none' }} />
       </Flex>
       menu stuff
     </Box>
