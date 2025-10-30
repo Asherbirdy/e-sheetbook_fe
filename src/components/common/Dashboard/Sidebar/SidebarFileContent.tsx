@@ -1,5 +1,5 @@
 import {
-  Box, CloseButton, Flex, Text, Accordion, Button, Span, AbsoluteCenter,
+  Box, CloseButton, Flex, Text, Accordion, Span,
 } from '@chakra-ui/react'
 import { useColorModeValue } from '@/components/ui/color-mode'
 import { useQuery } from '@tanstack/react-query'
@@ -7,22 +7,13 @@ import { useFileApi } from '@/api'
 
 export const SidebarFileContent = () => {
 
-  const { data: files } = useQuery({
+  const { data: files, isLoading } = useQuery({
     queryKey: ['files'],
     queryFn: () => useFileApi.get(),
   })
 
-  const items = [
-    {
-      value: 'a', title: 'First Item', text: 'asdasdsa',
-    },
-    {
-      value: 'b', title: 'Second Item', text: 'asdasdsa',
-    },
-    {
-      value: 'c', title: 'Third Item', text: 'asdasdsa',
-    },
-  ]
+  const fileList = files?.data?.file || []
+
   return (
     <Box
       transition="3s ease"
@@ -48,30 +39,41 @@ export const SidebarFileContent = () => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} />
       </Flex>
-      {JSON.stringify(files?.data)}
-      <Accordion.Root
-        spaceY="4" variant="plain" collapsible
-        defaultValue={['b']}
-      >
-        {items.map((item, index) => (
-          <Accordion.Item key={index} value={item.value}>
-            <Box position="relative">
-              <Accordion.ItemTrigger>
-                <Span flex="1">{item.title}</Span>
-                <Accordion.ItemIndicator />
-              </Accordion.ItemTrigger>
-              <AbsoluteCenter axis="vertical" insetEnd="0">
-                <Button variant="subtle" colorPalette="blue">
-                  loading
-                </Button>
-              </AbsoluteCenter>
-            </Box>
-            <Accordion.ItemContent>
-              <Accordion.ItemBody>{item.text}</Accordion.ItemBody>
-            </Accordion.ItemContent>
-          </Accordion.Item>
-        ))}
-      </Accordion.Root>
+
+      <Box px="4" py="2">
+        {isLoading ? (
+          <Text color="gray.500">載入中...</Text>
+        ) : fileList.length === 0 ? (
+          <Text color="gray.500">尚無文件</Text>
+        ) : (
+          <Accordion.Root
+            collapsible
+            variant="enclosed"
+          >
+            {fileList.map((file) => (
+              <Accordion.Item key={file._id} value={file._id}>
+                <Accordion.ItemTrigger>
+                  <Span flex="1" fontWeight="medium">
+                    {file.name}
+                  </Span>
+                  <Accordion.ItemIndicator />
+                </Accordion.ItemTrigger>
+                <Accordion.ItemContent>
+                  <Accordion.ItemBody>
+                    <Flex direction="column" gap="2">
+                      <Text fontSize="sm" color="gray.600">
+                        檔案 ID:
+                        {' '}
+                        {file._id}
+                      </Text>
+                    </Flex>
+                  </Accordion.ItemBody>
+                </Accordion.ItemContent>
+              </Accordion.Item>
+            ))}
+          </Accordion.Root>
+        )}
+      </Box>
     </Box>
   )
 }
