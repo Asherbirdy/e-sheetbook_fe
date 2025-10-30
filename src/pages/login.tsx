@@ -11,6 +11,7 @@ import { LoginPayload } from '@/types'
 import { LoginForm } from '@/components'
 import { cookie } from '@/utils'
 import { CookieEnum } from '@/enums'
+import { toaster } from '@/components/ui/toaster'
 // eslint-disable-next-line react-refresh/only-export-components
 export const state = {
   data: {
@@ -34,6 +35,10 @@ const Login = () => {
       navigate('/dashboard')
     },
     onError: () => {
+      toaster.error({
+        title: '登入失敗',
+        description: '請檢查您的帳號和密碼',
+      })
       state.data.password.value = ''
     },
   })
