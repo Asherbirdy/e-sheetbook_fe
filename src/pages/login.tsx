@@ -8,9 +8,9 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { useAuthApi } from '@/api/apis/useAuthApi'
 import { LoginPayload } from '@/types'
-import { toaster } from '@/components/ui/toaster'
 import { LoginForm } from '@/components'
-
+import { cookie } from '@/utils'
+import { CookieEnum } from '@/enums'
 // eslint-disable-next-line react-refresh/only-export-components
 export const state = {
   data: {
@@ -29,23 +29,11 @@ const Login = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: LoginPayload) => useAuthApi.login(payload),
     onSuccess: (response) => {
-      toaster.create({
-        title: '登入成功',
-        description: `歡迎回來，${response.data.user.name}！`,
-        type: 'success',
-        duration: 3000,
-      })
-
+      cookie.set(CookieEnum.AccessToken, response.data.token.accessTokenJWT)
+      cookie.set(CookieEnum.RefreshToken, response.data.token.refreshTokenJWT)
       navigate('/dashboard')
     },
     onError: () => {
-      toaster.create({
-        title: '登入失敗',
-        description: '登入失敗，請檢查您的帳號和密碼',
-        type: 'error',
-        duration: 5000,
-      })
-
       state.data.password.value = ''
     },
   })
