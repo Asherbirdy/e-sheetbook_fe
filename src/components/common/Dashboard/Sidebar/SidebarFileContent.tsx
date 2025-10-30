@@ -2,8 +2,15 @@ import {
   Box, CloseButton, Flex, Text, Accordion, Button, Span, AbsoluteCenter,
 } from '@chakra-ui/react'
 import { useColorModeValue } from '@/components/ui/color-mode'
+import { useQuery } from '@tanstack/react-query'
+import { useFileApi } from '@/api'
 
 export const SidebarFileContent = () => {
+
+  const { data: files } = useQuery({
+    queryKey: ['files'],
+    queryFn: () => useFileApi.get(),
+  })
 
   const items = [
     {
@@ -41,6 +48,7 @@ export const SidebarFileContent = () => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} />
       </Flex>
+      {JSON.stringify(files?.data)}
       <Accordion.Root
         spaceY="4" variant="plain" collapsible
         defaultValue={['b']}
