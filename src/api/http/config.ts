@@ -1,3 +1,4 @@
-const urlApi = import.meta.env.VITE_API_URL
+import { config } from '@/config'
+const urlApi = config.apiUrl
 
 export { urlApi }

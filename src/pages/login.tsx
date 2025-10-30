@@ -12,11 +12,12 @@ import { LoginForm } from '@/components'
 import { cookie } from '@/utils'
 import { CookieEnum } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
+import { config } from '@/config'
 // eslint-disable-next-line react-refresh/only-export-components
 export const state = {
   data: {
-    email: signal(import.meta.env.VITE_TEST_EMAIL || ''),
-    password: signal(import.meta.env.VITE_TEST_PASSWORD || ''),
+    email: signal(config.test.email || ''),
+    password: signal(config.test.password || ''),
   },
 }
 

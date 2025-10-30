@@ -34,19 +34,6 @@ class Axios {
     // 檢查是否有 refreshToken
     const refreshToken = cookie.get(CookieEnum.RefreshToken)
 
-    // if (!refreshToken) {
-    //   // 如果沒有 refreshToken,則直接導航到登入頁面
-    //   if (
-    //     window.location.pathname !== import.meta.env.VITE_BASE &&
-    //     window.location.pathname !== `${import.meta.env.VITE_BASE}forgetPassword` &&
-    //     window.location.pathname !== `${import.meta.env.VITE_BASE}teenMeetingAttend`
-    //   ) {
-    //     // 導航到登入頁面
-    //     window.location.href = import.meta.env.VITE_BASE
-    //   }
-    //   return false
-    // }
-
     try {
       // 嘗試刷新 accessToken
       const response = await axios.get(

@@ -1,6 +1,4 @@
-import {
-  FunctionComponent, ReactElement,
-} from 'react'
+import { FunctionComponent, ReactElement } from 'react'
 
 import {
   Box, Flex, Text,
@@ -38,7 +36,7 @@ export const WebsiteHeader: FunctionComponent = (): ReactElement => {
         alignItems={'center'}
         justifyContent={'space-between'}
       >
-        <Text mr={10}>{import.meta.env.VITE_EXAMPLE}</Text>
+        <Text mr={10}>test</Text>
         <Text>
           Count:
           {count}
