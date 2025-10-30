@@ -1,4 +1,6 @@
-import type { AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse, AxiosInstance, AxiosError } from 'axios'
+import type {
+  AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse, AxiosInstance, AxiosError,
+} from 'axios'
 
 // ** axios 實例配置，繼承 AxiosRequestConfig
 export interface AxiosOptions extends AxiosRequestConfig {
