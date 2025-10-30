@@ -1,34 +1,52 @@
 import {
-  Box, CloseButton, Flex, Text, Accordion, Span,
+  Box, CloseButton, Flex, Text, Accordion, Span, Badge, VStack, HStack, Icon,
 } from '@chakra-ui/react'
 import { useColorModeValue } from '@/components/ui/color-mode'
 import { useQuery } from '@tanstack/react-query'
-import { useFileApi } from '@/api'
+import { useSheetApi } from '@/api'
+import { LuFile, LuSheet } from 'react-icons/lu'
 
 export const SidebarFileContent = () => {
 
-  const { data: files, isLoading } = useQuery({
-    queryKey: ['files'],
-    queryFn: () => useFileApi.get(),
+  const { data: sheets, isLoading } = useQuery({
+    queryKey: ['sheets'],
+    queryFn: () => useSheetApi.get(),
   })
 
-  const fileList = files?.data?.file || []
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+  }
+
+  const bgColor = useColorModeValue('white', 'gray.900')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const hoverBg = useColorModeValue('gray.50', 'gray.800')
+  const sheetBg = useColorModeValue('gray.50', 'gray.800')
+  const sheetHoverBg = useColorModeValue('gray.100', 'gray.700')
+  const sheetTextColor = useColorModeValue('gray.700', 'gray.200')
 
   return (
     <Box
       transition="3s ease"
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={bgColor}
       borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+      borderRightColor={borderColor}
       w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
+      overflowY="auto"
     >
       <Flex
         h="20"
         alignItems="center"
         mx="8"
         justifyContent="space-between"
+        borderBottom="1px"
+        borderBottomColor={borderColor}
       >
         <Text
           fontSize="2xl"
@@ -40,33 +58,95 @@ export const SidebarFileContent = () => {
         <CloseButton display={{ base: 'flex', md: 'none' }} />
       </Flex>
 
-      <Box px="4" py="2">
+      <Box px="4" py="4">
         {isLoading ? (
-          <Text color="gray.500">載入中...</Text>
-        ) : fileList.length === 0 ? (
-          <Text color="gray.500">尚無文件</Text>
+          <Text color="gray.500" fontSize="sm">載入中...</Text>
+        ) : sheets?.data?.files.length === 0 ? (
+          <VStack gap="2" py="8">
+            <Icon fontSize="3xl" color="gray.400">
+              <LuFile />
+            </Icon>
+            <Text color="gray.500" fontSize="sm">尚無文件</Text>
+          </VStack>
         ) : (
           <Accordion.Root
             collapsible
-            variant="enclosed"
+            variant="plain"
+            size="sm"
           >
-            {fileList.map((file) => (
+            {sheets?.data?.files.map((file) => (
               <Accordion.Item key={file._id} value={file._id}>
-                <Accordion.ItemTrigger>
-                  <Span flex="1" fontWeight="medium">
-                    {file.name}
-                  </Span>
+                <Accordion.ItemTrigger
+                  py="3"
+                  px="3"
+                  borderRadius="md"
+                  _hover={{ bg: hoverBg }}
+                >
+                  <HStack flex="1" gap="2">
+                    <Icon fontSize="lg" color="blue.500">
+                      <LuFile />
+                    </Icon>
+                    <Span flex="1" fontWeight="medium" fontSize="sm">
+                      {file.name}
+                    </Span>
+                    <Badge
+                      size="xs"
+                      colorPalette="blue"
+                      variant="subtle"
+                    >
+                      {file.sheets?.length || 0}
+                    </Badge>
+                  </HStack>
                   <Accordion.ItemIndicator />
                 </Accordion.ItemTrigger>
                 <Accordion.ItemContent>
-                  <Accordion.ItemBody>
-                    <Flex direction="column" gap="2">
-                      <Text fontSize="sm" color="gray.600">
-                        檔案 ID:
-                        {' '}
-                        {file._id}
+                  <Accordion.ItemBody py="2" px="3">
+                    {file.sheets && file.sheets.length > 0 ? (
+                      <VStack gap="2" alignItems="stretch">
+                        {file.sheets.map((sheet) => (
+                          <Box
+                            key={sheet._id}
+                            p="3"
+                            borderRadius="md"
+                            bg={sheetBg}
+                            _hover={{ bg: sheetHoverBg, cursor: 'pointer' }}
+                            transition="all 0.2s"
+                          >
+                            <HStack gap="2" mb="2">
+                              <Icon fontSize="md" color="green.500">
+                                <LuSheet />
+                              </Icon>
+                              <Text
+                                fontSize="sm"
+                                fontWeight="medium"
+                                flex="1"
+                                color={sheetTextColor}
+                              >
+                                {sheet.name}
+                              </Text>
+                            </HStack>
+                            <VStack gap="1" alignItems="flex-start">
+                              <Text fontSize="xs" color="gray.500">
+                                建立時間:
+                                {' '}
+                                {formatDate(sheet.createdAt)}
+                              </Text>
+                              {sheet.updatedAt !== sheet.createdAt && (
+                                <Text fontSize="xs" color="gray.500">
+                                  更新時間:
+                                  {' '}
+                                  {formatDate(sheet.updatedAt)}
+                                </Text>
+                              )}
+                            </VStack>
+                          </Box>
+                        ))}
+                      </VStack>
+                    ) : (
+                      <Text fontSize="xs" color="gray.500" py="2">
+                        此文件尚無表格
                       </Text>
-                    </Flex>
+                    )}
                   </Accordion.ItemBody>
                 </Accordion.ItemContent>
               </Accordion.Item>

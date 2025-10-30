@@ -1,6 +1,6 @@
 export interface GetSheetResponse {
   msg: string
-  files: File[]
+  files: GetSheetFile[]
 }
 
 export interface GetSheetFile {
