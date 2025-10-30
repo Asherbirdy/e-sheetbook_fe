@@ -13,7 +13,12 @@
       "Bash(npx @chakra-ui/cli@latest snippet add)",
       "Bash(npx @chakra-ui/cli@latest snippet add:*)",
       "Bash(npx vite build:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(mkdir:*)",
+      "mcp__chakra-ui__get_component_props",
+      "mcp__chakra-ui__get_component_example",
+      "Bash(npm run type-check:*)",
+      "WebFetch(domain:ark-ui.com)"
     ],
     "deny": [],
     "ask": []

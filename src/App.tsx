@@ -1,13 +1,7 @@
-import {
-  BrowserRouter, useRoutes,
-} from 'react-router-dom'
+import { useRoutes } from 'react-router-dom'
 import routes from '~react-pages'
-import ReactDOM from 'react-dom/client'
-import React, { Suspense } from 'react'
-import {
-  Spinner, Center,
-} from '@chakra-ui/react'
-import { Provider } from './components/ui/provider'
+import { Suspense } from 'react'
+import { Spinner, Center } from '@chakra-ui/react'
 
 export function App() {
   return (
@@ -22,13 +16,3 @@ export function App() {
     </Suspense>
   )
 }
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <Provider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
-)
