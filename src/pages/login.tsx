@@ -14,8 +14,8 @@ import { LoginForm } from '@/components'
 // eslint-disable-next-line react-refresh/only-export-components
 export const state = {
   data: {
-    email: signal(''),
-    password: signal(''),
+    email: signal(import.meta.env.VITE_TEST_EMAIL || ''),
+    password: signal(import.meta.env.VITE_TEST_PASSWORD || ''),
   },
 }
 
