@@ -1,9 +1,21 @@
 import {
-  Box, CloseButton, Flex, Text,
+  Box, CloseButton, Flex, Text, Accordion, Button, Span, AbsoluteCenter,
 } from '@chakra-ui/react'
 import { useColorModeValue } from '@/components/ui/color-mode'
 
 export const SidebarFileContent = () => {
+
+  const items = [
+    {
+      value: 'a', title: 'First Item', text: 'asdasdsa',
+    },
+    {
+      value: 'b', title: 'Second Item', text: 'asdasdsa',
+    },
+    {
+      value: 'c', title: 'Third Item', text: 'asdasdsa',
+    },
+  ]
   return (
     <Box
       transition="3s ease"
@@ -29,7 +41,29 @@ export const SidebarFileContent = () => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} />
       </Flex>
-      menu stuff
+      <Accordion.Root
+        spaceY="4" variant="plain" collapsible
+        defaultValue={['b']}
+      >
+        {items.map((item, index) => (
+          <Accordion.Item key={index} value={item.value}>
+            <Box position="relative">
+              <Accordion.ItemTrigger>
+                <Span flex="1">{item.title}</Span>
+                <Accordion.ItemIndicator />
+              </Accordion.ItemTrigger>
+              <AbsoluteCenter axis="vertical" insetEnd="0">
+                <Button variant="subtle" colorPalette="blue">
+                  loading
+                </Button>
+              </AbsoluteCenter>
+            </Box>
+            <Accordion.ItemContent>
+              <Accordion.ItemBody>{item.text}</Accordion.ItemBody>
+            </Accordion.ItemContent>
+          </Accordion.Item>
+        ))}
+      </Accordion.Root>
     </Box>
   )
 }
