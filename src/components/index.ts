@@ -1,8 +1,8 @@
 // ** pages
-export * from './page/login/LoginForm'
+export * from './Page//Dashboard/Login/LoginForm'
 
 // ** common
-export * from './common/Dashboard/DashboardHeader'
-export * from './common/Website/WebsiteHeader'
-export * from './common/ColorModeSwitcher'
-export * from './common/Dashboard/Sidebar/Sidebar'
+export * from './Page/Dashboard/DashboardHeader'
+export * from './Page/Website/WebsiteHeader'
+export * from './Page/ColorModeSwitcher'
+export * from './Page/Dashboard/DashboardSidebar'
