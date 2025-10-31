@@ -1,11 +1,11 @@
 import {
   Box, CloseButton, Flex, Text, Accordion, Span, Badge, VStack, HStack, Icon,
 } from '@chakra-ui/react'
-import { useColorModeValue } from '@/components/ui/color-mode'
 import { useQuery } from '@tanstack/react-query'
 import { useSheetApi } from '@/api'
 import { LuFile, LuSheet } from 'react-icons/lu'
 import dayjs from 'dayjs'
+import { useColorMode } from '@/hook'
 
 export const SidebarFileContent = () => {
 
@@ -14,12 +14,9 @@ export const SidebarFileContent = () => {
     queryFn: () => useSheetApi.get(),
   })
 
-  const bgColor = useColorModeValue('white', 'gray.900')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
-  const hoverBg = useColorModeValue('gray.50', 'gray.800')
-  const sheetBg = useColorModeValue('gray.50', 'gray.800')
-  const sheetHoverBg = useColorModeValue('gray.100', 'gray.700')
-  const sheetTextColor = useColorModeValue('gray.700', 'gray.200')
+  const {
+    bgColor, borderColor, hoverBg, sheetBg, sheetHoverBg, sheetTextColor,
+  } = useColorMode()
 
   return (
     <Box
