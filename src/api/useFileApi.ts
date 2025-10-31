@@ -22,7 +22,7 @@ export const useFileApi = {
     })
   },
   delete: (payload: DeleteFilePayload): AxiosPromise<DeleteFileResponse> => {
-    return useApiRequest.post({
+    return useApiRequest.delete({
       url: '/file',
       data: payload,
     })
