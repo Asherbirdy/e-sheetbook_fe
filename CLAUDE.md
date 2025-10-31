@@ -172,22 +172,56 @@ This enables automatic tracking of signals in React components. Without this, in
 
 **Note**: Must use `@vitejs/plugin-react` (not `@vitejs/plugin-react-swc`) to support Babel plugins.
 
-**Structure Rules**:
-1. **state.data**: Contains all business data, form inputs, and user data
-2. **state.features**: Contains UI state (loading, visibility), validation (errors, touched), and interaction state
-3. **Single useSignal per field**: Each individual value uses its own `useSignal()` - never use `useState`
-4. **Consistent naming**: Always use `state` as the root object name
-5. **Group related signals**: errors and touched should be nested objects under `features`
-6. **Destructure in functions (REQUIRED)**: Every function that accesses `state.data` or `state.features` MUST destructure them at the start: `const { data, features } = state`. This improves code readability and reduces repetitive `state.` prefixes
+**Structure Rules for `useSignal()`**:
 
+When using `useSignal()` in function components, declare `data` and `features` as **separate, independent constants**:
+
+```typescript
+// ✅ Correct - Separate data and features
+const data = {
+  email: useSignal(''),
+  password: useSignal(''),
+}
+
+const features = {
+  isLoading: useSignal(false),
+  error: useSignal(''),
+  // Can have nested structure for organization
+  validation: {
+    emailTouched: useSignal(false),
+    passwordTouched: useSignal(false),
+  },
+}
+
+// ❌ Wrong - Do NOT nest under a state object
+const state = {
+  data: { email: useSignal('') },
+  features: { isLoading: useSignal(false) },
+}
+```
+
+**Structure Rules for `signal()`**:
+
+When using `signal()` (outside components), use a `state` object:
+
+```typescript
+// ✅ Correct - Use state object for signal()
+const state = {
+  info: signal({ count: 0 }),
+  config: signal({ theme: 'light' }),
+}
+```
 
 **Key Rules**:
-1. **Use useSignal()**: Always use `useSignal()` hook inside components (not `signal()` outside)
-2. **Organized Structure**: Group related signals in an object structure for clarity
-3. **Fine-grained Updates**: Each signal updates independently - `formState.email.value = 'new value'`
-4. **Direct Access**: Read and compare values directly - `if (formState.email.value === '') { ... }`
-5. **Each Instance Independent**: Every component instance has its own independent state
-6. **Use Cases**:
+1. **Use useSignal() inside components**: Always use `useSignal()` hook inside components (not `signal()` outside)
+2. **Separate data and features**: Declare `data` and `features` as independent constants, never nested under `state`
+3. **Organized Structure**: Group related signals within `data` or `features` for clarity
+4. **Nested organization allowed**: You can nest objects within `features` for better organization (e.g., `edit: { isDialogOpen: useSignal(false) }`)
+5. **Fine-grained Updates**: Each signal updates independently - `data.email.value = 'new value'`
+6. **Direct Access**: Read and compare values directly - `if (data.email.value === '') { ... }`
+7. **Destructure in functions**: Functions can destructure `data` and `features` for cleaner code: `const { data, features } = { data, features }`
+8. **Each Instance Independent**: Every component instance has its own independent state
+9. **Use Cases**:
    - ✅ Form inputs and validation
    - ✅ UI toggles (modals, dropdowns, tooltips)
    - ✅ Component-specific state
@@ -201,26 +235,62 @@ This enables automatic tracking of signals in React components. Without this, in
 - ✅ Each component instance has independent state
 - ✅ Simpler, more intuitive code
 - ✅ Better performance than useState
+- ✅ Clear separation between data and UI state
 
-**Reference Implementation**: See `src/pages/login.tsx` for a complete example.
+**Reference Implementation**: See `src/components/app/file/FileMenu.tsx` for a complete example.
 
 **Migration from useState**:
 ```typescript
 // ❌ Old way (DO NOT USE)
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
+const [isLoading, setIsLoading] = useState(false)
 
 setEmail('new@email.com')
 if (email === '') { ... }
 
 // ✅ New way (REQUIRED)
-const formState = {
+const data = {
   email: useSignal(''),
   password: useSignal(''),
 }
 
-formState.email.value = 'new@email.com'
-if (formState.email.value === '') { ... }
+const features = {
+  isLoading: useSignal(false),
+  error: useSignal(''),
+}
+
+data.email.value = 'new@email.com'
+if (data.email.value === '') { ... }
+features.isLoading.value = true
+```
+
+**Complex Example with Nested Features**:
+```typescript
+const data = {
+  fileName: useSignal('document.txt'),
+  content: useSignal(''),
+}
+
+const features = {
+  // Organize by feature area
+  edit: {
+    isDialogOpen: useSignal(false),
+    isSubmitting: useSignal(false),
+  },
+  delete: {
+    isDialogOpen: useSignal(false),
+    isDeleting: useSignal(false),
+  },
+  validation: {
+    error: useSignal(''),
+    touched: useSignal(false),
+  },
+}
+
+// Usage
+features.edit.isDialogOpen.value = true
+features.validation.error.value = 'Invalid input'
 ```
 
 ### Layout System
@@ -403,7 +473,7 @@ Tests use Vitest with jsdom environment:
 6. **API Exports**: Use object with methods pattern (e.g., `export const useAuthApi = { login, register }`)
 7. **Store Exports**: Use `useXxxStore` naming for Zustand stores
 8. **UI Styling**: Always prioritize Chakra UI style props over inline styles or CSS classes (see UI Styling Best Practices)
-9. **Component State (REQUIRED)**: Use Preact Signals for ALL component-level state instead of `useState`. Always group related signals in a single state object defined outside the component (see State Management with Preact Signals)
+9. **Component State (REQUIRED)**: Use Preact Signals for ALL component-level state instead of `useState`. Declare `data` and `features` as separate, independent constants using `useSignal()`. Never nest them under a `state` object (see State Management with Preact Signals)
 10. **Form Handling**: DO NOT use Formik, Yup, or other form libraries. Use Chakra UI components with Preact Signals for form state management
 11. **Date Handling (REQUIRED)**: Always use Day.js for date operations instead of native JavaScript Date methods (see Date Handling with Day.js)
 

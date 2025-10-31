@@ -11,7 +11,7 @@ import { toaster } from '@/components/ui/toaster'
 import { config } from '@/config'
 // eslint-disable-next-line react-refresh/only-export-components
 export const state = {
-  data: {
+  login: {
     email: signal(config.test.email || ''),
     password: signal(config.test.password || ''),
   },
@@ -36,7 +36,7 @@ const Login = () => {
         title: '登入失敗',
         description: '請檢查您的帳號和密碼',
       })
-      state.data.password.value = ''
+      state.login.password.value = ''
     },
   })
 
@@ -46,15 +46,15 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     mutate({
-      email: state.data.email.value,
-      password: state.data.password.value,
+      email: state.login.email.value,
+      password: state.login.password.value,
     })
   }
 
   effect(() => {
     const check = (
-      !state.data.email.value ||
-      !state.data.password.value
+      !state.login.email.value ||
+      !state.login.password.value
     )
     feature.button.disabled.value = check
   })

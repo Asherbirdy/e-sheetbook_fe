@@ -21,7 +21,7 @@ export const LoginForm = () => {
   }
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    state.data.email.value = e.target.value
+    state.login.email.value = e.target.value
 
     // 即時驗證 (只在已觸碰時)
     if (features.touched.email.value) {
@@ -30,7 +30,7 @@ export const LoginForm = () => {
   }
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    state.data.password.value = e.target.value
+    state.login.password.value = e.target.value
 
     // 即時驗證 (只在已觸碰時)
     if (features.touched.password.value) {
@@ -40,12 +40,12 @@ export const LoginForm = () => {
 
   const handleEmailBlur = () => {
     features.touched.email.value = true
-    features.errors.email.value = formValidate.email(state.data.email.value)
+    features.errors.email.value = formValidate.email(state.login.email.value)
   }
 
   const handlePasswordBlur = () => {
     features.touched.password.value = true
-    features.errors.password.value = formValidate.password(state.data.password.value)
+    features.errors.password.value = formValidate.password(state.login.password.value)
   }
 
   return (
@@ -59,7 +59,7 @@ export const LoginForm = () => {
           name="email"
           type="email"
           placeholder="your@email.com"
-          value={state.data.email.value}
+          value={state.login.email.value}
           onChange={handleEmailChange}
           onBlur={handleEmailBlur}
           size="lg"
@@ -80,7 +80,7 @@ export const LoginForm = () => {
             name="password"
             type={features.showPassword.value ? 'text' : 'password'}
             placeholder="請輸入您的密碼"
-            value={state.data.password.value}
+            value={state.login.password.value}
             onChange={handlePasswordChange}
             onBlur={handlePasswordBlur}
             size="lg"

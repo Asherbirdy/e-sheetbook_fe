@@ -19,7 +19,9 @@
       "mcp__chakra-ui__get_component_example",
       "Bash(npm run type-check:*)",
       "WebFetch(domain:ark-ui.com)",
-      "Bash(pnpm knip:*)"
+      "Bash(pnpm knip:*)",
+      "Bash(npm run lint:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

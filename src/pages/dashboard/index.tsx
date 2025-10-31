@@ -10,7 +10,6 @@ const DashboardMain = () => {
     queryFn: () => useUserApi.showCurrent(),
   })
 
-  console.log(userInfo)
   return (
     <DashboardLayout>
       <Box>

@@ -1,6 +1,4 @@
-import {
-  FunctionComponent, ReactElement,
-} from 'react'
+import { FunctionComponent, ReactElement } from 'react'
 import { Text } from '@chakra-ui/react'
 import { DefaultLayout } from '@/layout'
 
