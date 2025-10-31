@@ -1,13 +1,12 @@
 import {
-  Box, CloseButton, Flex, Text, Accordion, Span, Badge, VStack, HStack, Icon, IconButton,
+  Box, CloseButton, Flex, Text, Accordion, Span, Badge, VStack, HStack, Icon,
 } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useSheetApi } from '@/api'
-import {
-  LuFile, LuSheet, LuPlus,
-} from 'react-icons/lu'
+import { LuFile, LuSheet } from 'react-icons/lu'
 import dayjs from 'dayjs'
 import { useColorMode } from '@/hook'
+import { CAddFileButton } from '@/components/common/Button/CAddFileButton'
 
 export const DashboardSidebar = () => {
 
@@ -49,122 +48,114 @@ export const DashboardSidebar = () => {
       </Flex>
 
       <Box px="4" py="4">
+        {/* 標題區域 */}
+        <Flex
+          alignItems="center"
+          justifyContent="space-between"
+          mb="3"
+          px="3"
+        >
+          <Text fontSize="sm" fontWeight="semibold" color="gray.600">
+            Files
+          </Text>
+          <CAddFileButton />
+        </Flex>
+
+        {/* 內容區域 */}
         {isLoading ? (
-          <Text color="gray.500" fontSize="sm">載入中...</Text>) :
-          sheets?.data?.files.length === 0 ? (
-            <VStack gap="2" py="8">
-              <Icon fontSize="3xl" color="gray.400">
-                <LuFile />
-              </Icon>
-              <Text color="gray.500" fontSize="sm">尚無文件</Text>
-            </VStack>
-          ) : (
-            <>
-              <Flex
-                alignItems="center"
-                justifyContent="space-between"
-                mb="3"
-                px="3"
-              >
-                <Text fontSize="sm" fontWeight="semibold" color="gray.600">
-                  Files
-                </Text>
-                <IconButton
-                  size="xs"
-                  variant="ghost"
-                  aria-label="新增文件"
-                  onClick={() => {
-                    // TODO: 實作新增文件功能
-                  }}
+          <Text color="gray.500" fontSize="sm" px="3">載入中...</Text>
+        ) : sheets?.data?.files.length === 0 ? (
+          <VStack gap="2" py="8">
+            <Icon fontSize="3xl" color="gray.400">
+              <LuFile />
+            </Icon>
+            <Text color="gray.500" fontSize="sm">尚無文件</Text>
+          </VStack>
+        ) : (
+          <Accordion.Root
+            collapsible
+            variant="plain"
+            size="sm"
+          >
+            {sheets?.data?.files.map((file) => (
+              <Accordion.Item key={file._id} value={file._id}>
+                <Accordion.ItemTrigger
+                  py="3"
+                  px="3"
+                  borderRadius="md"
+                  _hover={{ bg: hoverBg }}
                 >
-                  <LuPlus />
-                </IconButton>
-              </Flex>
-              <Accordion.Root
-                collapsible
-                variant="plain"
-                size="sm"
-              >
-                {sheets?.data?.files.map((file) => (
-                  <Accordion.Item key={file._id} value={file._id}>
-                    <Accordion.ItemTrigger
-                      py="3"
-                      px="3"
-                      borderRadius="md"
-                      _hover={{ bg: hoverBg }}
+                  <HStack flex="1" gap="2">
+                    <Icon fontSize="lg" color="blue.500">
+                      <LuFile />
+                    </Icon>
+                    <Span flex="1" fontWeight="medium" fontSize="sm">
+                      {file.name}
+                    </Span>
+                    <Badge
+                      size="xs"
+                      colorPalette="blue"
+                      variant="subtle"
                     >
-                      <HStack flex="1" gap="2">
-                        <Icon fontSize="lg" color="blue.500">
-                          <LuFile />
-                        </Icon>
-                        <Span flex="1" fontWeight="medium" fontSize="sm">
-                          {file.name}
-                        </Span>
-                        <Badge
-                          size="xs"
-                          colorPalette="blue"
-                          variant="subtle"
-                        >
-                          {file.sheets?.length || 0}
-                        </Badge>
-                      </HStack>
-                      <Accordion.ItemIndicator />
-                    </Accordion.ItemTrigger>
-                    <Accordion.ItemContent>
-                      <Accordion.ItemBody py="2" px="3">
-                        {file.sheets && file.sheets.length > 0 ? (
-                          <VStack gap="2" alignItems="stretch">
-                            {file.sheets.map((sheet) => (
-                              <Box
-                                key={sheet._id}
-                                p="3"
-                                borderRadius="md"
-                                bg={sheetBg}
-                                _hover={{ bg: sheetHoverBg, cursor: 'pointer' }}
-                                transition="all 0.2s"
+                      {file.sheets?.length || 0}
+                    </Badge>
+                  </HStack>
+                  <Accordion.ItemIndicator />
+                </Accordion.ItemTrigger>
+                <Accordion.ItemContent>
+                  <Accordion.ItemBody py="2" px="3">
+                    {file.sheets && file.sheets.length > 0 ? (
+                      <VStack gap="2" alignItems="stretch">
+                        {file.sheets.map((sheet) => (
+                          <Box
+                            key={sheet._id}
+                            p="3"
+                            borderRadius="md"
+                            bg={sheetBg}
+                            _hover={{ bg: sheetHoverBg, cursor: 'pointer' }}
+                            transition="all 0.2s"
+                          >
+                            <HStack gap="2" mb="2">
+                              <Icon fontSize="md" color="green.500">
+                                <LuSheet />
+                              </Icon>
+                              <Text
+                                fontSize="sm"
+                                fontWeight="medium"
+                                flex="1"
+                                color={sheetTextColor}
                               >
-                                <HStack gap="2" mb="2">
-                                  <Icon fontSize="md" color="green.500">
-                                    <LuSheet />
-                                  </Icon>
-                                  <Text
-                                    fontSize="sm"
-                                    fontWeight="medium"
-                                    flex="1"
-                                    color={sheetTextColor}
-                                  >
-                                    {sheet.name}
-                                  </Text>
-                                </HStack>
-                                <VStack gap="1" alignItems="flex-start">
-                                  <Text fontSize="xs" color="gray.500">
-                                    建立時間:
-                                    {' '}
-                                    {dayjs(sheet.createdAt).format('YYYY/MM/DD')}
-                                  </Text>
-                                  {sheet.updatedAt !== sheet.createdAt && (
-                                    <Text fontSize="xs" color="gray.500">
-                                      更新時間:
-                                      {' '}
-                                      {dayjs(sheet.updatedAt).format('YYYY/MM/DD')}
-                                    </Text>
-                                  )}
-                                </VStack>
-                              </Box>
-                            ))}
-                          </VStack>
-                        ) : (
-                          <Text fontSize="xs" color="gray.500" py="2">
-                            此文件尚無表格
-                          </Text>
-                        )}
-                      </Accordion.ItemBody>
-                    </Accordion.ItemContent>
-                  </Accordion.Item>
-                ))}
-              </Accordion.Root>
-            </>
-          )}
+                                {sheet.name}
+                              </Text>
+                            </HStack>
+                            <VStack gap="1" alignItems="flex-start">
+                              <Text fontSize="xs" color="gray.500">
+                                建立時間:
+                                {' '}
+                                {dayjs(sheet.createdAt).format('YYYY/MM/DD')}
+                              </Text>
+                              {sheet.updatedAt !== sheet.createdAt && (
+                                <Text fontSize="xs" color="gray.500">
+                                  更新時間:
+                                  {' '}
+                                  {dayjs(sheet.updatedAt).format('YYYY/MM/DD')}
+                                </Text>
+                              )}
+                            </VStack>
+                          </Box>
+                        ))}
+                      </VStack>
+                    ) : (
+                      <Text fontSize="xs" color="gray.500" py="2">
+                        此文件尚無表格
+                      </Text>
+                    )}
+                  </Accordion.ItemBody>
+                </Accordion.ItemContent>
+              </Accordion.Item>
+            ))}
+          </Accordion.Root>
+        )}
       </Box>
     </Box>
   )

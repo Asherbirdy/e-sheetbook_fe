@@ -1,9 +1,9 @@
 // ** pages
-export * from './Page//Dashboard/Login/LoginForm'
+export * from './page/Dashboard/Login/LoginForm'
 
 // ** common
-export * from './Page/Dashboard/DashboardHeader'
-export * from './Page/Website/WebsiteHeader'
-export * from './Page/ColorModeSwitcher'
-export * from './Page/Dashboard/DashboardSidebar'
-export * from './Common/Button/CAddFileButton'
+export * from './page/Dashboard/DashboardHeader'
+export * from './page/Website/WebsiteHeader'
+export * from './page/ColorModeSwitcher'
+export * from './page/Dashboard/DashboardSidebar'
+export * from './common/Button/CAddFileButton'
