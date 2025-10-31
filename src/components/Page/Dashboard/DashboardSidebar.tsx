@@ -6,7 +6,7 @@ import { useSheetApi } from '@/api'
 import { LuFile, LuSheet, LuEllipsis, LuPencil, LuTrash2 } from 'react-icons/lu'
 import dayjs from 'dayjs'
 import { useColorMode } from '@/hook'
-import { CAddFileButton } from '@/components/app/file/CAddFileButton'
+import { FileAddButton } from '@/components'
 
 export const DashboardSidebar = () => {
 
@@ -58,7 +58,7 @@ export const DashboardSidebar = () => {
           <Text fontSize="sm" fontWeight="semibold" color="gray.600">
             Files
           </Text>
-          <CAddFileButton />
+          <FileAddButton />
         </Flex>
 
         {/* 內容區域 */}

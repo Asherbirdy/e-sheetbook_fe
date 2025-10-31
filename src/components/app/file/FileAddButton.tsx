@@ -13,7 +13,7 @@ import { CreateFilePayload } from '@/types'
  * 新增文件按鈕組件
  * 包含點擊後彈出的 Dialog 表單，用於創建新文件
  */
-export const CAddFileButton = () => {
+export const FileAddButton = () => {
   const queryClient = useQueryClient()
 
   // 組件狀態
