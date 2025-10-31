@@ -9,6 +9,7 @@ import { FileMenu } from './FileMenu'
 
 export const FileAccordion = () => {
   const { palette } = useColorMode()
+  const navigate = useNavigate()
 
   const { data: sheets, isLoading } = useQuery({
     queryKey: ['sheets'],
@@ -64,6 +65,7 @@ export const FileAccordion = () => {
                       bg={palette.sheetBg}
                       _hover={{ bg: palette.sheetHoverBg, cursor: 'pointer' }}
                       transition="all 0.2s"
+                      onClick={() => navigate(`/sheet/${sheet._id}`)}
                     >
                       <HStack gap="2" mb="2">
                         <Icon as={LuSheet} fontSize="md" color="green.500" />
