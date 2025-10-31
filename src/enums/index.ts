@@ -1,2 +1,2 @@
-export * from './common/RoutesEnum'
-export * from './common/CookieEnum'
+export * from './RoutesEnum'
+export * from './CookieEnum'
