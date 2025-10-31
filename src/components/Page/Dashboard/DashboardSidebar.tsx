@@ -3,10 +3,10 @@ import {
 } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useSheetApi } from '@/api'
-import { LuFile, LuSheet, LuEllipsisVertical, LuPencil, LuTrash2 } from 'react-icons/lu'
+import { LuFile, LuSheet, LuEllipsis, LuPencil, LuTrash2 } from 'react-icons/lu'
 import dayjs from 'dayjs'
 import { useColorMode } from '@/hook'
-import { CAddFileButton } from '@/components/common/Button/CAddFileButton'
+import { CAddFileButton } from '@/components/app/file/CAddFileButton'
 
 export const DashboardSidebar = () => {
 
@@ -112,7 +112,7 @@ export const DashboardSidebar = () => {
                           transition="all 0.2s"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Icon as={LuEllipsisVertical} fontSize="sm" />
+                          <Icon as={LuEllipsis} fontSize="sm" />
                         </Box>
                       </Menu.Trigger>
                       <Portal>
