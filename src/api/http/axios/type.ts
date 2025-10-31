@@ -21,8 +21,8 @@ export abstract class RequstInterceptors {
   abstract responseInterceptorsCatch?: (axiosInstance: AxiosInstance, error: AxiosError)=> void;
 }
 
-// ** 定義返回類型
-export interface Respones<T = any> {
-  success: boolean;
-  result: T
-}
+// // ** 定義返回類型
+// export interface Respones<T = any> {
+//   success: boolean;
+//   result: T
+// }

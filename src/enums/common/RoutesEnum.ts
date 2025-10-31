@@ -1,4 +1,4 @@
-export enum RoutesPath {
+export enum Routes {
   // Public Routes
   PublicHome = '/',
 

@@ -2,6 +2,37 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Language Convention
+
+**CRITICAL**: All responses and code comments MUST be written in Traditional Chinese (繁體中文).
+
+- ✅ **Responses to user**: Always use Traditional Chinese
+- ✅ **Code comments**: Always use Traditional Chinese
+- ✅ **Git commit messages**: Always use Traditional Chinese
+- ✅ **Documentation files (except CLAUDE.md)**: Use Traditional Chinese
+- ⚠️ **This CLAUDE.md file**: Keep in English for compatibility with Claude Code
+
+**Examples:**
+```typescript
+// ✅ Correct - Traditional Chinese comments
+const handleLogin = () => {
+  // 驗證用戶輸入的電子郵件格式
+  if (!isValidEmail(email)) {
+    showError('請輸入有效的電子郵件地址')
+    return
+  }
+}
+
+// ❌ Wrong - English comments
+const handleLogin = () => {
+  // Validate user email format
+  if (!isValidEmail(email)) {
+    showError('Please enter a valid email address')
+    return
+  }
+}
+```
+
 ## Project Overview
 
 This is an e-SheetBook frontend application built with React, Vite, Chakra UI v3, Preact Signals, Zustand, and TanStack Query. It provides a spreadsheet/file management interface with authentication and dashboard features.
@@ -364,16 +395,17 @@ Tests use Vitest with jsdom environment:
 
 ## Important Conventions
 
-1. **Component Files**: Use PascalCase for component files (e.g., `DashboardLayout.tsx`)
-2. **Utility Files**: Use camelCase for utility files (e.g., `counterStore.ts`)
-3. **Type Files**: Suffix with `Type.ts` for type definitions (e.g., `LoginType.ts`)
-4. **Enum Files**: Suffix with `Enum.ts` for enums (e.g., `RoutesEnum.ts`)
-5. **API Exports**: Use object with methods pattern (e.g., `export const useAuthApi = { login, register }`)
-6. **Store Exports**: Use `useXxxStore` naming for Zustand stores
-7. **UI Styling**: Always prioritize Chakra UI style props over inline styles or CSS classes (see UI Styling Best Practices)
-8. **Component State (REQUIRED)**: Use Preact Signals for ALL component-level state instead of `useState`. Always group related signals in a single state object defined outside the component (see State Management with Preact Signals)
-9. **Form Handling**: DO NOT use Formik, Yup, or other form libraries. Use Chakra UI components with Preact Signals for form state management
-10. **Date Handling (REQUIRED)**: Always use Day.js for date operations instead of native JavaScript Date methods (see Date Handling with Day.js)
+1. **Language (CRITICAL)**: All responses and code comments MUST be in Traditional Chinese (繁體中文). Git commit messages should also use Traditional Chinese. Only this CLAUDE.md file should remain in English (see Language Convention section)
+2. **Component Files**: Use PascalCase for component files (e.g., `DashboardLayout.tsx`)
+3. **Utility Files**: Use camelCase for utility files (e.g., `counterStore.ts`)
+4. **Type Files**: Suffix with `Type.ts` for type definitions (e.g., `LoginType.ts`)
+5. **Enum Files**: Suffix with `Enum.ts` for enums (e.g., `RoutesEnum.ts`)
+6. **API Exports**: Use object with methods pattern (e.g., `export const useAuthApi = { login, register }`)
+7. **Store Exports**: Use `useXxxStore` naming for Zustand stores
+8. **UI Styling**: Always prioritize Chakra UI style props over inline styles or CSS classes (see UI Styling Best Practices)
+9. **Component State (REQUIRED)**: Use Preact Signals for ALL component-level state instead of `useState`. Always group related signals in a single state object defined outside the component (see State Management with Preact Signals)
+10. **Form Handling**: DO NOT use Formik, Yup, or other form libraries. Use Chakra UI components with Preact Signals for form state management
+11. **Date Handling (REQUIRED)**: Always use Day.js for date operations instead of native JavaScript Date methods (see Date Handling with Day.js)
 
 ## Known Configuration
 

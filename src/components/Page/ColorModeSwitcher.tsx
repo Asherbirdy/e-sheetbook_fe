@@ -7,9 +7,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@/components/ui/color-mode'
-import {
-  FaMoon, FaSun,
-} from 'react-icons/fa'
+import { FaMoon, FaSun } from 'react-icons/fa'
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, 'aria-label'>
 

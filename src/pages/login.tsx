@@ -2,7 +2,7 @@ import {
   Box, Button, Card, Container, Flex, Heading, Stack, Text, Link as ChakraLink,
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { useAuthApi } from '@/api/apis/useAuthApi'
+import { useAuthApi } from '@/api/useAuthApi'
 import { LoginPayload } from '@/types'
 import { LoginForm } from '@/components'
 import { cookie } from '@/utils'

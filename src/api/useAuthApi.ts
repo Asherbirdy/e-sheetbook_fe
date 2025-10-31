@@ -1,7 +1,7 @@
 import {
   LoginPayload, LoginResponse, RegisterPayload, SendOTPtoEmailPayload,
 } from '@/types'
-import { useApiRequest } from '../http'
+import { useApiRequest } from './http'
 import { AxiosPromise } from 'axios'
 
 export const useAuthApi = {
