@@ -17,10 +17,14 @@ export const FileMenu = ({ file }: FileMenuProps) => {
   const state = {
     data: { fileName: useSignal(file.name) },
     features: {
-      isEditDialogOpen: useSignal(false),
-      isDeleteDialogOpen: useSignal(false),
-      isSubmitting: useSignal(false),
-      isDeleting: useSignal(false),
+      edit: {
+        isEditDialogOpen: useSignal(false),
+        isSubmitting: useSignal(false),
+      },
+      delete: {
+        isDeleteDialogOpen: useSignal(false),
+        isDeleting: useSignal(false),
+      },
       error: useSignal(''),
     },
   }
@@ -37,7 +41,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
         title: '編輯成功',
         description: '檔案名稱已更新',
       })
-      features.isEditDialogOpen.value = false
+      features.edit.isEditDialogOpen.value = false
       // 重新獲取資料
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
@@ -63,7 +67,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
         title: '刪除成功',
         description: '檔案已刪除',
       })
-      features.isDeleteDialogOpen.value = false
+      features.delete.isDeleteDialogOpen.value = false
       // 重新獲取資料
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
@@ -82,23 +86,23 @@ export const FileMenu = ({ file }: FileMenuProps) => {
     const { data, features } = state
     data.fileName.value = file.name
     features.error.value = ''
-    features.isEditDialogOpen.value = true
+    features.edit.isEditDialogOpen.value = true
   }
 
   // 打開刪除確認對話框
   const handleOpenDelete = (e: React.MouseEvent) => {
     e.stopPropagation()
-    state.features.isDeleteDialogOpen.value = true
+    state.features.delete.isDeleteDialogOpen.value = true
   }
 
   // 確認刪除
   const handleDelete = async () => {
     const { features } = state
-    features.isDeleting.value = true
+    features.delete.isDeleting.value = true
     try {
       await deleteMutation.mutateAsync()
     } finally {
-      features.isDeleting.value = false
+      features.delete.isDeleting.value = false
     }
   }
 
@@ -112,11 +116,11 @@ export const FileMenu = ({ file }: FileMenuProps) => {
       return
     }
 
-    features.isSubmitting.value = true
+    features.edit.isSubmitting.value = true
     try {
       await mutation.mutateAsync(data.fileName.value)
     } finally {
-      features.isSubmitting.value = false
+      features.edit.isSubmitting.value = false
     }
   }
 
@@ -167,8 +171,8 @@ export const FileMenu = ({ file }: FileMenuProps) => {
 
       {/* 編輯檔案 Dialog */}
       <Dialog.Root
-        open={state.features.isEditDialogOpen.value}
-        onOpenChange={(e) => { state.features.isEditDialogOpen.value = e.open }}
+        open={state.features.edit.isEditDialogOpen.value}
+        onOpenChange={(e) => { state.features.edit.isEditDialogOpen.value = e.open }}
       >
         <Portal>
           <Dialog.Backdrop />
@@ -200,7 +204,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 <Dialog.ActionTrigger asChild>
                   <Button
                     variant="outline"
-                    onClick={() => { state.features.isEditDialogOpen.value = false }}
+                    onClick={() => { state.features.edit.isEditDialogOpen.value = false }}
                   >
                     取消
                   </Button>
@@ -208,7 +212,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 <Button
                   colorPalette="blue"
                   onClick={handleSubmit}
-                  loading={state.features.isSubmitting.value}
+                  loading={state.features.edit.isSubmitting.value}
                 >
                   儲存
                 </Button>
@@ -221,8 +225,8 @@ export const FileMenu = ({ file }: FileMenuProps) => {
 
       {/* 刪除確認 Dialog */}
       <Dialog.Root
-        open={state.features.isDeleteDialogOpen.value}
-        onOpenChange={(e) => { state.features.isDeleteDialogOpen.value = e.open }}
+        open={state.features.delete.isDeleteDialogOpen.value}
+        onOpenChange={(e) => { state.features.delete.isDeleteDialogOpen.value = e.open }}
         role="alertdialog"
       >
         <Portal>
@@ -243,7 +247,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 <Dialog.ActionTrigger asChild>
                   <Button
                     variant="outline"
-                    onClick={() => { state.features.isDeleteDialogOpen.value = false }}
+                    onClick={() => { state.features.delete.isDeleteDialogOpen.value = false }}
                   >
                     取消
                   </Button>
@@ -251,7 +255,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 <Button
                   colorPalette="red"
                   onClick={handleDelete}
-                  loading={state.features.isDeleting.value}
+                  loading={state.features.delete.isDeleting.value}
                 >
                   刪除
                 </Button>
