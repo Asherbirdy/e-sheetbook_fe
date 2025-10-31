@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios'
-import { useApiRequest } from '../http'
+import { useApiRequest } from './http'
 import {
   CreateSheetPayload, CreateSheetResponse, DeleteSheetPayload, DeleteSheetResponse, EditSheetPayload, EditSheetResponse, GetSheetFromFilePayload, GetSheetFromFileResponse,
   GetSheetResponse,

@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios'
-import { useApiRequest } from '../http'
+import { useApiRequest } from './http'
 import {
   CreateFilePayload, CreateFileResponse, DeleteFilePayload, DeleteFileResponse, EditFilePayload, EditFileResponse, GetFileResponse,
 } from '@/types'
