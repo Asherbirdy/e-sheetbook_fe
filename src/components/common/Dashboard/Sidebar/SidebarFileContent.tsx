@@ -24,7 +24,6 @@ export const SidebarFileContent = () => {
       bg={bgColor}
       borderRight="1px"
       borderRightColor={borderColor}
-      w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
       overflowY="auto"

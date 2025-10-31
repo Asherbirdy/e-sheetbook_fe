@@ -27,13 +27,20 @@ declare global {
   const useIsFetching: typeof import('@tanstack/react-query').useIsFetching
   const useIsMutating: typeof import('@tanstack/react-query').useIsMutating
   const useLayoutEffect: typeof import('react').useLayoutEffect
+  const useLocation: typeof import('react-router-dom').useLocation
+  const useMatch: typeof import('react-router-dom').useMatch
   const useMemo: typeof import('react').useMemo
   const useMutation: typeof import('@tanstack/react-query').useMutation
+  const useNavigate: typeof import('react-router-dom').useNavigate
+  const useOutlet: typeof import('react-router-dom').useOutlet
+  const useParams: typeof import('react-router-dom').useParams
   const useQueries: typeof import('@tanstack/react-query').useQueries
   const useQuery: typeof import('@tanstack/react-query').useQuery
   const useQueryClient: typeof import('@tanstack/react-query').useQueryClient
   const useReducer: typeof import('react').useReducer
   const useRef: typeof import('react').useRef
+  const useRoutes: typeof import('react-router-dom').useRoutes
+  const useSearchParams: typeof import('react-router-dom').useSearchParams
   const useSignal: typeof import('@preact/signals-react').useSignal
   const useState: typeof import('react').useState
   const useSyncExternalStore: typeof import('react').useSyncExternalStore
