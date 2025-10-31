@@ -1,12 +1,12 @@
 import {
-  Box, CloseButton, Flex, Text, Accordion, Span, Badge, VStack, HStack, Icon, Menu, Portal,
+  Box, CloseButton, Flex, Text, Accordion, Span, Badge, VStack, HStack, Icon,
 } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useSheetApi } from '@/api'
-import { LuFile, LuSheet, LuEllipsis, LuPencil, LuTrash2 } from 'react-icons/lu'
+import { LuFile, LuSheet } from 'react-icons/lu'
 import dayjs from 'dayjs'
 import { useColorMode } from '@/hook'
-import { FileAddButton } from '@/components'
+import { FileAddButton, FileMenu } from '@/components'
 
 export const DashboardSidebar = () => {
 
@@ -96,56 +96,7 @@ export const DashboardSidebar = () => {
                       {file.sheets?.length || 0}
                     </Badge>
                     {/* 檔案操作選單 */}
-                    <Menu.Root positioning={{ placement: 'bottom-end' }}>
-                      <Menu.Trigger asChild>
-                        <Box
-                          as="span"
-                          display="inline-flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          w="6"
-                          h="6"
-                          borderRadius="md"
-                          cursor="pointer"
-                          color="gray.600"
-                          _hover={{ bg: 'gray.100', color: 'gray.800' }}
-                          transition="all 0.2s"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Icon as={LuEllipsis} fontSize="sm" />
-                        </Box>
-                      </Menu.Trigger>
-                      <Portal>
-                        <Menu.Positioner>
-                          <Menu.Content minW="120px">
-                            <Menu.Item
-                              value="edit"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                // TODO: 實作編輯功能
-                                console.log('編輯檔案:', file.name)
-                              }}
-                            >
-                              <Icon as={LuPencil} color="blue.500" />
-                              <Span>編輯</Span>
-                            </Menu.Item>
-                            <Menu.Item
-                              value="delete"
-                              color="fg.error"
-                              _hover={{ bg: 'bg.error', color: 'fg.error' }}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                // TODO: 實作刪除功能
-                                console.log('刪除檔案:', file.name)
-                              }}
-                            >
-                              <Icon as={LuTrash2} color="red.500" />
-                              <Span>刪除</Span>
-                            </Menu.Item>
-                          </Menu.Content>
-                        </Menu.Positioner>
-                      </Portal>
-                    </Menu.Root>
+                    <FileMenu file={file} />
                   </HStack>
                   <Accordion.ItemIndicator />
                 </Accordion.ItemTrigger>
