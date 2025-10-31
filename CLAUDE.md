@@ -227,9 +227,30 @@ The project uses `@/*` alias pointing to `src/*`:
 
 ### Auto-imports
 
-React hooks are auto-imported via `unplugin-auto-import`:
-- No need to manually import `useState`, `useEffect`, etc.
-- Generates `auto-imports.d.ts` for TypeScript
+The following are auto-imported via `unplugin-auto-import` (configured in `vite.config.ts`):
+
+**React hooks**: All standard React hooks are available without imports
+- `useState`, `useEffect`, `useCallback`, `useMemo`, `useRef`, etc.
+
+**Preact Signals**: Core signal functions
+- `useSignal` - Create signals inside components (primary method)
+- `signal` - Create signals outside components
+- `computed`, `effect`, `batch`
+
+**TanStack Query**: React Query hooks
+- `useQuery` - Fetch and cache data
+- `useMutation` - Mutate data
+- `useQueryClient` - Access query client
+- `useInfiniteQuery`, `useQueries`, `useIsFetching`, `useIsMutating`
+
+**React Router DOM**: Navigation and routing hooks
+- `useNavigate` - Programmatic navigation
+- `useParams` - Access URL parameters
+- `useLocation` - Access location object
+- `useSearchParams` - Access/modify query params
+- `useMatch`, `useOutlet`, `useRoutes`
+
+**Important**: The `auto-imports.d.ts` file is generated automatically and must be included in `tsconfig.json` for TypeScript to recognize these globals. No manual imports needed for any of the above.
 
 ## Component Patterns
 

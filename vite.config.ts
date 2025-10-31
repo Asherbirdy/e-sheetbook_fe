@@ -11,15 +11,20 @@ export default defineConfig((config) => {
 
   const env = loadEnv(config.mode, process.cwd())
 
-  return{
+  return {
     base: '/',
     plugins: [
       react({
-      // 啟用 Preact Signals 自動追蹤
+        // 啟用 Preact Signals 自動追蹤
         babel: { plugins: [['module:@preact/signals-react-transform']] },
       }),
       AutoImport({
-        imports: ['react'],
+        imports: [
+          'react',
+          { '@preact/signals-react': ['useSignal', 'signal', 'computed', 'effect', 'batch'] },
+          { '@tanstack/react-query': ['useQuery', 'useMutation', 'useQueryClient', 'useInfiniteQuery', 'useQueries', 'useIsFetching', 'useIsMutating'] },
+          { 'react-router-dom': ['useNavigate', 'useParams', 'useLocation', 'useSearchParams', 'useMatch', 'useOutlet', 'useRoutes'] },
+        ],
         dts: true,
       }),
       viteTsconfigPaths(),
@@ -33,10 +38,10 @@ export default defineConfig((config) => {
       open: true,
       port: Number(env.VITE_PORT) || 3000,
     },
+    resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
     // test: {
     //   globals: true,
     //   environment: 'jsdom',
     // },
-    resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
   }
 })
