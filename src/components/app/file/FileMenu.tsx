@@ -19,7 +19,6 @@ export const FileMenu = ({ file }: FileMenuProps) => {
   const features = {
     edit: { isEditDialogOpen: useSignal(false) },
     delete: { isDeleteDialogOpen: useSignal(false) },
-    error: useSignal(''),
   }
 
   // API mutation
@@ -69,7 +68,6 @@ export const FileMenu = ({ file }: FileMenuProps) => {
     e.stopPropagation()
 
     data.fileName.value = file.name
-    features.error.value = ''
     features.edit.isEditDialogOpen.value = true
   }
 
@@ -138,20 +136,16 @@ export const FileMenu = ({ file }: FileMenuProps) => {
               </Dialog.Header>
               <Dialog.Body>
                 <form>
-                  <Field.Root invalid={!!features.error.value}>
+                  <Field.Root>
                     <Field.Label>檔案名稱</Field.Label>
                     <Input
                       value={data.fileName.value}
                       onChange={(e) => {
                         data.fileName.value = e.target.value
-                        features.error.value = ''
                       }}
                       placeholder="請輸入檔案名稱"
                       autoFocus
                     />
-                    {features.error.value && (
-                      <Field.ErrorText>{features.error.value}</Field.ErrorText>
-                    )}
                   </Field.Root>
                 </form>
               </Dialog.Body>
