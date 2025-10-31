@@ -28,6 +28,7 @@
   },
   "include": [
     "src",
-    "auto-imports.d.ts"
+    "auto-imports.d.ts",
+    "vite-env.d.ts"
   ]
 }
