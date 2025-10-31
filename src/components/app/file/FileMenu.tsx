@@ -17,20 +17,17 @@ export const FileMenu = ({ file }: FileMenuProps) => {
   const state = {
     data: { fileName: useSignal(file.name) },
     features: {
-      edit: {
-        isEditDialogOpen: useSignal(false),
-        isSubmitting: useSignal(false),
-      },
-      delete: {
-        isDeleteDialogOpen: useSignal(false),
-        isDeleting: useSignal(false),
-      },
+      edit: { isEditDialogOpen: useSignal(false) },
+      delete: { isDeleteDialogOpen: useSignal(false) },
       error: useSignal(''),
     },
   }
 
   // API mutation
-  const mutation = useMutation({
+  const {
+    mutateAsync: editMutation,
+    isPending: isEditPending,
+  } = useMutation({
     mutationFn: (fileName: string) => useFileApi.edit({
       fileId: file._id,
       name: fileName,
@@ -59,7 +56,10 @@ export const FileMenu = ({ file }: FileMenuProps) => {
   const queryClient = useQueryClient()
 
   // 刪除 mutation
-  const deleteMutation = useMutation({
+  const {
+    mutateAsync: deleteMutation,
+    isPending: isDeletePending,
+  } = useMutation({
     mutationFn: () => useFileApi.delete({ fileId: file._id }),
     onSuccess: () => {
       const { features } = state
@@ -98,11 +98,11 @@ export const FileMenu = ({ file }: FileMenuProps) => {
   // 確認刪除
   const handleDelete = async () => {
     const { features } = state
-    features.delete.isDeleting.value = true
+    // features.delete.isDeleting.value = true
     try {
-      await deleteMutation.mutateAsync()
+      await deleteMutation()
     } finally {
-      features.delete.isDeleting.value = false
+      // features.delete.isDeleting.value = false
     }
   }
 
@@ -116,11 +116,11 @@ export const FileMenu = ({ file }: FileMenuProps) => {
       return
     }
 
-    features.edit.isSubmitting.value = true
+    // features.edit.isSubmitting.value = true
     try {
-      await mutation.mutateAsync(data.fileName.value)
+      await editMutation(data.fileName.value)
     } finally {
-      features.edit.isSubmitting.value = false
+      // features.edit.isSubmitting.value = false
     }
   }
 
@@ -212,7 +212,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 <Button
                   colorPalette="blue"
                   onClick={handleSubmit}
-                  loading={state.features.edit.isSubmitting.value}
+                  loading={isEditPending}
                 >
                   儲存
                 </Button>
@@ -255,7 +255,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 <Button
                   colorPalette="red"
                   onClick={handleDelete}
-                  loading={state.features.delete.isDeleting.value}
+                  loading={isDeletePending}
                 >
                   刪除
                 </Button>
