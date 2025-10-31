@@ -1,6 +1,6 @@
 import { GetSheetFile } from '@/types'
 import {
-  Box, Icon, Menu, Portal, Span, Dialog, Button, Input, Field,
+  Box, Icon, Menu, Portal, Span, Dialog, Button, Input, Field, Text,
 } from '@chakra-ui/react'
 import {
   LuEllipsis, LuPencil, LuTrash2,
@@ -17,8 +17,10 @@ export const FileMenu = ({ file }: FileMenuProps) => {
   const state = {
     data: { fileName: useSignal(file.name) },
     features: {
-      isDialogOpen: useSignal(false),
+      isEditDialogOpen: useSignal(false),
+      isDeleteDialogOpen: useSignal(false),
       isSubmitting: useSignal(false),
+      isDeleting: useSignal(false),
       error: useSignal(''),
     },
   }
@@ -35,7 +37,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
         title: '編輯成功',
         description: '檔案名稱已更新',
       })
-      features.isDialogOpen.value = false
+      features.isEditDialogOpen.value = false
       // 重新獲取資料
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
@@ -52,13 +54,52 @@ export const FileMenu = ({ file }: FileMenuProps) => {
 
   const queryClient = useQueryClient()
 
+  // 刪除 mutation
+  const deleteMutation = useMutation({
+    mutationFn: () => useFileApi.delete({ fileId: file._id }),
+    onSuccess: () => {
+      const { features } = state
+      toaster.success({
+        title: '刪除成功',
+        description: '檔案已刪除',
+      })
+      features.isDeleteDialogOpen.value = false
+      // 重新獲取資料
+      queryClient.invalidateQueries({ queryKey: ['sheets'] })
+    },
+    onError: (error: unknown) => {
+      const errorMsg = (error as { response?: { data?: { msg?: string } } })?.response?.data?.msg || '刪除失敗'
+      toaster.error({
+        title: '刪除失敗',
+        description: errorMsg,
+      })
+    },
+  })
+
   // 打開編輯對話框
   const handleOpenEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
     const { data, features } = state
     data.fileName.value = file.name
     features.error.value = ''
-    features.isDialogOpen.value = true
+    features.isEditDialogOpen.value = true
+  }
+
+  // 打開刪除確認對話框
+  const handleOpenDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    state.features.isDeleteDialogOpen.value = true
+  }
+
+  // 確認刪除
+  const handleDelete = async () => {
+    const { features } = state
+    features.isDeleting.value = true
+    try {
+      await deleteMutation.mutateAsync()
+    } finally {
+      features.isDeleting.value = false
+    }
   }
 
   // 提交表單
@@ -114,10 +155,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 value="delete"
                 color="fg.error"
                 _hover={{ bg: 'bg.error', color: 'fg.error' }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  console.log('刪除檔案:', file.name)
-                }}
+                onClick={handleOpenDelete}
               >
                 <Icon as={LuTrash2} color="red.500" />
                 <Span>刪除</Span>
@@ -129,8 +167,8 @@ export const FileMenu = ({ file }: FileMenuProps) => {
 
       {/* 編輯檔案 Dialog */}
       <Dialog.Root
-        open={state.features.isDialogOpen.value}
-        onOpenChange={(e) => { state.features.isDialogOpen.value = e.open }}
+        open={state.features.isEditDialogOpen.value}
+        onOpenChange={(e) => { state.features.isEditDialogOpen.value = e.open }}
       >
         <Portal>
           <Dialog.Backdrop />
@@ -162,7 +200,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                 <Dialog.ActionTrigger asChild>
                   <Button
                     variant="outline"
-                    onClick={() => { state.features.isDialogOpen.value = false }}
+                    onClick={() => { state.features.isEditDialogOpen.value = false }}
                   >
                     取消
                   </Button>
@@ -173,6 +211,49 @@ export const FileMenu = ({ file }: FileMenuProps) => {
                   loading={state.features.isSubmitting.value}
                 >
                   儲存
+                </Button>
+              </Dialog.Footer>
+              <Dialog.CloseTrigger />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+
+      {/* 刪除確認 Dialog */}
+      <Dialog.Root
+        open={state.features.isDeleteDialogOpen.value}
+        onOpenChange={(e) => { state.features.isDeleteDialogOpen.value = e.open }}
+        role="alertdialog"
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>確認刪除</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Text>
+                  確定要刪除檔案「
+                  <Text as="span" fontWeight="bold">{file.name}</Text>
+                  」嗎？此操作無法復原。
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button
+                    variant="outline"
+                    onClick={() => { state.features.isDeleteDialogOpen.value = false }}
+                  >
+                    取消
+                  </Button>
+                </Dialog.ActionTrigger>
+                <Button
+                  colorPalette="red"
+                  onClick={handleDelete}
+                  loading={state.features.isDeleting.value}
+                >
+                  刪除
                 </Button>
               </Dialog.Footer>
               <Dialog.CloseTrigger />
