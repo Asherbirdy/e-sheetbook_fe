@@ -15,6 +15,7 @@ This is an e-SheetBook frontend application built with React, Vite, Chakra UI v3
   - Preact Signals for component-level state
 - **Data Fetching**: TanStack Query (React Query) for server state
 - **Routing**: React Router v6 with file-based routing via `vite-plugin-pages`
+- **Date Handling**: Day.js for date parsing, formatting, and manipulation
 - **Testing**: Vitest with React Testing Library
 - **Type Checking**: TypeScript with strict mode enabled
 
@@ -226,9 +227,30 @@ The project uses `@/*` alias pointing to `src/*`:
 
 ### Auto-imports
 
-React hooks are auto-imported via `unplugin-auto-import`:
-- No need to manually import `useState`, `useEffect`, etc.
-- Generates `auto-imports.d.ts` for TypeScript
+The following are auto-imported via `unplugin-auto-import` (configured in `vite.config.ts`):
+
+**React hooks**: All standard React hooks are available without imports
+- `useState`, `useEffect`, `useCallback`, `useMemo`, `useRef`, etc.
+
+**Preact Signals**: Core signal functions
+- `useSignal` - Create signals inside components (primary method)
+- `signal` - Create signals outside components
+- `computed`, `effect`, `batch`
+
+**TanStack Query**: React Query hooks
+- `useQuery` - Fetch and cache data
+- `useMutation` - Mutate data
+- `useQueryClient` - Access query client
+- `useInfiniteQuery`, `useQueries`, `useIsFetching`, `useIsMutating`
+
+**React Router DOM**: Navigation and routing hooks
+- `useNavigate` - Programmatic navigation
+- `useParams` - Access URL parameters
+- `useLocation` - Access location object
+- `useSearchParams` - Access/modify query params
+- `useMatch`, `useOutlet`, `useRoutes`
+
+**Important**: The `auto-imports.d.ts` file is generated automatically and must be included in `tsconfig.json` for TypeScript to recognize these globals. No manual imports needed for any of the above.
 
 ## Component Patterns
 
@@ -276,6 +298,55 @@ In `src/components/common/`:
 - `Website/`: Public website header
 - `ColorModeSwitcher.tsx`: Theme toggle button
 
+### Date Handling with Day.js
+
+**IMPORTANT**: For all date parsing, formatting, and manipulation, use Day.js instead of native JavaScript Date methods.
+
+**Installation**: `dayjs` is already installed as a dependency.
+
+**Usage Pattern**:
+```typescript
+import dayjs from 'dayjs'
+
+// Formatting dates
+const formatted = dayjs(dateString).format('YYYY/MM/DD')
+const time = dayjs(dateString).format('HH:mm:ss')
+const full = dayjs(dateString).format('YYYY/MM/DD HH:mm:ss')
+
+// Parsing dates
+const date = dayjs('2024-01-01')
+
+// Manipulating dates
+const tomorrow = dayjs().add(1, 'day')
+const lastMonth = dayjs().subtract(1, 'month')
+
+// Comparing dates
+const isAfter = dayjs(date1).isAfter(date2)
+const isBefore = dayjs(date1).isBefore(date2)
+
+// Getting date parts
+const year = dayjs().year()
+const month = dayjs().month() // 0-11
+const day = dayjs().date()
+```
+
+**Common Format Patterns**:
+- `YYYY/MM/DD` - Year/Month/Day (e.g., 2024/01/15)
+- `YYYY-MM-DD` - ISO format (e.g., 2024-01-15)
+- `MM/DD/YYYY` - US format (e.g., 01/15/2024)
+- `HH:mm:ss` - 24-hour time (e.g., 14:30:00)
+- `YYYY/MM/DD HH:mm` - Date and time (e.g., 2024/01/15 14:30)
+
+**Why Day.js?**
+- ✅ Lightweight (2KB) compared to alternatives
+- ✅ Same API as Moment.js but smaller bundle size
+- ✅ Immutable and chainable
+- ✅ Plugin support for extended functionality
+- ✅ Better cross-browser compatibility
+- ✅ TypeScript support
+
+**Reference**: See `src/components/common/Dashboard/Sidebar/SidebarFileContent.tsx:17-19` for implementation example.
+
 ## Authentication Flow
 
 1. Token stored in `localStorage.getItem('token')`
@@ -302,6 +373,7 @@ Tests use Vitest with jsdom environment:
 7. **UI Styling**: Always prioritize Chakra UI style props over inline styles or CSS classes (see UI Styling Best Practices)
 8. **Component State (REQUIRED)**: Use Preact Signals for ALL component-level state instead of `useState`. Always group related signals in a single state object defined outside the component (see State Management with Preact Signals)
 9. **Form Handling**: DO NOT use Formik, Yup, or other form libraries. Use Chakra UI components with Preact Signals for form state management
+10. **Date Handling (REQUIRED)**: Always use Day.js for date operations instead of native JavaScript Date methods (see Date Handling with Day.js)
 
 ## Known Configuration
 

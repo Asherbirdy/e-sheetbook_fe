@@ -1,5 +1,5 @@
 import {
-  Flex, IconButton, Text, HStack, VStack, Box, FlexProps,
+  Flex, IconButton, Text, HStack, VStack, Box,
 } from '@chakra-ui/react'
 import {
   FiMenu, FiBell, FiChevronDown,
@@ -7,13 +7,7 @@ import {
 import { useColorModeValue } from '@/components/ui/color-mode'
 import { Avatar } from '@/components/ui/avatar'
 
-interface MobileProps extends FlexProps {
-  onOpen: () => void
-}
-
-export const DashboardHeader = ({
-  onOpen, ...rest
-}: MobileProps) => {
+export const DashboardHeader = () => {
   return (
     <Flex
       ml={{ base: 0 }}
@@ -30,14 +24,12 @@ export const DashboardHeader = ({
         base: 'space-between',
         md: 'flex-end',
       }}
-      {...rest}
     >
       <IconButton
         display={{
           base: 'flex',
           md: 'none',
         }}
-        onClick={onOpen}
         variant="outline"
         aria-label="open menu"
       >

@@ -27,6 +27,7 @@
     }
   },
   "include": [
-    "src"
+    "src",
+    "auto-imports.d.ts"
   ]
 }

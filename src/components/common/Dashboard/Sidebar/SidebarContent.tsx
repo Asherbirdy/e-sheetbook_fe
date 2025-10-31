@@ -9,9 +9,7 @@ interface SidebarProps extends BoxProps {
   onClose: () => void
 }
 
-export const SidebarContent = ({
-  onClose, ...rest
-}: SidebarProps) => {
+export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   return (
     <Box
       transition="3s ease"
