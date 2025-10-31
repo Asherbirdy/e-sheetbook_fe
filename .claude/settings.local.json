@@ -18,7 +18,8 @@
       "mcp__chakra-ui__get_component_props",
       "mcp__chakra-ui__get_component_example",
       "Bash(npm run type-check:*)",
-      "WebFetch(domain:ark-ui.com)"
+      "WebFetch(domain:ark-ui.com)",
+      "Bash(pnpm knip:*)"
     ],
     "deny": [],
     "ask": []
