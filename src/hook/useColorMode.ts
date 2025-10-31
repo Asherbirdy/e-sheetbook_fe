@@ -8,12 +8,20 @@ export const useColorMode = () => {
   const sheetHoverBg = useColorModeValue('gray.100', 'gray.700')
   const sheetTextColor = useColorModeValue('gray.700', 'gray.200')
 
-  return {
+  const palette = {
     bgColor,
     borderColor,
     hoverBg,
     sheetBg,
     sheetHoverBg,
     sheetTextColor,
+  }
+
+  const styles = {}
+  const colorScheme = {}
+  const tokens = {}
+
+  return {
+    palette, styles, colorScheme, tokens,
   }
 }

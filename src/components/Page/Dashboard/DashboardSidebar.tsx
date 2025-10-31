@@ -1,5 +1,5 @@
 import {
-  Box, CloseButton, Flex, Text, Accordion, Span, Badge, VStack, HStack, Icon,
+  Box, CloseButton, Flex, Text, Accordion, Span, VStack, HStack, Icon,
 } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useSheetApi } from '@/api'
@@ -9,22 +9,19 @@ import { useColorMode } from '@/hook'
 import { FileAddButton, FileMenu } from '@/components'
 
 export const DashboardSidebar = () => {
+  const { palette } = useColorMode()
 
   const { data: sheets, isLoading } = useQuery({
     queryKey: ['sheets'],
     queryFn: () => useSheetApi.get(),
   })
 
-  const {
-    bgColor, borderColor, hoverBg, sheetBg, sheetHoverBg, sheetTextColor,
-  } = useColorMode()
-
   return (
     <Box
       transition="3s ease"
-      bg={bgColor}
+      bg={palette.bgColor}
       borderRight="1px"
-      borderRightColor={borderColor}
+      borderRightColor={palette.borderColor}
       pos="fixed"
       h="full"
       overflowY="auto"
@@ -35,7 +32,7 @@ export const DashboardSidebar = () => {
         mx="8"
         justifyContent="space-between"
         borderBottom="1px"
-        borderBottomColor={borderColor}
+        borderBottomColor={palette.borderColor}
       >
         <Text
           fontSize="2xl"
@@ -81,20 +78,13 @@ export const DashboardSidebar = () => {
                   py="3"
                   px="3"
                   borderRadius="md"
-                  _hover={{ bg: hoverBg }}
+                  _hover={{ bg: palette.hoverBg }}
                 >
                   <HStack flex="1" gap="2">
                     <Icon as={LuFile} fontSize="lg" color="blue.500" />
                     <Span flex="1" fontWeight="medium" fontSize="sm">
                       {file.name}
                     </Span>
-                    <Badge
-                      size="xs"
-                      colorPalette="blue"
-                      variant="subtle"
-                    >
-                      {file.sheets?.length || 0}
-                    </Badge>
                     {/* 檔案操作選單 */}
                     <FileMenu file={file} />
                   </HStack>
@@ -109,8 +99,8 @@ export const DashboardSidebar = () => {
                             key={sheet._id}
                             p="3"
                             borderRadius="md"
-                            bg={sheetBg}
-                            _hover={{ bg: sheetHoverBg, cursor: 'pointer' }}
+                            bg={palette.sheetBg}
+                            _hover={{ bg: palette.sheetHoverBg, cursor: 'pointer' }}
                             transition="all 0.2s"
                           >
                             <HStack gap="2" mb="2">
@@ -119,7 +109,7 @@ export const DashboardSidebar = () => {
                                 fontSize="sm"
                                 fontWeight="medium"
                                 flex="1"
-                                color={sheetTextColor}
+                                color={palette.sheetTextColor}
                               >
                                 {sheet.name}
                               </Text>
