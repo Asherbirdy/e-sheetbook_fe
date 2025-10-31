@@ -7,7 +7,7 @@ import { LuFile, LuSheet } from 'react-icons/lu'
 import dayjs from 'dayjs'
 import { useColorMode } from '@/hook'
 
-export const SidebarFileContent = () => {
+export const Sidebar = () => {
 
   const { data: sheets, isLoading } = useQuery({
     queryKey: ['sheets'],
