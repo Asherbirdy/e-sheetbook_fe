@@ -17,13 +17,13 @@ export const useAuthApi = {
   },
   sendOTPtoEmail: (payload: SendOTPtoEmailPayload) => {
     return useApiRequest.post({
-      url: '/auth/sendOTP',
+      url: PrivateApiRoute.AuthSendOTP,
       data: payload,
     })
   },
   register: (payload: RegisterPayload) => {
     return useApiRequest.post({
-      url: '/auth/userRegister',
+      url: PrivateApiRoute.AuthRegister,
       data: payload,
     })
   },
