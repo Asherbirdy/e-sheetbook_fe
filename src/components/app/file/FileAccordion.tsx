@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
 import { FileMenu } from './FileMenu'
+import { FileAddSheetButton } from './FileAddSheetButton'
 
 export const FileAccordion = () => {
   const { palette } = useColorMode()
@@ -48,6 +49,8 @@ export const FileAccordion = () => {
               <Span flex="1" fontWeight="medium" fontSize="sm">
                 {file.name}
               </Span>
+              {/* 新增 Sheet 按鈕 */}
+              <FileAddSheetButton fileId={file._id} />
               {/* 檔案操作選單 */}
               <FileMenu file={file} />
             </HStack>
@@ -55,6 +58,7 @@ export const FileAccordion = () => {
           </Accordion.ItemTrigger>
           <Accordion.ItemContent>
             <Accordion.ItemBody py="2" px="3">
+
               {!file.sheets || file.sheets.length === 0 && (
                 <Text fontSize="xs" color="gray.500" py="2">
                   此文件尚無表格
