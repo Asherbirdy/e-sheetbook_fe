@@ -3,6 +3,7 @@ import {
 } from '@/types'
 import { useApiRequest } from './http'
 import { AxiosPromise } from 'axios'
+import { PrivateApiRoute } from '@/enums'
 
 export const useAuthApi = {
   /*
@@ -10,19 +11,19 @@ export const useAuthApi = {
   */
   login: (payload: LoginPayload): AxiosPromise<LoginResponse> => {
     return useApiRequest.post({
-      url: '/auth/login',
+      url: PrivateApiRoute.AuthLogin,
       data: payload,
     })
   },
   sendOTPtoEmail: (payload: SendOTPtoEmailPayload) => {
     return useApiRequest.post({
-      url: '/auth/sendOTP',
+      url: PrivateApiRoute.AuthSendOTP,
       data: payload,
     })
   },
   register: (payload: RegisterPayload) => {
     return useApiRequest.post({
-      url: '/auth/userRegister',
+      url: PrivateApiRoute.AuthRegister,
       data: payload,
     })
   },

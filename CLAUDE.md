@@ -399,6 +399,56 @@ In `src/components/common/`:
 - `Website/`: Public website header
 - `ColorModeSwitcher.tsx`: Theme toggle button
 
+### Component Export Convention (REQUIRED)
+
+**IMPORTANT**: All reusable components MUST be exported through `src/components/index.ts` for centralized imports.
+
+**Structure Pattern**:
+```typescript
+// src/components/index.ts
+
+// ** pages
+export * from './page/Dashboard/Login/LoginForm'
+
+// ** common
+export * from './page/Dashboard/DashboardHeader'
+export * from './page/Website/WebsiteHeader'
+
+// ** app - file (組件按功能分組)
+export * from './app/file/FileAddButton'
+export * from './app/file/FileMenu'
+export * from './app/file/FileAccordion'
+
+// ** app - sheet
+export * from './app/sheet/SheetViewer'
+```
+
+**Key Rules**:
+1. **Centralized exports**: Always export through `index.ts`, never import directly from component files
+2. **Group by feature**: Use comment headers to organize exports by feature area (pages, common, app/file, app/sheet, etc.)
+3. **Alphabetical order**: Within each group, maintain alphabetical order for easier maintenance
+4. **Barrel exports**: Use `export *` pattern to re-export all named exports from component files
+
+**Usage Examples**:
+```typescript
+// ✅ Correct - Import from centralized index
+import { FileMenu, FileAccordion, FileAddButton } from '@/components'
+
+// ❌ Wrong - Direct import from component file
+import { FileMenu } from '@/components/app/file/FileMenu'
+```
+
+**Benefits**:
+- ✅ Single source of truth for all component imports
+- ✅ Easier refactoring (only update one file when moving components)
+- ✅ Cleaner import statements
+- ✅ Better code organization and discoverability
+
+**When creating new components**:
+1. Create the component file in the appropriate directory (e.g., `src/components/app/file/NewComponent.tsx`)
+2. Immediately add the export to `src/components/index.ts`
+3. Group the export with related components using comment headers
+
 ### Date Handling with Day.js
 
 **IMPORTANT**: For all date parsing, formatting, and manipulation, use Day.js instead of native JavaScript Date methods.
@@ -474,8 +524,9 @@ Tests use Vitest with jsdom environment:
 7. **Store Exports**: Use `useXxxStore` naming for Zustand stores
 8. **UI Styling**: Always prioritize Chakra UI style props over inline styles or CSS classes (see UI Styling Best Practices)
 9. **Component State (REQUIRED)**: Use Preact Signals for ALL component-level state instead of `useState`. Declare `data` and `features` as separate, independent constants using `useSignal()`. Never nest them under a `state` object (see State Management with Preact Signals)
-10. **Form Handling**: DO NOT use Formik, Yup, or other form libraries. Use Chakra UI components with Preact Signals for form state management
-11. **Date Handling (REQUIRED)**: Always use Day.js for date operations instead of native JavaScript Date methods (see Date Handling with Day.js)
+10. **Component Exports (REQUIRED)**: All reusable components MUST be exported through `src/components/index.ts` for centralized imports. Group exports by feature area with comment headers (see Component Export Convention)
+11. **Form Handling**: DO NOT use Formik, Yup, or other form libraries. Use Chakra UI components with Preact Signals for form state management
+12. **Date Handling (REQUIRED)**: Always use Day.js for date operations instead of native JavaScript Date methods (see Date Handling with Day.js)
 
 ## Known Configuration
 

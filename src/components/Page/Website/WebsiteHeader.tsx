@@ -9,7 +9,7 @@ import {
 // We can then pass the "as" prop to Chakra UI's <Link> component. See: https://chakra-ui.com/docs/components/link/usage#usage-with-routing-library
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher'
-import { useCounterStore } from '@/stores/counterStore'
+import { useCounterStore } from '@/stores/app/useCounterStore'
 import { useColorMode } from '@/components/ui/color-mode'
 
 export const WebsiteHeader: FunctionComponent = (): ReactElement => {

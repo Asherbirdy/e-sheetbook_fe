@@ -8,14 +8,7 @@ import { LoginForm } from '@/components'
 import { cookie } from '@/utils'
 import { CookieEnum } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
-import { config } from '@/config'
-// eslint-disable-next-line react-refresh/only-export-components
-export const state = {
-  login: {
-    email: signal(config.test.email || ''),
-    password: signal(config.test.password || ''),
-  },
-}
+import { LoginState as state } from '@/stores'
 
 const Login = () => {
   const navigate = useNavigate()
