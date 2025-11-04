@@ -3,8 +3,8 @@ import {
 } from '@chakra-ui/react'
 import { useSignal } from '@preact/signals-react'
 import { LuEye, LuEyeOff } from 'react-icons/lu'
-import { state } from '@/pages/login'
 import { formValidate } from '@/utils'
+import { LoginState as state } from '@/stores'
 
 export const LoginForm = () => {
 
