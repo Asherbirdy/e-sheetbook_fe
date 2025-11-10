@@ -17,7 +17,24 @@ export const FileAddSheetButton = ({ fileId }: FileAddSheetButtonProps) => {
     sheetUrl: useSignal(''),
   }
 
-  const features = { isDialogOpen: useSignal(false) }
+  const features = {
+    isDialogOpen: useSignal(false),
+    validation: {
+      urlError: useSignal(''),
+      urlTouched: useSignal(false),
+    },
+  }
+
+  // 驗證 URL 是否為 HTTPS
+  const validateUrl = (url: string) => {
+    if (url.trim() === '') {
+      return ''
+    }
+    if (!url.startsWith('https://')) {
+      return 'URL 必須以 https:// 開頭'
+    }
+    return ''
+  }
 
   // 創建 sheet mutation
   const {
@@ -38,6 +55,9 @@ export const FileAddSheetButton = ({ fileId }: FileAddSheetButtonProps) => {
       // 重置表單
       data.sheetName.value = ''
       data.sheetUrl.value = ''
+      // 重置驗證狀態
+      features.validation.urlError.value = ''
+      features.validation.urlTouched.value = false
       // 重新獲取資料
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
@@ -49,7 +69,8 @@ export const FileAddSheetButton = ({ fileId }: FileAddSheetButtonProps) => {
   const checkSubmit = computed(() => {
     const isCheck = (
       data.sheetName.value.trim() !== '' &&
-      data.sheetUrl.value.trim() !== ''
+      data.sheetUrl.value.trim() !== '' &&
+      features.validation.urlError.value === ''
     )
     return isCheck
   })
@@ -106,15 +127,21 @@ export const FileAddSheetButton = ({ fileId }: FileAddSheetButtonProps) => {
                       autoFocus
                     />
                   </Field.Root>
-                  <Field.Root>
+                  <Field.Root invalid={!!features.validation.urlError.value && features.validation.urlTouched.value}>
                     <Field.Label>Sheet URL</Field.Label>
                     <Input
                       value={data.sheetUrl.value}
                       onChange={(e) => {
-                        data.sheetUrl.value = e.target.value
+                        const newUrl = e.target.value
+                        data.sheetUrl.value = newUrl
+                        features.validation.urlTouched.value = true
+                        features.validation.urlError.value = validateUrl(newUrl)
                       }}
-                      placeholder="請輸入 Sheet URL"
+                      placeholder="請輸入 Sheet URL (必須為 https://)"
                     />
+                    {features.validation.urlError.value && features.validation.urlTouched.value && (
+                      <Field.ErrorText>{features.validation.urlError.value}</Field.ErrorText>
+                    )}
                   </Field.Root>
                 </form>
               </Dialog.Body>
@@ -126,6 +153,8 @@ export const FileAddSheetButton = ({ fileId }: FileAddSheetButtonProps) => {
                       features.isDialogOpen.value = false
                       data.sheetName.value = ''
                       data.sheetUrl.value = ''
+                      features.validation.urlError.value = ''
+                      features.validation.urlTouched.value = false
                     }}
                   >
                     取消
