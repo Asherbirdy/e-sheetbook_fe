@@ -1,18 +1,23 @@
-import { useParams } from 'react-router-dom'
+import { Box, Heading } from '@chakra-ui/react'
 import { DashboardLayout } from '@/layout'
+import { FileSheetGrid } from '@/components'
 
 const FileIdPage = () => {
   const { fileId } = useParams<{ fileId: string }>()
-  return (
-    <>
-      <DashboardLayout>
 
-        <div>
-          File ID:
-          {fileId}
-        </div>
-      </DashboardLayout>
-    </>
+  if (!fileId) {
+    return null
+  }
+
+  return (
+    <DashboardLayout>
+      <Box p="6">
+        <Heading size="lg" mb="6">
+          表格列表
+        </Heading>
+        <FileSheetGrid fileId={fileId} />
+      </Box>
+    </DashboardLayout>
   )
 }
 
