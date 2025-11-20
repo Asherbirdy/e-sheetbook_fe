@@ -4,5 +4,6 @@ export enum Routes {
 
   // Dashboard Routes
   DashboardHome = '/dashboard',
+  DashboardFile = '/dashboard/file',
   DashboardSecondPage = '/dashboard/pageTwo',
 }
