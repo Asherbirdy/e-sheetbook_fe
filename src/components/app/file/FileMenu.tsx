@@ -132,7 +132,7 @@ export const FileMenu = ({ file }: FileMenuProps) => {
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Header>
-                <Dialog.Title>編輯檔案</Dialog.Title>
+                <Dialog.Title>編輯檔案s</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
                 <form>
