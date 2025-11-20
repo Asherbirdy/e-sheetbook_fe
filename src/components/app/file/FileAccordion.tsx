@@ -5,7 +5,6 @@ import { LuFile } from 'react-icons/lu'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
 import { FileMenu } from './FileMenu'
-import { FileAddSheetButton } from './FileAddSheetButton'
 
 export const FileAccordion = () => {
   const { palette } = useColorMode()
@@ -15,10 +14,16 @@ export const FileAccordion = () => {
     queryFn: () => useSheetApi.get(),
   })
 
+  /*
+     * This component now only shows files, not sheets
+  */
   if (isLoading) {
     return <Text color="gray.500" fontSize="sm" px="3">載入中...</Text>
   }
 
+  /*
+    * No files to display
+  */
   if (sheets?.data?.files.length === 0) {
     return (
       <VStack gap="2" py="8">
@@ -28,6 +33,9 @@ export const FileAccordion = () => {
     )
   }
 
+  /*
+    * Render files
+  */
   return (
     <VStack gap="1" alignItems="stretch">
       {sheets?.data?.files.map((file) => (
@@ -44,9 +52,6 @@ export const FileAccordion = () => {
             <Text flex="1" fontWeight="medium" fontSize="sm">
               {file.name}
             </Text>
-            {/* 新增 Sheet 按鈕 */}
-            <FileAddSheetButton fileId={file._id} />
-            {/* 檔案操作選單 */}
             <FileMenu file={file} />
           </HStack>
         </Box>
