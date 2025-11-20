@@ -117,21 +117,17 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
                   {features.drawer.selectedSheet.value?.name || '表格'}
                 </Drawer.Title>
               </Drawer.Header>
-              <Drawer.Body>
+              <Drawer.Body p="0" h="100%">
                 {features.drawer.selectedSheet.value && (
-                  <Box>
-                    <Text color="gray.500" mb="2">
-                      Sheet ID:
-                      {' '}
-                      {features.drawer.selectedSheet.value._id}
-                    </Text>
-                    <Text color="gray.500" mb="2">
-                      URL:
-                      {' '}
-                      {features.drawer.selectedSheet.value.url}
-                    </Text>
-                    {/* 這裡可以放入 iframe */}
-                  </Box>
+                  <iframe
+                    src={features.drawer.selectedSheet.value.url}
+                    title={features.drawer.selectedSheet.value.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                    }}
+                  />
                 )}
               </Drawer.Body>
               <Drawer.CloseTrigger />
