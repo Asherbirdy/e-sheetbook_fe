@@ -1,11 +1,17 @@
+import { useParams } from 'react-router-dom'
+import { DashboardLayout } from '@/layout'
+
 const FileIdPage = () => {
   const { fileId } = useParams<{ fileId: string }>()
   return (
     <>
-      <div>
-        File ID:
-        {fileId}
-      </div>
+      <DashboardLayout>
+
+        <div>
+          File ID:
+          {fileId}
+        </div>
+      </DashboardLayout>
     </>
   )
 }

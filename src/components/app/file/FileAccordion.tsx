@@ -8,6 +8,7 @@ import { FileMenu } from './FileMenu'
 
 export const FileAccordion = () => {
   const { palette } = useColorMode()
+  const navigate = useNavigate()
 
   const { data: sheets, isLoading } = useQuery({
     queryKey: ['sheets'],
@@ -46,6 +47,8 @@ export const FileAccordion = () => {
           borderRadius="md"
           _hover={{ bg: palette.hoverBg }}
           transition="all 0.2s"
+          cursor="pointer"
+          onClick={() => navigate(`/dashboard/file/${file._id}`)}
         >
           <HStack gap="2">
             <Icon as={LuFile} fontSize="lg" color="blue.500" />
