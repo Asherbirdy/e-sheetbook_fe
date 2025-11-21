@@ -113,8 +113,8 @@ const Register = () => {
             </Box>
           </Stack>
 
-          {features.step.value === 'form' ? (
-            // 表單步驟
+          {/* 表單步驟 */}
+          {features.step.value === 'form' && (
             <form onSubmit={handleSendOtp}>
               <Stack gap={5}>
                 <Field.Root>
@@ -184,8 +184,10 @@ const Register = () => {
                 </Button>
               </Stack>
             </form>
-          ) : (
-            // OTP 驗證步驟
+          )}
+
+          {/* OTP 驗證步驟 */}
+          {features.step.value === 'otp' && (
             <Stack gap={6}>
               <Text textAlign="center" color="gray.600" _dark={{ color: 'gray.400' }}>
                 我們已將 6 位數驗證碼發送至
