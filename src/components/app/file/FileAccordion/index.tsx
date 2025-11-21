@@ -1,10 +1,11 @@
 import {
-  Box, HStack, Icon, Text, VStack,
+  Box, HStack, Icon, Text, VStack, Menu, Portal,
 } from '@chakra-ui/react'
-import { LuFile } from 'react-icons/lu'
+import { LuFile, LuEllipsis } from 'react-icons/lu'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
-import { FileMenu } from './FileMenu'
+import { FileEditMenuItem } from '@/components/app/file/FileAccordion/FileEditMenuItem'
+import { FileDeleteMenuItem } from '@/components/app/file/FileAccordion/FileDeleteMenuItem'
 
 export const FileAccordion = () => {
   const { palette } = useColorMode()
@@ -55,7 +56,35 @@ export const FileAccordion = () => {
             <Text flex="1" fontWeight="medium" fontSize="sm">
               {file.name}
             </Text>
-            <FileMenu file={file} />
+            {/* 檔案選單 */}
+            <Menu.Root positioning={{ placement: 'bottom-end' }}>
+              <Menu.Trigger asChild>
+                <Box
+                  as="span"
+                  display="inline-flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  w="6"
+                  h="6"
+                  borderRadius="md"
+                  cursor="pointer"
+                  color="gray.600"
+                  _hover={{ bg: 'gray.100', color: 'gray.800' }}
+                  transition="all 0.2s"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Icon as={LuEllipsis} fontSize="sm" />
+                </Box>
+              </Menu.Trigger>
+              <Portal>
+                <Menu.Positioner>
+                  <Menu.Content minW="120px">
+                    <FileEditMenuItem file={file} />
+                    <FileDeleteMenuItem file={file} />
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Portal>
+            </Menu.Root>
           </HStack>
         </Box>
       ))}
