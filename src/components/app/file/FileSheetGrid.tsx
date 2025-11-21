@@ -6,6 +6,7 @@ import {
 } from 'react-icons/lu'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
+import { SheetEditMenuItem } from '../sheet/SheetEditMenuItem'
 
 interface SheetData {
   _id: string
@@ -118,8 +119,7 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
               <Portal>
                 <Menu.Positioner>
                   <Menu.Content minW="120px">
-                    {/* TODO: 加入編輯和刪除選項 */}
-                    <Menu.Item value="edit">編輯</Menu.Item>
+                    <SheetEditMenuItem sheet={sheet} />
                     <Menu.Item value="delete" color="fg.error">刪除</Menu.Item>
                   </Menu.Content>
                 </Menu.Positioner>
