@@ -1,7 +1,9 @@
 import {
-  Box, Drawer, Grid, Icon, Portal, Text, VStack,
+  Box, Drawer, Grid, Icon, Menu, Portal, Text, VStack,
 } from '@chakra-ui/react'
-import { LuSheet, LuFile } from 'react-icons/lu'
+import {
+  LuSheet, LuFile, LuEllipsis,
+} from 'react-icons/lu'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
 
@@ -88,7 +90,42 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
             justifyContent="center"
             gap="3"
             minH="120px"
+            position="relative"
           >
+            {/* 右上角選單 */}
+            <Menu.Root positioning={{ placement: 'bottom-end' }}>
+              <Menu.Trigger asChild>
+                <Box
+                  as="span"
+                  position="absolute"
+                  top="2"
+                  right="2"
+                  display="inline-flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  w="6"
+                  h="6"
+                  borderRadius="md"
+                  cursor="pointer"
+                  color="gray.500"
+                  _hover={{ bg: 'gray.200', color: 'gray.700' }}
+                  transition="all 0.2s"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Icon as={LuEllipsis} fontSize="sm" />
+                </Box>
+              </Menu.Trigger>
+              <Portal>
+                <Menu.Positioner>
+                  <Menu.Content minW="120px">
+                    {/* TODO: 加入編輯和刪除選項 */}
+                    <Menu.Item value="edit">編輯</Menu.Item>
+                    <Menu.Item value="delete" color="fg.error">刪除</Menu.Item>
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Portal>
+            </Menu.Root>
+
             <Icon as={LuSheet} fontSize="4xl" color="green.500" />
             <Text
               fontSize="sm"
