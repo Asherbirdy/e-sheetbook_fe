@@ -4,8 +4,8 @@ import {
 import { LuFile, LuEllipsis } from 'react-icons/lu'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
-import { FileEditMenuItem } from './FileEditMenuItem'
-import { FileDeleteMenuItem } from './FileDeleteMenuItem'
+import { FileEditMenuItem } from '@/components/app/file/FileAccordion/FileEditMenuItem'
+import { FileDeleteMenuItem } from '@/components/app/file/FileAccordion/FileDeleteMenuItem'
 
 export const FileAccordion = () => {
   const { palette } = useColorMode()
