@@ -39,6 +39,10 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
       isDialogOpen: useSignal(false),
       targetSheet: useSignal<SheetData | null>(null),
     },
+    delete: {
+      isDialogOpen: useSignal(false),
+      targetSheet: useSignal<SheetData | null>(null),
+    },
   }
 
   // 編輯表格 mutation
@@ -60,6 +64,19 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
     },
   })
 
+  // 刪除表格 mutation
+  const { mutate: deleteMutation, isPending: isDeletePending } = useMutation({
+    mutationFn: () => useSheetApi.delete({ sheetId: features.delete.targetSheet.value!._id }),
+    onSuccess: () => {
+      toaster.success({ title: '刪除成功', description: '表格已刪除' })
+      features.delete.isDialogOpen.value = false
+      queryClient.invalidateQueries({ queryKey: ['sheets', fileId] })
+    },
+    onError: () => {
+      toaster.error({ title: '刪除失敗' })
+    },
+  })
+
   const { data: sheetsData, isLoading } = useQuery({
     queryKey: ['sheets', fileId],
     queryFn: () => useSheetApi.getSheetFromFile({ fileId }),
@@ -78,6 +95,13 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
     data.editUrl.value = sheet.url
     features.edit.targetSheet.value = sheet
     features.edit.isDialogOpen.value = true
+  }
+
+  // 打開刪除確認 Dialog
+  const handleOpenDelete = (e: React.MouseEvent, sheet: SheetData) => {
+    e.stopPropagation()
+    features.delete.targetSheet.value = sheet
+    features.delete.isDialogOpen.value = true
   }
 
   if (isLoading) {
@@ -161,7 +185,9 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
                       <Icon as={LuPencil} color="blue.500" />
                       <Span>編輯</Span>
                     </Menu.Item>
-                    <Menu.Item value="delete" color="fg.error">刪除</Menu.Item>
+                    <Menu.Item value="delete" color="fg.error" onClick={(e) => handleOpenDelete(e, sheet)}>
+                      刪除
+                    </Menu.Item>
                   </Menu.Content>
                 </Menu.Positioner>
               </Portal>
@@ -260,6 +286,48 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
                   loading={isEditPending}
                 >
                   儲存
+                </Button>
+              </Dialog.Footer>
+              <Dialog.CloseTrigger />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+
+      {/* 刪除確認 Dialog */}
+      <Dialog.Root
+        open={features.delete.isDialogOpen.value}
+        onOpenChange={(e) => { features.delete.isDialogOpen.value = e.open }}
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>確認刪除</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Text>
+                  確定要刪除「
+                  {features.delete.targetSheet.value?.name}
+                  」嗎？此操作無法復原。
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button
+                    variant="outline"
+                    onClick={() => { features.delete.isDialogOpen.value = false }}
+                  >
+                    取消
+                  </Button>
+                </Dialog.ActionTrigger>
+                <Button
+                  colorPalette="red"
+                  onClick={() => deleteMutation()}
+                  loading={isDeletePending}
+                >
+                  刪除
                 </Button>
               </Dialog.Footer>
               <Dialog.CloseTrigger />
