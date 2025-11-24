@@ -18,11 +18,13 @@ const Home: FunctionComponent = (): ReactElement => {
   const {
     open, onOpen, onClose,
   } = useDisclosure()
+
+  const navigate = useNavigate()
   return (
     <DefaultLayout>
       <Box>
         <Tooltip content="This will open a modal">
-          <Button onClick={onOpen}>Click this button</Button>
+          <Button onClick={() => navigate('/login')}>Go to Login</Button>
         </Tooltip>
 
         <DialogRoot
