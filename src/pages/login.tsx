@@ -102,6 +102,21 @@ const Login = () => {
             <Stack gap={5}>
               <LoginForm />
 
+              {/* 忘記密碼 */}
+              <Text textAlign="right" mt={-2}>
+                <ChakraLink
+                  onClick={() => navigate('/forgot-password')}
+                  color="blue.500"
+                  fontSize="sm"
+                  _hover={{
+                    color: 'blue.600',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  忘記密碼？
+                </ChakraLink>
+              </Text>
+
               {/* 登入按鈕 */}
               <Button
                 type="submit"
