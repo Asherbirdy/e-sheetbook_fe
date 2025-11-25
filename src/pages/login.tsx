@@ -22,7 +22,7 @@ const Login = () => {
     onSuccess: (response) => {
       cookie.set(CookieEnum.AccessToken, response.data.token.accessTokenJWT)
       cookie.set(CookieEnum.RefreshToken, response.data.token.refreshTokenJWT)
-      navigate('/dashboard')
+      navigate('/dashboard', { replace: true })
     },
     onError: () => {
       toaster.error({
