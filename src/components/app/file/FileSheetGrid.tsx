@@ -1,12 +1,17 @@
 import {
-  Box, Button, Dialog, Drawer, Field, Grid, Icon, Input, Menu, Portal, Span, Text, VStack,
+  Box, Button, Dialog, Drawer, Field, Grid, Icon, Input, Menu, Portal, Span, Text, VStack, HStack, IconButton,
 } from '@chakra-ui/react'
 import {
-  LuSheet, LuFile, LuEllipsis, LuPencil,
+  LuSheet, LuFile, LuEllipsis, LuPencil, LuPlus, LuTrash2,
 } from 'react-icons/lu'
+import { useSignal } from '@preact/signals-react'
+import {
+  useMutation, useQuery, useQueryClient,
+} from '@tanstack/react-query'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
 import { toaster } from '@/components/ui/toaster'
+import { EditSheetApi } from '@/types'
 
 interface SheetData {
   _id: string
@@ -15,6 +20,7 @@ interface SheetData {
   fileId: string
   userId: string
   updatedAt: string
+  api: EditSheetApi[]
 }
 
 interface FileSheetGridProps {
@@ -28,6 +34,7 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
   const data = {
     editName: useSignal(''),
     editUrl: useSignal(''),
+    editApis: useSignal<EditSheetApi[]>([]),
   }
 
   const features = {
@@ -52,7 +59,7 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
       fileId: features.edit.targetSheet.value!.fileId,
       name: data.editName.value,
       url: data.editUrl.value,
-      api: '',
+      api: data.editApis.value,
     }),
     onSuccess: () => {
       toaster.success({ title: '編輯成功', description: '表格已更新' })
@@ -93,6 +100,7 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
     e.stopPropagation()
     data.editName.value = sheet.name
     data.editUrl.value = sheet.url
+    data.editApis.value = sheet.api || []
     features.edit.targetSheet.value = sheet
     features.edit.isDialogOpen.value = true
   }
@@ -252,7 +260,10 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
               <Dialog.Header>
                 <Dialog.Title>編輯表格</Dialog.Title>
               </Dialog.Header>
-              <Dialog.Body display="flex" flexDirection="column" gap="4">
+              <Dialog.Body
+                display="flex" flexDirection="column" gap="4"
+                maxH="70vh" overflowY="auto"
+              >
                 <Field.Root>
                   <Field.Label>表格名稱</Field.Label>
                   <Input
@@ -270,6 +281,133 @@ export const FileSheetGrid = ({ fileId }: FileSheetGridProps) => {
                     placeholder="請輸入表格網址"
                   />
                 </Field.Root>
+
+                {/* API 管理區塊 */}
+                <Box>
+                  <HStack justify="space-between" mb="3">
+                    <Text fontWeight="medium" fontSize="sm">API 設定</Text>
+                    <Button
+                      size="sm"
+                      colorPalette="blue"
+                      onClick={() => {
+                        data.editApis.value = [
+                          ...data.editApis.value,
+                          {
+                            name: '', method: 'GET', url: '',
+                          },
+                        ]
+                      }}
+                    >
+                      <Icon as={LuPlus} />
+                      新增 API
+                    </Button>
+                  </HStack>
+
+                  {data.editApis.value.length === 0 ? (
+                    <Box
+                      p="4"
+                      borderRadius="md"
+                      borderWidth="1px"
+                      borderStyle="dashed"
+                      borderColor="gray.300"
+                      textAlign="center"
+                      color="gray.500"
+                      fontSize="sm"
+                    >
+                      尚未新增任何 API
+                    </Box>
+                  ) : (
+                    <VStack gap="3" align="stretch">
+                      {data.editApis.value.map((api, index) => (
+                        <Box
+                          key={index}
+                          p="4"
+                          borderRadius="md"
+                          borderWidth="1px"
+                          borderColor="gray.200"
+                          bg="gray.50"
+                          _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
+                        >
+                          <VStack gap="3" align="stretch">
+                            <HStack justify="space-between">
+                              <Text
+                                fontSize="sm" fontWeight="medium" color="gray.600"
+                                _dark={{ color: 'gray.400' }}
+                              >
+                                API #
+                                {index + 1}
+                              </Text>
+                              <IconButton
+                                size="sm"
+                                variant="ghost"
+                                colorPalette="red"
+                                onClick={() => {
+                                  data.editApis.value = data.editApis.value.filter((_, i) => i !== index)
+                                }}
+                              >
+                                <Icon as={LuTrash2} />
+                              </IconButton>
+                            </HStack>
+
+                            <Field.Root>
+                              <Field.Label fontSize="xs">API 名稱</Field.Label>
+                              <Input
+                                size="sm"
+                                value={api.name}
+                                onChange={(e) => {
+                                  const newApis = [...data.editApis.value]
+                                  newApis[index].name = e.target.value
+                                  data.editApis.value = newApis
+                                }}
+                                placeholder="例如：取得使用者資料"
+                              />
+                            </Field.Root>
+
+                            <Field.Root>
+                              <Field.Label fontSize="xs">HTTP 方法</Field.Label>
+                              <select
+                                value={api.method}
+                                onChange={(e) => {
+                                  const newApis = [...data.editApis.value]
+                                  newApis[index].method = e.target.value as 'GET' | 'POST' | 'PUT' | 'DELETE'
+                                  data.editApis.value = newApis
+                                }}
+                                style={{
+                                  width: '100%',
+                                  borderRadius: '6px',
+                                  borderWidth: '1px',
+                                  borderColor: '#D1D5DB',
+                                  padding: '8px 12px',
+                                  fontSize: '14px',
+                                  outline: 'none',
+                                }}
+                              >
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                              </select>
+                            </Field.Root>
+
+                            <Field.Root>
+                              <Field.Label fontSize="xs">API 網址</Field.Label>
+                              <Input
+                                size="sm"
+                                value={api.url}
+                                onChange={(e) => {
+                                  const newApis = [...data.editApis.value]
+                                  newApis[index].url = e.target.value
+                                  data.editApis.value = newApis
+                                }}
+                                placeholder="例如：/api/users"
+                              />
+                            </Field.Root>
+                          </VStack>
+                        </Box>
+                      ))}
+                    </VStack>
+                  )}
+                </Box>
               </Dialog.Body>
               <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>
