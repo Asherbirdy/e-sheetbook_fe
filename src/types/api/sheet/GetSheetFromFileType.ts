@@ -1,3 +1,8 @@
+export interface GetSheetFromFileApi {
+  name: string
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  url: string
+}
 export interface GetSheetFromFilePayload {
   fileId: string
 }
@@ -14,6 +19,6 @@ export interface Sheet {
   fileId: string
   userId: string
   __v: number
-  api: string
+  api: GetSheetFromFileApi[]
   updatedAt: string
 }

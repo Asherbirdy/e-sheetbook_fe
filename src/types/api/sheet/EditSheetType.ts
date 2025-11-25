@@ -1,7 +1,13 @@
+export interface EditSheetApi {
+  name: string
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  url: string
+}
+
 export interface EditSheetPayload {
   name: string
   url: string
-  api: string
+  api: EditSheetApi[]
   fileId: string
   sheetId: string
 }
