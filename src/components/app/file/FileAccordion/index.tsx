@@ -2,6 +2,8 @@ import {
   Box, HStack, Icon, Text, VStack, Menu, Portal,
 } from '@chakra-ui/react'
 import { LuFile, LuEllipsis } from 'react-icons/lu'
+import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
 import { FileEditMenuItem } from '@/components/app/file/FileAccordion/FileEditMenuItem'
@@ -71,7 +73,6 @@ export const FileAccordion = () => {
                   color="gray.600"
                   _hover={{ bg: 'gray.100', color: 'gray.800' }}
                   transition="all 0.2s"
-                  onClick={(e) => e.stopPropagation()}
                 >
                   <Icon as={LuEllipsis} fontSize="sm" />
                 </Box>
