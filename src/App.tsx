@@ -5,14 +5,8 @@ import { Spinner, Center } from '@chakra-ui/react'
 
 export function App() {
   return (
-    <Suspense
-      fallback={
-        <Center h="100vh">
-          <Spinner size="xl" />
-        </Center>
-      }
-    >
+    <div>
       {useRoutes(routes)}
-    </Suspense>
+    </div>
   )
 }

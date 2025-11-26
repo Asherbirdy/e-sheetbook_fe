@@ -16,9 +16,7 @@ const FileIdPage = () => {
     url: useSignal(''),
   }
 
-  const features = {
-    isDialogOpen: useSignal(false),
-  }
+  const features = { isDialogOpen: useSignal(false) }
 
   // 新增表格 mutation
   const { mutate: createMutation, isPending } = useMutation({
