@@ -2,7 +2,7 @@ import {
   Box, Button, Dialog, Field, Heading, HStack, Icon, Input, Portal,
 } from '@chakra-ui/react'
 import { LuPlus } from 'react-icons/lu'
-import { DashboardLayout } from '@/layout'
+
 import { FileSheetGrid } from '@/components'
 import { useSheetApi } from '@/api'
 import { toaster } from '@/components/ui/toaster'
@@ -44,7 +44,7 @@ const FileIdPage = () => {
   }
 
   return (
-    <DashboardLayout>
+    <>
       <Box p="6">
         <HStack justify="space-between" mb="6">
           <Heading size="lg">表格列表</Heading>
@@ -113,7 +113,7 @@ const FileIdPage = () => {
           </Portal>
         </Dialog.Root>
       </Box>
-    </DashboardLayout>
+    </>
   )
 }
 
