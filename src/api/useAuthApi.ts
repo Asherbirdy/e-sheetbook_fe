@@ -5,6 +5,11 @@ import { useApiRequest } from './http'
 import { AxiosPromise } from 'axios'
 import { PrivateApiRoute, PublicApiRoute } from '@/enums'
 
+interface CheckLoginResponse {
+  status?: string;
+  msg?: string;
+}
+
 export const useAuthApi = {
   /*
    * 登入
@@ -27,7 +32,7 @@ export const useAuthApi = {
       data: payload,
     })
   },
-  checkLogin: () => {
+  checkLogin: (): AxiosPromise<CheckLoginResponse> => {
     return useApiRequest.get({ url: PublicApiRoute.AuthCheckLogin })
   },
 }

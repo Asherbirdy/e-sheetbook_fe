@@ -18,6 +18,22 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
     isLogin: useSignal(false),
   }
 
+  // 檢查登入狀態
+  const { data: checkLoginData } = useQuery({
+    queryKey: ['checkLogin'],
+    queryFn: () => useAuthApi.checkLogin(),
+    retry: false,
+  })
+
+  // 當 checkLogin API 回應時,更新登入狀態
+  effect(() => {
+    if (checkLoginData?.data?.status === 'success') {
+      feature.isLogin.value = true
+      return
+    }
+    feature.isLogin.value = false
+  })
+
   // 登入 mutation
   const login = useMutation({
     mutationFn: (payload: LoginPayload) => useAuthApi.login(payload),
@@ -29,6 +45,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
         description: '歡迎回來!',
       })
       feature.dialog.login.status.value = false
+      feature.isLogin.value = true
     },
     onError: () => {
       toaster.error({
