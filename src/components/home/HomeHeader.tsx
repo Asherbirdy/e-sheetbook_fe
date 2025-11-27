@@ -9,17 +9,17 @@ import { LoginForm } from '@/components'
 import { cookie } from '@/utils'
 import { CookieEnum } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
-import { LoginState as state } from '@/stores'
+import { LoginState as state, useAuthStore } from '@/stores'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const HomeHeader: FunctionComponent = (): ReactElement => {
   const navigate = useNavigate()
+  const isLogin = useAuthStore((state) => state.isLogin)
+  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated)
 
   // Dialog 狀態
-  const feature = {
-    dialog: { login: { status: useSignal(false) } },
-    isLogin: useSignal(false),
-  }
+  const dialog = { login: { status: useSignal(false) } }
 
   // 登入 mutation
   const login = useMutation({
@@ -31,8 +31,8 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
         title: '登入成功',
         description: '歡迎回來!',
       })
-      feature.dialog.login.status.value = false
-      feature.isLogin.value = true
+      dialog.login.status.value = false
+      setIsAuthenticated(true)
     },
     onError: () => {
       toaster.error({
@@ -54,10 +54,14 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
   // 關閉 Dialog
   const closeLoginDialog = () => {
-    feature.dialog.login.status.value = false
+    dialog.login.status.value = false
     state.login.email.value = ''
     state.login.password.value = ''
   }
+
+  useEffect(() => {
+    useAuthStore.getState().checkLogin()
+  }, [])
 
   return (
     <>
@@ -83,7 +87,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
             >
               Home
             </Text>
-            {feature.isLogin.value && (
+            {isLogin && (
               <Text
                 fontWeight="semibold"
                 cursor="pointer"
@@ -97,25 +101,25 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
           {/* 使用者頭像 */}
           <Box display="flex" alignItems="center" gap={2}>
-            {!feature.isLogin.value && (
+            {!isLogin && (
               <>
                 <Button
                   size="sm"
                   variant="subtle"
-                  onClick={() => { feature.dialog.login.status.value = true }}
+                  onClick={() => { dialog.login.status.value = true }}
                 >
                   Login
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => { feature.dialog.login.status.value = true }}
+                  onClick={() => { dialog.login.status.value = true }}
                 >
                   Register
                 </Button>
               </>
             )}
 
-            {feature.isLogin.value && (
+            {isLogin && (
               <>
                 <Avatar.Root size="md">
                   <Avatar.Image src="https://bit.ly/broken-link" />
@@ -124,7 +128,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                 <Button
                   variant="subtle"
                   size="sm"
-                  onClick={() => { feature.dialog.login.status.value = true }}
+                  onClick={() => { dialog.login.status.value = true }}
                 >
                   Logout
                 </Button>
@@ -136,7 +140,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
       {/* 登入對話框 */}
       <Dialog.Root
-        open={feature.dialog.login.status.value}
+        open={dialog.login.status.value}
         onOpenChange={(e) => { if (!e.open) closeLoginDialog() }}
         size="md"
       >
