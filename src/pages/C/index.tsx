@@ -6,10 +6,10 @@ import {
 
 const CHome: FunctionComponent = (): ReactElement => {
   return (
-    <>
+    <div>
       <MeasurableSection />
       <TeamCalendar />
-    </>
+    </div>
   )
 }
 

@@ -1,16 +1,26 @@
 import { Outlet } from 'react-router-dom'
-import { Box } from '@chakra-ui/react'
-import { HomeHeader } from '@/components'
+import { HomeLayout } from '@/layout'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useLocation } from 'react-router-dom'
 
 const CRoute = () => {
-  return (
+  const location = useLocation()
 
-    <Box minH="100vh" bg="gray.50">
-      <Box maxW="1000px" mx="auto">
-        <HomeHeader />
-        <Outlet />
-      </Box>
-    </Box>
+  return (
+    <HomeLayout>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          style={{ width: '100%' }}
+        >
+          <Outlet />
+        </motion.div>
+      </AnimatePresence>
+    </HomeLayout>
   )
 }
 

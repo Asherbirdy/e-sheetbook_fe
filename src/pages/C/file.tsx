@@ -1,12 +1,8 @@
-import { HomeLayout } from '@/layout'
-
 const FilePage = () => {
   return (
-    <HomeLayout>
-      <>
-        <div>File Page Content</div>
-      </>
-    </HomeLayout>
+    <div>
+      <div>File Page Content</div>
+    </div>
   )
 }
 
