@@ -104,6 +104,42 @@ Guards support async operations and return `boolean | Promise<boolean>`. See `sr
 
 All API functions return `AxiosPromise<T>` for proper type inference with TanStack Query.
 
+### Hooks Usage
+
+1. **useState/useReducer**: For local component state
+2. **effect (Recommended)**: For side effects and reactivity
+   - Use `effect()` from `@preact/signals-react` for all reactive effects
+   - Automatically tracks signal dependencies
+   - More performant and easier to reason about than `useEffect`
+   - Cleanup functions are optional and run asynchronously
+   
+   ```typescript
+   import { effect } from '@preact/signals-react';
+   
+   // Basic usage
+   effect(() => {
+     if (someSignal.value) {
+       // Effect code here
+     }
+   });
+   
+   // With cleanup
+   effect(() => {
+     const timer = setTimeout(() => {
+       // Delayed effect
+     }, 1000);
+     
+     return () => clearTimeout(timer);
+   });
+   ```
+
+3. **Avoid useEffect**
+   - ❌ Do not use `useEffect` in new code
+   - ⚠️ Only use for legacy React component compatibility
+   - 🔄 Migrate existing `useEffect` to `effect()` when possible
+3. **useContext**: For accessing context values
+4. **useMemo/useCallback**: For performance optimizations
+
 ### State Management with Preact Signals (REQUIRED)
 
 **IMPORTANT**: For component-level state (form inputs, UI toggles, etc.), you MUST use Preact Signals with `useSignal()` instead of React's `useState`. This is a project-wide standard.
