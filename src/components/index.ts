@@ -1,6 +1,6 @@
 // ** pages
-export * from './LoginForm'
-export * from './app/RegisterForm'
+export * from './form/LoginForm'
+export * from './form/RegisterForm'
 
 // ** common
 export * from './page/ColorModeSwitcher'
