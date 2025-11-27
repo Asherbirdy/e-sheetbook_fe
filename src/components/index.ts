@@ -1,5 +1,6 @@
 // ** pages
 export * from './page/Dashboard/Login/LoginForm'
+export * from './page/Dashboard/Register/RegisterForm'
 
 // ** common
 export * from './page/Dashboard/DashboardHeader'

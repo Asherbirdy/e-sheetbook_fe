@@ -17,7 +17,9 @@ const CRoute = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          <Outlet />
+          <Box py={8} px={8}>
+            <Outlet />
+          </Box>
         </motion.div>
       </Box>
     </Box>

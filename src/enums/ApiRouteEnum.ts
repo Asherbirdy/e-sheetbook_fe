@@ -1,6 +1,7 @@
 
 export enum PublicApiRoute {
-    AuthLogin = '/auth/login',
+  AuthLogin = '/auth/login',
+  AuthLogout = '/auth/logout',
   AuthCheckLogin = '/auth/checkValidToken',
 }
 

@@ -5,7 +5,7 @@ import {
 import { LuFlower2 } from 'react-icons/lu'
 import { useAuthApi } from '@/api/useAuthApi'
 import { LoginPayload } from '@/types'
-import { LoginForm } from '@/components'
+import { LoginForm, RegisterForm } from '@/components'
 import { cookie } from '@/utils'
 import { CookieEnum, CRoutes } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
@@ -15,11 +15,15 @@ import { useEffect } from 'react'
 
 const HomeHeader: FunctionComponent = (): ReactElement => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const isLogin = useAuthStore((state) => state.isLogin)
   const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated)
 
   // Dialog 狀態
-  const dialog = { login: { status: useSignal(false) } }
+  const dialog = {
+    login: { status: useSignal(false) },
+    register: { status: useSignal(false) },
+  }
 
   // 登入 mutation
   const login = useMutation({
@@ -42,6 +46,42 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
       state.login.password.value = ''
     },
   })
+
+  // 登出 mutation
+  const logout = useMutation({
+    mutationFn: () => useAuthApi.logout(),
+    onSuccess: () => {
+      // 清除 Cookie
+      cookie.remove(CookieEnum.AccessToken)
+      cookie.remove(CookieEnum.RefreshToken)
+
+      // 清除所有 React Query 快取
+      queryClient.clear()
+
+      // 設定登入狀態為 false
+      setIsAuthenticated(false)
+
+      // 顯示登出成功訊息
+      toaster.success({
+        title: '登出成功',
+        description: '期待您的再次光臨!',
+      })
+
+      // 導航到首頁
+      navigate(CRoutes.Home)
+    },
+    onError: () => {
+      toaster.error({
+        title: '登出失敗',
+        description: '請稍後再試',
+      })
+    },
+  })
+
+  // 處理登出
+  const handleLogout = () => {
+    logout.mutate()
+  }
 
   // 處理登入提交
   const handleSubmit = (e: React.FormEvent) => {
@@ -112,7 +152,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => { dialog.login.status.value = true }}
+                  onClick={() => { dialog.register.status.value = true }}
                 >
                   Register
                 </Button>
@@ -128,7 +168,8 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                 <Button
                   variant="subtle"
                   size="sm"
-                  onClick={() => { dialog.login.status.value = true }}
+                  onClick={handleLogout}
+                  loading={logout.isPending}
                 >
                   Logout
                 </Button>
@@ -166,6 +207,33 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                     </Button>
                   </Stack>
                 </form>
+              </Dialog.Body>
+              <Dialog.CloseTrigger />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+
+      {/* 註冊對話框 */}
+      <Dialog.Root
+        open={dialog.register.status.value}
+        onOpenChange={(e) => { if (!e.open) dialog.register.status.value = false }}
+        size="md"
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>建立帳戶</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <RegisterForm
+                  onSuccess={() => {
+                    dialog.register.status.value = false
+                    dialog.login.status.value = true
+                  }}
+                />
               </Dialog.Body>
               <Dialog.CloseTrigger />
             </Dialog.Content>

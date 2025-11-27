@@ -11,5 +11,6 @@ export enum Routes {
 
 export enum CRoutes {
   Home = '/C',
-  File = '/C/file'
+  File = '/C/file',
+  Register = '/C/register'
 }
