@@ -15,6 +15,7 @@ import { useEffect } from 'react'
 
 const HomeHeader: FunctionComponent = (): ReactElement => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const isLogin = useAuthStore((state) => state.isLogin)
   const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated)
 
@@ -42,6 +43,42 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
       state.login.password.value = ''
     },
   })
+
+  // 登出 mutation
+  const logout = useMutation({
+    mutationFn: () => useAuthApi.logout(),
+    onSuccess: () => {
+      // 清除 Cookie
+      cookie.remove(CookieEnum.AccessToken)
+      cookie.remove(CookieEnum.RefreshToken)
+
+      // 清除所有 React Query 快取
+      queryClient.clear()
+
+      // 設定登入狀態為 false
+      setIsAuthenticated(false)
+
+      // 顯示登出成功訊息
+      toaster.success({
+        title: '登出成功',
+        description: '期待您的再次光臨!',
+      })
+
+      // 導航到首頁
+      navigate(CRoutes.Home)
+    },
+    onError: () => {
+      toaster.error({
+        title: '登出失敗',
+        description: '請稍後再試',
+      })
+    },
+  })
+
+  // 處理登出
+  const handleLogout = () => {
+    logout.mutate()
+  }
 
   // 處理登入提交
   const handleSubmit = (e: React.FormEvent) => {
@@ -128,7 +165,8 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                 <Button
                   variant="subtle"
                   size="sm"
-                  onClick={() => { dialog.login.status.value = true }}
+                  onClick={handleLogout}
+                  loading={logout.isPending}
                 >
                   Logout
                 </Button>

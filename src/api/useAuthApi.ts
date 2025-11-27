@@ -35,4 +35,7 @@ export const useAuthApi = {
   checkLogin: (): AxiosPromise<CheckLoginResponse> => {
     return useApiRequest.get({ url: PublicApiRoute.AuthCheckLogin })
   },
+  logout: (): AxiosPromise<void> => {
+    return useApiRequest.delete({ url: PublicApiRoute.AuthLogout })
+  },
 }
