@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement } from 'react'
 import {
-  Box, HStack, Text, Avatar, Dialog, Portal, Button, Heading, Stack,
+  Box, HStack, Text, Avatar, Dialog, Portal, Button, Stack,
 } from '@chakra-ui/react'
 import { LuFlower2 } from 'react-icons/lu'
 import { useAuthApi } from '@/api/useAuthApi'
@@ -20,22 +20,6 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
     dialog: { login: { status: useSignal(false) } },
     isLogin: useSignal(false),
   }
-
-  // 檢查登入狀態
-  const { data: checkLoginData } = useQuery({
-    queryKey: ['checkLogin'],
-    queryFn: () => useAuthApi.checkLogin(),
-    retry: false,
-  })
-
-  // 當 checkLogin API 回應時,更新登入狀態
-  effect(() => {
-    if (checkLoginData?.data?.status === 'success') {
-      feature.isLogin.value = true
-      return
-    }
-    feature.isLogin.value = false
-  })
 
   // 登入 mutation
   const login = useMutation({
@@ -165,9 +149,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Header>
-                <Dialog.Title>
-                  <Heading size="lg">歡迎回來</Heading>
-                </Dialog.Title>
+                <Dialog.Title>歡迎回來</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
                 <form onSubmit={handleSubmit}>
