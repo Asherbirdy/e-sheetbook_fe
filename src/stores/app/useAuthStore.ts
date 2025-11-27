@@ -3,24 +3,34 @@ import { useAuthApi } from '@/api/useAuthApi'
 
 interface AuthStore {
   isLogin: boolean
-  getIsLogin: () => boolean
+  isInitialized: boolean
+  setIsAuthenticated: (value: boolean) => void
   checkLogin: () => Promise<void>
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   isLogin: false,
+  isInitialized: false,
 
-  // 取得登入狀態
-  getIsLogin: () => get().isLogin,
+  // 設定認證狀態
+  setIsAuthenticated: (value: boolean) => set({ isLogin: value }),
 
   // 檢查登入狀態
   checkLogin: async () => {
-    const response = await useAuthApi.checkLogin()
+    try {
+      const response = await useAuthApi.checkLogin()
 
-    if (response.data?.status === 'success') {
-      set({ isLogin: true })
-      return
+      if (response.data?.status === 'success') {
+        set({ isLogin: true, isInitialized: true })
+        return
+      }
+      set({ isLogin: false, isInitialized: true })
+    } catch (error) {
+      set({ isLogin: false, isInitialized: true })
     }
-    set({ isLogin: false })
   },
 }))
+
+// 導出 getter 函數,可以在非 React 環境中使用
+export const getIsLogin = () => useAuthStore.getState().isLogin
+export const getIsInitialized = () => useAuthStore.getState().isInitialized
