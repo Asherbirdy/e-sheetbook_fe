@@ -1,3 +1,4 @@
+
 export enum Routes {
   // Public Routes
   PublicHome = '/',
@@ -6,4 +7,9 @@ export enum Routes {
   DashboardHome = '/dashboard',
   DashboardFile = '/dashboard/file',
   DashboardSecondPage = '/dashboard/pageTwo',
+}
+
+export enum CRoutes {
+  Home = '/C',
+  File = '/C/file'
 }
