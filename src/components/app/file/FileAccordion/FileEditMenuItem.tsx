@@ -8,13 +8,47 @@ import { GetSheetFile } from '@/types'
 
 interface FileEditMenuItemProps {
   file: GetSheetFile
+  onOpenEdit: () => void
 }
 
-export const FileEditMenuItem = ({ file }: FileEditMenuItemProps) => {
-  const queryClient = useQueryClient()
+export const FileEditMenuItem = ({ onOpenEdit }: FileEditMenuItemProps) => {
+  // 打開編輯對話框
+  const handleOpenEdit = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onOpenEdit()
+  }
 
+  return (
+    <Menu.Item
+      value="edit"
+      onClick={handleOpenEdit}
+    >
+      <Icon as={LuPencil} color="blue.500" />
+      <Span>編輯</Span>
+    </Menu.Item>
+  )
+}
+
+// 編輯對話框組件 (分離出來,獨立於 Menu 之外)
+interface FileEditDialogProps {
+  file: GetSheetFile
+  open: boolean
+  onClose: () => void
+}
+
+export const FileEditDialog = ({
+  file, open, onClose,
+}: FileEditDialogProps) => {
+  const queryClient = useQueryClient()
   const data = { fileName: useSignal(file.name) }
-  const features = { isEditDialogOpen: useSignal(false) }
+
+  // 當 Dialog 打開時,重置檔案名稱
+  useEffect(() => {
+    if (open) {
+      data.fileName.value = file.name
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, file.name])
 
   // 編輯檔案 mutation
   const {
@@ -30,7 +64,7 @@ export const FileEditMenuItem = ({ file }: FileEditMenuItemProps) => {
         title: '編輯成功',
         description: '檔案名稱已更新',
       })
-      features.isEditDialogOpen.value = false
+      onClose()
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
     onError: () => {
@@ -38,72 +72,54 @@ export const FileEditMenuItem = ({ file }: FileEditMenuItemProps) => {
     },
   })
 
-  // 打開編輯對話框
-  const handleOpenEdit = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    data.fileName.value = file.name
-    features.isEditDialogOpen.value = true
-  }
-
   return (
-    <>
-      <Menu.Item
-        value="edit"
-        onClick={handleOpenEdit}
-      >
-        <Icon as={LuPencil} color="blue.500" />
-        <Span>編輯</Span>
-      </Menu.Item>
-
-      {/* 編輯檔案 Dialog */}
-      <Dialog.Root
-        open={features.isEditDialogOpen.value}
-        onOpenChange={(e) => { features.isEditDialogOpen.value = e.open }}
-      >
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>編輯檔案</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                <form>
-                  <Field.Root>
-                    <Field.Label>檔案名稱</Field.Label>
-                    <Input
-                      value={data.fileName.value}
-                      onChange={(e) => {
-                        data.fileName.value = e.target.value
-                      }}
-                      placeholder="請輸入檔案名稱"
-                      autoFocus
-                    />
-                  </Field.Root>
-                </form>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button
-                    variant="outline"
-                    onClick={() => { features.isEditDialogOpen.value = false }}
-                  >
-                    取消
-                  </Button>
-                </Dialog.ActionTrigger>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(e) => { if (!e.open) onClose() }}
+    >
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>編輯檔案</Dialog.Title>
+            </Dialog.Header>
+            <Dialog.Body>
+              <form>
+                <Field.Root>
+                  <Field.Label>檔案名稱</Field.Label>
+                  <Input
+                    value={data.fileName.value}
+                    onChange={(e) => {
+                      data.fileName.value = e.target.value
+                    }}
+                    placeholder="請輸入檔案名稱"
+                    autoFocus
+                  />
+                </Field.Root>
+              </form>
+            </Dialog.Body>
+            <Dialog.Footer>
+              <Dialog.ActionTrigger asChild>
                 <Button
-                  colorPalette="blue"
-                  onClick={() => editMutation(data.fileName.value)}
-                  loading={isEditPending}
+                  variant="outline"
+                  onClick={onClose}
                 >
-                  儲存
+                  取消
                 </Button>
-              </Dialog.Footer>
-              <Dialog.CloseTrigger />
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-    </>
+              </Dialog.ActionTrigger>
+              <Button
+                colorPalette="blue"
+                onClick={() => editMutation(data.fileName.value)}
+                loading={isEditPending}
+              >
+                儲存
+              </Button>
+            </Dialog.Footer>
+            <Dialog.CloseTrigger />
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   )
 }

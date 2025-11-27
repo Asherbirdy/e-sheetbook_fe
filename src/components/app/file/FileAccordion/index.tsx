@@ -4,12 +4,16 @@ import {
 import { LuFile, LuEllipsis } from 'react-icons/lu'
 import { useSheetApi } from '@/api'
 import { useColorMode } from '@/hook'
-import { FileEditMenuItem } from '@/components/app/file/FileAccordion/FileEditMenuItem'
+import { FileEditMenuItem, FileEditDialog } from '@/components/app/file/FileAccordion/FileEditMenuItem'
 import { FileDeleteMenuItem } from '@/components/app/file/FileAccordion/FileDeleteMenuItem'
+import type { GetSheetFile } from '@/types'
 
 export const FileAccordion = () => {
   const { palette } = useColorMode()
   const navigate = useNavigate()
+
+  // 編輯對話框狀態
+  const features = { editDialogFile: useSignal<GetSheetFile | null>(null) }
 
   const { data: sheets, isLoading } = useQuery({
     queryKey: ['sheets'],
@@ -79,7 +83,10 @@ export const FileAccordion = () => {
               <Portal>
                 <Menu.Positioner>
                   <Menu.Content minW="120px">
-                    <FileEditMenuItem file={file} />
+                    <FileEditMenuItem
+                      file={file}
+                      onOpenEdit={() => { features.editDialogFile.value = file }}
+                    />
                     <FileDeleteMenuItem file={file} />
                   </Menu.Content>
                 </Menu.Positioner>
@@ -88,6 +95,15 @@ export const FileAccordion = () => {
           </HStack>
         </Box>
       ))}
+
+      {/* 編輯對話框 (獨立於 Menu 之外) */}
+      {features.editDialogFile.value && (
+        <FileEditDialog
+          file={features.editDialogFile.value}
+          open={features.editDialogFile.value !== null}
+          onClose={() => { features.editDialogFile.value = null }}
+        />
+      )}
     </VStack>
   )
 }
