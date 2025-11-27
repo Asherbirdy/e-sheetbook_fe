@@ -16,7 +16,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
         <HStack gap={2}>
           <LuFlower2 size={24} />
           <Text fontSize="xl" fontWeight="bold">
-            Homa
+            E-sheetbook
           </Text>
         </HStack>
 
@@ -34,10 +34,15 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
         </HStack>
 
         {/* 使用者頭像 */}
-        <Avatar.Root size="md">
-          <Avatar.Image src="https://bit.ly/broken-link" />
-          <Avatar.Fallback>U</Avatar.Fallback>
-        </Avatar.Root>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Avatar.Root size="md">
+            <Avatar.Image src="https://bit.ly/broken-link" />
+            <Avatar.Fallback>U</Avatar.Fallback>
+          </Avatar.Root>
+          <Text color="gray.500" cursor="pointer">
+            Login
+          </Text>
+        </Box>
       </HStack>
     </Box>
   )
