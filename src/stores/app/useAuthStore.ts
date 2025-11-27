@@ -8,7 +8,7 @@ interface AuthStore {
   checkLogin: () => Promise<void>
 }
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
   isLogin: false,
   isInitialized: false,
 
@@ -17,17 +17,14 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   // 檢查登入狀態
   checkLogin: async () => {
-    try {
-      const response = await useAuthApi.checkLogin()
 
-      if (response.data?.status === 'success') {
-        set({ isLogin: true, isInitialized: true })
-        return
-      }
-      set({ isLogin: false, isInitialized: true })
-    } catch (error) {
-      set({ isLogin: false, isInitialized: true })
+    const response = await useAuthApi.checkLogin()
+
+    if (response.data?.status === 'success') {
+      set({ isLogin: true, isInitialized: true })
+      return
     }
+    set({ isLogin: false, isInitialized: true })
   },
 }))
 
