@@ -1,13 +1,14 @@
 import { Outlet } from 'react-router-dom'
-import { HomeLayout } from '@/layout'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
+import { HomeHeader } from '@/components'
 
 const CRoute = () => {
   const location = useLocation()
 
   return (
-    <HomeLayout>
+    <>
+      <HomeHeader />
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
@@ -20,7 +21,7 @@ const CRoute = () => {
           <Outlet />
         </motion.div>
       </AnimatePresence>
-    </HomeLayout>
+    </>
   )
 }
 
