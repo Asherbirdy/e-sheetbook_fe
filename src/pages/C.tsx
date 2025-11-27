@@ -1,12 +1,18 @@
 import { Outlet } from 'react-router-dom'
-import { HomeLayout } from '@/layout'
+import { Box } from '@chakra-ui/react'
+import { HomeHeader } from '@/components'
 
 const CRoute = () => {
   return (
-    <HomeLayout>
-      <Outlet />
-    </HomeLayout>
+
+    <Box minH="100vh" bg="gray.50">
+      <Box maxW="1000px" mx="auto">
+        <HomeHeader />
+        <Outlet />
+      </Box>
+    </Box>
   )
 }
 
 export default CRoute
+
