@@ -10,8 +10,11 @@ import { cookie } from '@/utils'
 import { CookieEnum } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
 import { LoginState as state } from '@/stores'
+import { useNavigate } from 'react-router-dom'
 
 const HomeHeader: FunctionComponent = (): ReactElement => {
+  const navigate = useNavigate()
+
   // Dialog 狀態
   const feature = {
     dialog: { login: { status: useSignal(false) } },
@@ -59,7 +62,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
   // 處理登入提交
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    login.mutate({
+    login.mutateAsync({
       email: state.login.email.value,
       password: state.login.password.value,
     })
@@ -90,41 +93,63 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
           {/* 導航選單 */}
           <HStack gap={8}>
-            <Text fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}>
-              Homa
+            {feature.isLogin.value ? '已登入' : '未登入'}
+            <Text
+              fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}
+              onClick={() => navigate('/')}
+            >
+              Home
             </Text>
-            <Text color="gray.500" cursor="pointer" _hover={{ color: 'gray.700' }}>
-              Team Directory
-            </Text>
-            <Text color="gray.500" cursor="pointer" _hover={{ color: 'gray.700' }}>
-              Activities
-            </Text>
+            {feature.isLogin.value && (
+              <Text
+                fontWeight="semibold"
+                cursor="pointer"
+                _hover={{ color: 'gray.600' }}
+                onClick={() => navigate('/file')}
+              >
+                Files
+              </Text>
+            )}
           </HStack>
 
           {/* 使用者頭像 */}
           <Box display="flex" alignItems="center" gap={2}>
-            <Avatar.Root size="md">
-              <Avatar.Image src="https://bit.ly/broken-link" />
-              <Avatar.Fallback>U</Avatar.Fallback>
-            </Avatar.Root>
-            <Text
-              color="gray.500"
-              cursor="pointer"
-              _hover={{ color: 'gray.700' }}
-              onClick={() => { feature.dialog.login.status.value = true }}
-            >
-              Login
-            </Text>
-            <Text
-              color="gray.500"
-              cursor="pointer"
-              _hover={{ color: 'gray.700' }}
-              onClick={() => { feature.dialog.login.status.value = true }}
-            >
-              狀態:
-              {' '}
-              { feature.isLogin.value ? '已登入' : '未登入'}
-            </Text>
+
+            {!feature.isLogin.value && (
+              <Button
+                size="sm"
+                variant="subtle"
+                onClick={() => { feature.dialog.login.status.value = true }}
+              >
+                Login
+              </Button>
+            )}
+
+            {!feature.isLogin.value && (
+              <Button
+                size="sm"
+                onClick={() => { feature.dialog.login.status.value = true }}
+              >
+                Register
+              </Button>
+            )}
+
+            {feature.isLogin.value && (
+              <Avatar.Root size="md">
+                <Avatar.Image src="https://bit.ly/broken-link" />
+                <Avatar.Fallback>U</Avatar.Fallback>
+              </Avatar.Root>
+            )}
+
+            {feature.isLogin.value && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => { feature.dialog.login.status.value = true }}
+              >
+                Logout
+              </Button>
+            )}
           </Box>
         </HStack>
       </Box>
