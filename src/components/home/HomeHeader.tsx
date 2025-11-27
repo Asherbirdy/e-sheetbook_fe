@@ -77,7 +77,6 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
           {/* 導航選單 */}
           <HStack gap={8}>
-            {feature.isLogin.value ? '已登入' : '未登入'}
             <Text
               fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}
               onClick={() => navigate('/')}
