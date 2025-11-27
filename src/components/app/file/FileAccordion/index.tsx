@@ -14,23 +14,23 @@ export const FileAccordion = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  // 狀態管理
-  const features = {
-    editDialogFile: useSignal<GetSheetFile | null>(null),
-    deleteDialogFile: useSignal<GetSheetFile | null>(null),
-    fileName: useSignal(''),
-  }
-
+  // 資料獲取
   const { data: sheets, isLoading } = useQuery({
     queryKey: ['sheets'],
     queryFn: () => useSheetApi.get(),
   })
 
+  // 狀態管理 - 統一使用 dialog 命名
+  const dialog = {
+    edit: {
+      file: useSignal<GetSheetFile | null>(null),
+      name: useSignal(''),
+    },
+    delete: { file: useSignal<GetSheetFile | null>(null) },
+  }
+
   // 編輯檔案 mutation
-  const {
-    mutate: editMutation,
-    isPending: isEditPending,
-  } = useMutation({
+  const editFile = useMutation({
     mutationFn: (params: { fileId: string; fileName: string }) => useFileApi.edit({
       fileId: params.fileId,
       name: params.fileName,
@@ -40,7 +40,7 @@ export const FileAccordion = () => {
         title: '編輯成功',
         description: '檔案名稱已更新',
       })
-      features.editDialogFile.value = null
+      dialog.edit.file.value = null
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
     onError: () => {
@@ -49,17 +49,14 @@ export const FileAccordion = () => {
   })
 
   // 刪除檔案 mutation
-  const {
-    mutate: deleteMutation,
-    isPending: isDeletePending,
-  } = useMutation({
+  const deleteFile = useMutation({
     mutationFn: (fileId: string) => useFileApi.delete({ fileId }),
     onSuccess: () => {
       toaster.success({
         title: '刪除成功',
         description: '檔案已刪除',
       })
-      features.deleteDialogFile.value = null
+      dialog.delete.file.value = null
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
     onError: () => {
@@ -67,23 +64,48 @@ export const FileAccordion = () => {
     },
   })
 
-  // 當編輯對話框打開時,重置檔案名稱
-  effect(() => {
-    if (features.editDialogFile.value) {
-      features.fileName.value = features.editDialogFile.value.name
-    }
-  })
+  // 處理編輯按鈕點擊 - 設定初始值
+  const handleEditClick = (file: GetSheetFile) => {
+    dialog.edit.file.value = file
+    dialog.edit.name.value = file.name
+  }
 
-  /*
-     * This component now only shows files, not sheets
-  */
+  // 處理刪除按鈕點擊
+  const handleDeleteClick = (file: GetSheetFile) => {
+    dialog.delete.file.value = file
+  }
+
+  // 處理編輯提交
+  const handleEditSubmit = () => {
+    if (!dialog.edit.file.value) return
+
+    editFile.mutate({
+      fileId: dialog.edit.file.value._id,
+      fileName: dialog.edit.name.value,
+    })
+  }
+
+  // 處理刪除確認
+  const handleDeleteConfirm = () => {
+    if (!dialog.delete.file.value) return
+    deleteFile.mutate(dialog.delete.file.value._id)
+  }
+
+  // 關閉對話框
+  const closeEditDialog = () => {
+    dialog.edit.file.value = null
+    dialog.edit.name.value = ''
+  }
+
+  const closeDeleteDialog = () => {
+    dialog.delete.file.value = null
+  }
+
+  // Early returns for loading and empty states
   if (isLoading) {
     return <Text color="gray.500" fontSize="sm" px="3">載入中...</Text>
   }
 
-  /*
-    * No files to display
-  */
   if (sheets?.data?.files.length === 0) {
     return (
       <VStack gap="2" py="8">
@@ -93,11 +115,9 @@ export const FileAccordion = () => {
     )
   }
 
-  /*
-    * Render files
-  */
   return (
     <VStack gap="1" alignItems="stretch">
+      {/* 檔案列表 */}
       {sheets?.data?.files.map((file) => (
         <Box
           key={file._id}
@@ -114,6 +134,7 @@ export const FileAccordion = () => {
             <Text flex="1" fontWeight="medium" fontSize="sm">
               {file.name}
             </Text>
+
             {/* 檔案選單 */}
             <Menu.Root positioning={{ placement: 'bottom-end' }}>
               <Menu.Trigger asChild>
@@ -137,26 +158,24 @@ export const FileAccordion = () => {
               <Portal>
                 <Menu.Positioner>
                   <Menu.Content minW="120px">
-                    {/* 編輯選單項目 */}
                     <Menu.Item
                       value="edit"
                       onClick={(e) => {
                         e.stopPropagation()
-                        features.editDialogFile.value = file
+                        handleEditClick(file)
                       }}
                     >
                       <Icon as={LuPencil} color="blue.500" />
                       <Span>編輯</Span>
                     </Menu.Item>
 
-                    {/* 刪除選單項目 */}
                     <Menu.Item
                       value="delete"
                       color="fg.error"
                       _hover={{ bg: 'bg.error', color: 'fg.error' }}
                       onClick={(e) => {
                         e.stopPropagation()
-                        features.deleteDialogFile.value = file
+                        handleDeleteClick(file)
                       }}
                     >
                       <Icon as={LuTrash2} color="red.500" />
@@ -171,104 +190,95 @@ export const FileAccordion = () => {
       ))}
 
       {/* 編輯對話框 */}
-      {features.editDialogFile.value && (
-        <Dialog.Root
-          open={features.editDialogFile.value !== null}
-          onOpenChange={(e) => { if (!e.open) features.editDialogFile.value = null }}
-        >
-          <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
-                <Dialog.Header>
-                  <Dialog.Title>編輯檔案</Dialog.Title>
-                </Dialog.Header>
-                <Dialog.Body>
-                  <form>
-                    <Field.Root>
-                      <Field.Label>檔案名稱</Field.Label>
-                      <Input
-                        value={features.fileName.value}
-                        onChange={(e) => {
-                          features.fileName.value = e.target.value
-                        }}
-                        placeholder="請輸入檔案名稱"
-                        autoFocus
-                      />
-                    </Field.Root>
-                  </form>
-                </Dialog.Body>
-                <Dialog.Footer>
-                  <Dialog.ActionTrigger asChild>
-                    <Button
-                      variant="outline"
-                      onClick={() => { features.editDialogFile.value = null }}
-                    >
-                      取消
-                    </Button>
-                  </Dialog.ActionTrigger>
+      <Dialog.Root
+        open={dialog.edit.file.value !== null}
+        onOpenChange={(e) => { if (!e.open) closeEditDialog() }}
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>編輯檔案</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Field.Root>
+                  <Field.Label>檔案名稱</Field.Label>
+                  <Input
+                    value={dialog.edit.name.value}
+                    onChange={(e) => {
+                      dialog.edit.name.value = e.target.value
+                    }}
+                    placeholder="請輸入檔案名稱"
+                    autoFocus
+                  />
+                </Field.Root>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
                   <Button
-                    colorPalette="blue"
-                    onClick={() => editMutation({
-                      fileId: features.editDialogFile.value!._id,
-                      fileName: features.fileName.value,
-                    })}
-                    loading={isEditPending}
+                    variant="outline"
+                    onClick={closeEditDialog}
                   >
-                    儲存
+                    取消
                   </Button>
-                </Dialog.Footer>
-                <Dialog.CloseTrigger />
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Portal>
-        </Dialog.Root>
-      )}
+                </Dialog.ActionTrigger>
+                <Button
+                  colorPalette="blue"
+                  onClick={handleEditSubmit}
+                  loading={editFile.isPending}
+                >
+                  儲存
+                </Button>
+              </Dialog.Footer>
+              <Dialog.CloseTrigger />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
 
       {/* 刪除確認對話框 */}
-      {features.deleteDialogFile.value && (
-        <Dialog.Root
-          open={features.deleteDialogFile.value !== null}
-          onOpenChange={(e) => { if (!e.open) features.deleteDialogFile.value = null }}
-          role="alertdialog"
-        >
-          <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
-                <Dialog.Header>
-                  <Dialog.Title>確認刪除</Dialog.Title>
-                </Dialog.Header>
-                <Dialog.Body>
-                  <Text>
-                    確定要刪除檔案「
-                    <Text as="span" fontWeight="bold">{features.deleteDialogFile.value.name}</Text>
-                    」嗎?此操作無法復原。
-                  </Text>
-                </Dialog.Body>
-                <Dialog.Footer>
-                  <Dialog.ActionTrigger asChild>
-                    <Button
-                      variant="outline"
-                      onClick={() => { features.deleteDialogFile.value = null }}
-                    >
-                      取消
-                    </Button>
-                  </Dialog.ActionTrigger>
+      <Dialog.Root
+        open={dialog.delete.file.value !== null}
+        onOpenChange={(e) => { if (!e.open) closeDeleteDialog() }}
+        role="alertdialog"
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>確認刪除</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Text>
+                  確定要刪除檔案「
+                  <Text as="span" fontWeight="bold">{dialog.delete.file.value?.name}</Text>
+                  」嗎?此操作無法復原。
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
                   <Button
-                    colorPalette="red"
-                    onClick={() => deleteMutation(features.deleteDialogFile.value!._id)}
-                    loading={isDeletePending}
+                    variant="outline"
+                    onClick={closeDeleteDialog}
                   >
-                    刪除
+                    取消
                   </Button>
-                </Dialog.Footer>
-                <Dialog.CloseTrigger />
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Portal>
-        </Dialog.Root>
-      )}
+                </Dialog.ActionTrigger>
+                <Button
+                  colorPalette="red"
+                  onClick={handleDeleteConfirm}
+                  loading={deleteFile.isPending}
+                >
+                  刪除
+                </Button>
+              </Dialog.Footer>
+              <Dialog.CloseTrigger />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </VStack>
   )
 }
