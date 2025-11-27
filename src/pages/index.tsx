@@ -9,9 +9,11 @@ import {
 const Home: FunctionComponent = (): ReactElement => {
   return (
     <Box minH="100vh" bg="gray.50">
-      <HomeHeader />
-      <MeasurableSection />
-      <TeamCalendar />
+      <Box maxW="1000px" mx="auto">
+        <HomeHeader />
+        <MeasurableSection />
+        <TeamCalendar />
+      </Box>
     </Box>
   )
 }

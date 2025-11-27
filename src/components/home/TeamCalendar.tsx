@@ -1,6 +1,10 @@
 import { FunctionComponent, ReactElement } from 'react'
-import { Box, HStack, Text, Image, VStack, IconButton } from '@chakra-ui/react'
-import { LuChevronLeft, LuChevronRight, LuCalendar, LuHourglass } from 'react-icons/lu'
+import {
+  Box, HStack, Text, Image, VStack, IconButton,
+} from '@chakra-ui/react'
+import {
+  LuChevronLeft, LuChevronRight, LuCalendar, LuHourglass,
+} from 'react-icons/lu'
 
 interface CalendarEventProps {
   date: string
@@ -49,7 +53,10 @@ const CalendarEvent: FunctionComponent<CalendarEventProps> = ({
         color="white"
         gap={0}
       >
-        <HStack gap={2} bg="blackAlpha.600" px={2} py={1} borderRadius="md">
+        <HStack
+          gap={2} bg="blackAlpha.600" px={2}
+          py={1} borderRadius="md"
+        >
           {icon === 'calendar' ? <LuCalendar size={16} /> : <LuHourglass size={16} />}
           <Text fontSize="sm" fontWeight="medium">
             {date}
@@ -65,7 +72,7 @@ const CalendarEvent: FunctionComponent<CalendarEventProps> = ({
 
 const TeamCalendar: FunctionComponent = (): ReactElement => {
   return (
-    <Box px={8} py={8}>
+    <Box py={8} px={8}>
       <HStack justify="space-between" mb={6}>
         <Text fontSize="3xl" fontWeight="bold">
           Team calendar

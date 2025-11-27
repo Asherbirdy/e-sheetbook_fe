@@ -1,18 +1,17 @@
 import { FunctionComponent, ReactElement } from 'react'
-import { Box, HStack, Text, Avatar } from '@chakra-ui/react'
+import {
+  Box, HStack, Text, Avatar,
+} from '@chakra-ui/react'
 import { LuFlower2 } from 'react-icons/lu'
 
 const HomeHeader: FunctionComponent = (): ReactElement => {
   return (
     <Box
       as="header"
-      px={8}
       py={4}
-      bg="white"
-      borderBottomWidth="1px"
       borderColor="gray.200"
     >
-      <HStack justify="space-between">
+      <HStack justify="space-between" px={8}>
         {/* Logo 區塊 */}
         <HStack gap={2}>
           <LuFlower2 size={24} />

@@ -18,18 +18,24 @@ export const DashboardLayout = ({ children }: { children: ReactElement }) => {
       <Box ml={{ base: 0, md: 60 }}>
         <DashboardHeader />
         <Box as="main" p="4">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{  opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-              style={{ width: '100%' }}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          <Box
+            maxW="1000px"
+            mx="auto"
+            w="100%"
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{  opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+                style={{ width: '100%' }}
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
+          </Box>
         </Box>
       </Box>
     </Box>

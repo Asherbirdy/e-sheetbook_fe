@@ -1,5 +1,7 @@
 import { FunctionComponent, ReactElement } from 'react'
-import { Box, Grid, GridItem, Text, HStack, VStack, Stack } from '@chakra-ui/react'
+import {
+  Box, Grid, GridItem, Text, HStack, VStack,
+} from '@chakra-ui/react'
 import { LuTrendingUp, LuTrendingDown } from 'react-icons/lu'
 
 interface StatCardProps {
@@ -16,7 +18,13 @@ const StatCard: FunctionComponent<StatCardProps> = ({
   isPositive = true,
 }): ReactElement => {
   return (
-    <Box bg="white" p={6} borderRadius="lg" borderWidth="1px" borderColor="gray.200">
+    <Box
+      bg="white"
+      p={6}
+      borderRadius="lg"
+      borderWidth="1px"
+      borderColor="gray.200"
+    >
       <VStack align="start" gap={2}>
         <HStack justify="space-between" w="full">
           <Text fontSize="sm" color="gray.600">
@@ -39,7 +47,7 @@ const StatCard: FunctionComponent<StatCardProps> = ({
 
 const MeasurableSection: FunctionComponent = (): ReactElement => {
   return (
-    <Box px={8} py={8}>
+    <Box py={8} px={8}>
       <Text fontSize="3xl" fontWeight="bold" mb={6}>
         Measurable
       </Text>
@@ -47,13 +55,19 @@ const MeasurableSection: FunctionComponent = (): ReactElement => {
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         {/* Team Total 主要卡片 */}
         <GridItem colSpan={1}>
-          <Box bg="white" p={6} borderRadius="lg" borderWidth="1px" borderColor="gray.200">
+          <Box
+            bg="white" p={6} borderRadius="lg"
+            borderWidth="1px" borderColor="gray.200"
+          >
             <VStack align="start" gap={4}>
               <Box>
                 <Text fontSize="sm" color="gray.600" mb={1}>
                   Team total
                 </Text>
-                <Box h="2px" w="full" bg="blue.500" borderRadius="full" />
+                <Box
+                  h="2px" w="full" bg="blue.500"
+                  borderRadius="full"
+                />
               </Box>
 
               <HStack align="baseline">
@@ -70,7 +84,8 @@ const MeasurableSection: FunctionComponent = (): ReactElement => {
               </HStack>
 
               <Text fontSize="xs" color="gray.500" lineHeight="1.6">
-                Regular surveys and events best way to grow team{' '}
+                Regular surveys and events best way to grow team
+                {' '}
                 <Text as="span" color="blue.500" cursor="pointer">
                   Connection
                 </Text>
@@ -83,10 +98,22 @@ const MeasurableSection: FunctionComponent = (): ReactElement => {
         {/* 右側統計卡片 */}
         <GridItem colSpan={2}>
           <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-            <StatCard title="Chemistry" value="12%" trend="+24%" isPositive />
-            <StatCard title="Recognition" value="20%" trend="+12%" isPositive />
-            <StatCard title="Wellbeing" value="5%" trend="-4%" isPositive={false} />
-            <StatCard title="Engagement" value="24%" trend="+10%" isPositive />
+            <StatCard
+              title="Chemistry" value="12%" trend="+24%"
+              isPositive
+            />
+            <StatCard
+              title="Recognition" value="20%" trend="+12%"
+              isPositive
+            />
+            <StatCard
+              title="Wellbeing" value="5%" trend="-4%"
+              isPositive={false}
+            />
+            <StatCard
+              title="Engagement" value="24%" trend="+10%"
+              isPositive
+            />
           </Grid>
         </GridItem>
       </Grid>
