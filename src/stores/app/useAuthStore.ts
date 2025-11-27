@@ -3,15 +3,15 @@ import { useAuthApi } from '@/api/useAuthApi'
 
 interface AuthStore {
   isLogin: boolean
-  setIsAuthenticated: (value: boolean) => void
+  getIsLogin: () => boolean
   checkLogin: () => Promise<void>
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   isLogin: false,
 
-  // 設定認證狀態
-  setIsAuthenticated: (value: boolean) => set({ isLogin: value }),
+  // 取得登入狀態
+  getIsLogin: () => get().isLogin,
 
   // 檢查登入狀態
   checkLogin: async () => {
