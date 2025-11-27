@@ -10,7 +10,7 @@ import { cookie } from '@/utils'
 import { CookieEnum, CRoutes } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
 import { LoginState as state, useAuthStore } from '@/stores'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useEffect } from 'react'
 
 const HomeHeader: FunctionComponent = (): ReactElement => {
@@ -121,21 +121,23 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
           {/* 導航選單 */}
           <HStack gap={8}>
-            <Text
-              fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}
-              onClick={() => navigate(CRoutes.Home)}
-            >
-              Home
-            </Text>
-            {isLogin && (
+            <Link to={CRoutes.Home} viewTransition>
               <Text
-                fontWeight="semibold"
-                cursor="pointer"
-                _hover={{ color: 'gray.600' }}
-                onClick={() => navigate(CRoutes.File)}
+                fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}
               >
-                Files
+                Home
               </Text>
+            </Link>
+            {isLogin && (
+              <Link to={CRoutes.File} viewTransition>
+                <Text
+                  fontWeight="semibold"
+                  cursor="pointer"
+                  _hover={{ color: 'gray.600' }}
+                >
+                  Files
+                </Text>
+              </Link>
             )}
           </HStack>
 

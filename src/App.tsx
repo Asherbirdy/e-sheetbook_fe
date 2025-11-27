@@ -1,5 +1,4 @@
-import { useRoutes } from 'react-router-dom'
-import routes from '~react-pages'
+import { Outlet } from 'react-router-dom'
 import { Suspense, useEffect } from 'react'
 import { Spinner, Center } from '@chakra-ui/react'
 import { useAuthStore } from '@/stores'
@@ -20,7 +19,7 @@ export function App() {
         </Center>
       }
     >
-      {useRoutes(routes)}
+      <Outlet />
     </Suspense>
   )
 }
