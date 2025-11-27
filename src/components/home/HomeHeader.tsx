@@ -5,7 +5,7 @@ import {
 import { LuFlower2 } from 'react-icons/lu'
 import { useAuthApi } from '@/api/useAuthApi'
 import { LoginPayload } from '@/types'
-import { LoginForm } from '@/components'
+import { LoginForm, RegisterForm } from '@/components'
 import { cookie } from '@/utils'
 import { CookieEnum, CRoutes } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
@@ -20,7 +20,10 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
   const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated)
 
   // Dialog 狀態
-  const dialog = { login: { status: useSignal(false) } }
+  const dialog = {
+    login: { status: useSignal(false) },
+    register: { status: useSignal(false) },
+  }
 
   // 登入 mutation
   const login = useMutation({
@@ -149,7 +152,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => { navigate(CRoutes.Register) }}
+                  onClick={() => { dialog.register.status.value = true }}
                 >
                   Register
                 </Button>
@@ -204,6 +207,33 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                     </Button>
                   </Stack>
                 </form>
+              </Dialog.Body>
+              <Dialog.CloseTrigger />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+
+      {/* 註冊對話框 */}
+      <Dialog.Root
+        open={dialog.register.status.value}
+        onOpenChange={(e) => { if (!e.open) dialog.register.status.value = false }}
+        size="md"
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>建立帳戶</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <RegisterForm
+                  onSuccess={() => {
+                    dialog.register.status.value = false
+                    dialog.login.status.value = true
+                  }}
+                />
               </Dialog.Body>
               <Dialog.CloseTrigger />
             </Dialog.Content>
