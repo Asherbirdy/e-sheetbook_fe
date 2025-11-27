@@ -23,10 +23,14 @@ export const FileAccordion = () => {
   // 狀態管理 - 統一使用 dialog 命名
   const dialog = {
     edit: {
+      status: useSignal(false),
       file: useSignal<GetSheetFile | null>(null),
       name: useSignal(''),
     },
-    delete: { file: useSignal<GetSheetFile | null>(null) },
+    delete: {
+      status: useSignal(false),
+      file: useSignal<GetSheetFile | null>(null),
+    },
   }
 
   // 編輯檔案 mutation
@@ -40,7 +44,7 @@ export const FileAccordion = () => {
         title: '編輯成功',
         description: '檔案名稱已更新',
       })
-      dialog.edit.file.value = null
+      dialog.edit.status.value = false
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
     onError: () => {
@@ -56,7 +60,7 @@ export const FileAccordion = () => {
         title: '刪除成功',
         description: '檔案已刪除',
       })
-      dialog.delete.file.value = null
+      dialog.delete.status.value = false
       queryClient.invalidateQueries({ queryKey: ['sheets'] })
     },
     onError: () => {
@@ -68,11 +72,13 @@ export const FileAccordion = () => {
   const handleEditClick = (file: GetSheetFile) => {
     dialog.edit.file.value = file
     dialog.edit.name.value = file.name
+    dialog.edit.status.value = true
   }
 
   // 處理刪除按鈕點擊
   const handleDeleteClick = (file: GetSheetFile) => {
     dialog.delete.file.value = file
+    dialog.delete.status.value = true
   }
 
   // 處理編輯提交
@@ -93,11 +99,13 @@ export const FileAccordion = () => {
 
   // 關閉對話框
   const closeEditDialog = () => {
+    dialog.edit.status.value = false
     dialog.edit.file.value = null
     dialog.edit.name.value = ''
   }
 
   const closeDeleteDialog = () => {
+    dialog.delete.status.value = false
     dialog.delete.file.value = null
   }
 
@@ -191,7 +199,7 @@ export const FileAccordion = () => {
 
       {/* 編輯對話框 */}
       <Dialog.Root
-        open={dialog.edit.file.value !== null}
+        open={dialog.edit.status.value}
         onOpenChange={(e) => { if (!e.open) closeEditDialog() }}
       >
         <Portal>
@@ -239,7 +247,7 @@ export const FileAccordion = () => {
 
       {/* 刪除確認對話框 */}
       <Dialog.Root
-        open={dialog.delete.file.value !== null}
+        open={dialog.delete.status.value}
         onOpenChange={(e) => { if (!e.open) closeDeleteDialog() }}
         role="alertdialog"
       >
