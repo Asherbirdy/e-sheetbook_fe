@@ -47,7 +47,7 @@ const StatCard: FunctionComponent<StatCardProps> = ({
 
 const MeasurableSection: FunctionComponent = (): ReactElement => {
   return (
-    <Box py={8} px={8}>
+    <>
       <Text fontSize="3xl" fontWeight="bold" mb={6}>
         Measurable
       </Text>
@@ -117,7 +117,7 @@ const MeasurableSection: FunctionComponent = (): ReactElement => {
           </Grid>
         </GridItem>
       </Grid>
-    </Box>
+    </>
   )
 }
 
