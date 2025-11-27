@@ -7,7 +7,7 @@ import { useAuthApi } from '@/api/useAuthApi'
 import { LoginPayload } from '@/types'
 import { LoginForm } from '@/components'
 import { cookie } from '@/utils'
-import { CookieEnum } from '@/enums'
+import { CookieEnum, CRoutes } from '@/enums'
 import { toaster } from '@/components/ui/toaster'
 import { LoginState as state, useAuthStore } from '@/stores'
 import { useNavigate } from 'react-router-dom'
@@ -83,7 +83,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
           <HStack gap={8}>
             <Text
               fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}
-              onClick={() => navigate('/')}
+              onClick={() => navigate(CRoutes.Home)}
             >
               Home
             </Text>
@@ -92,7 +92,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                 fontWeight="semibold"
                 cursor="pointer"
                 _hover={{ color: 'gray.600' }}
-                onClick={() => navigate('/file')}
+                onClick={() => navigate(CRoutes.File)}
               >
                 Files
               </Text>
