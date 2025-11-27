@@ -199,6 +199,95 @@ This ensures consistency with Chakra's theming system, responsive design, and co
 3. **Alphabetical order**: Within each group, maintain alphabetical order for easier maintenance
 4. **Barrel exports**: Use `export *` pattern to re-export all named exports from component files
 
+### Early Return Pattern
+
+**IMPORTANT**: Use early returns to reduce nesting and improve code readability. This pattern is especially useful for validation, error handling, and conditional rendering.
+
+**Example**:
+
+```tsx
+// ❌ Avoid - Nested conditions
+const UserProfile = ({ user }) => {
+  if (user) {
+    if (user.isActive) {
+      return (
+        <div>
+          <h1>{user.name}</h1>
+          <p>Email: {user.email}</p>
+        </div>
+      )
+    } else {
+      return <div>Account not active</div>
+    }
+  }
+  return <div>Loading...</div>
+}
+
+// ✅ Prefer - Early returns
+const UserProfile = ({ user }) => {
+  if (!user) return <div>Loading...</div>
+  if (!user.isActive) return <div>Account not active</div>
+  
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>Email: {user.email}</p>
+    </div>
+  )
+}
+```
+
+**Best Practices**:
+1. **Handle error/edge cases first**: Return early for invalid states or errors
+2. **Reduce nesting**: Each level of nesting increases cognitive load
+3. **Improve readability**: The main logic appears at the lowest indentation level
+4. **Easier to reason about**: Each condition is handled independently
+5. **Better performance**: Early returns can prevent unnecessary computations
+
+**Common Use Cases**:
+- Form validation
+- Permission checks
+- Loading/error states
+- Data existence checks
+- Authentication/authorization
+
+### Conditional Rendering in JSX
+
+**IMPORTANT**: When conditionally rendering in JSX, prefer using the logical AND (`&&`) operator over ternary operators (`?:`) for better readability, especially when the `false` case should render nothing.
+
+**Example**:
+
+```tsx
+// ❌ Avoid - Ternary with null
+{isLoading ? <Spinner /> : null}
+
+// ✅ Prefer - Logical AND
+{isLoading && <Spinner />}
+
+// ❌ Avoid - Nested ternaries
+{isLoading 
+  ? <Spinner /> 
+  : hasError 
+    ? <ErrorComponent /> 
+    : <Content />}
+
+// ✅ Prefer - Early returns or separate variables
+if (isLoading) return <Spinner />
+if (hasError) return <ErrorComponent />
+return <Content />
+
+// Or with logical operators
+{isLoading && <Spinner />}
+{!isLoading && hasError && <ErrorComponent />}
+{!isLoading && !hasError && <Content />}
+```
+
+**Best Practices**:
+1. Use `&&` for simple conditions where you want to render something or nothing
+2. For complex conditions, extract the logic outside JSX or use early returns
+3. Keep JSX clean and readable by moving complex logic to variables or functions
+4. When you must choose between two different components, consider using a variable assignment before the return statement
+
 **Usage Examples**:
 ```typescript
 // ✅ Correct - Import from centralized index
