@@ -121,7 +121,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
           {/* 導航選單 */}
           <HStack gap={8}>
-            <Link to={CRoutes.Home}>
+            <Link to={CRoutes.Home} viewTransition>
               <Text
                 fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}
               >
@@ -129,7 +129,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
               </Text>
             </Link>
             {isLogin && (
-              <Link to={CRoutes.File}>
+              <Link to={CRoutes.File} viewTransition>
                 <Text
                   fontWeight="semibold"
                   cursor="pointer"

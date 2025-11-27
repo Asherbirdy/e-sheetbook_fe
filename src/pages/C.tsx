@@ -14,7 +14,6 @@ const CRoute = () => {
         <Box
           py={8}
           px={8}
-          className={isTransitioning ? 'transitioning' : ''}
         >
           <Suspense
             fallback={

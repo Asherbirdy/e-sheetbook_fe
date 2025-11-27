@@ -135,7 +135,7 @@ export const FileAccordion = () => {
           _hover={{ bg: palette.hoverBg }}
           transition="all 0.2s"
           cursor="pointer"
-          onClick={() => navigate(`/dashboard/file/${file._id}`)}
+          onClick={() => navigate(`/dashboard/file/${file._id}`, { viewTransition: true })}
         >
           <HStack gap="2">
             <Icon as={LuFile} fontSize="lg" color="blue.500" />
