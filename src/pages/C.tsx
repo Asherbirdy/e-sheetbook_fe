@@ -12,13 +12,13 @@ const CRoute = () => {
       <Box maxW="1000px" mx="auto">
         <HomeHeader />
         <Box>
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false} mode="sync">
             <motion.div
               key={location.pathname}
-              initial={{  opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
               style={{ width: '100%' }}
             >
               <Outlet />
