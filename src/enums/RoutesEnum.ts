@@ -10,6 +10,6 @@ export enum Routes {
 }
 
 export enum CRoutes {
-  Main = '/C',
+  Home = '/C',
   File = '/C/file'
 }
