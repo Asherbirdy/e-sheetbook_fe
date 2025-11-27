@@ -12,7 +12,7 @@ const CRoute = () => {
       <Box maxW="1000px" mx="auto">
         <HomeHeader />
         <Box>
-          <AnimatePresence initial={false}>
+          <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={location.pathname}
               initial={{ opacity: 0 }}
