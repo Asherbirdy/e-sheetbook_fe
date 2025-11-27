@@ -1,0 +1,47 @@
+import { FunctionComponent, ReactElement } from 'react'
+import { Box, HStack, Text, Avatar } from '@chakra-ui/react'
+import { LuFlower2 } from 'react-icons/lu'
+
+const HomeHeader: FunctionComponent = (): ReactElement => {
+  return (
+    <Box
+      as="header"
+      px={8}
+      py={4}
+      bg="white"
+      borderBottomWidth="1px"
+      borderColor="gray.200"
+    >
+      <HStack justify="space-between">
+        {/* Logo 區塊 */}
+        <HStack gap={2}>
+          <LuFlower2 size={24} />
+          <Text fontSize="xl" fontWeight="bold">
+            Homa
+          </Text>
+        </HStack>
+
+        {/* 導航選單 */}
+        <HStack gap={8}>
+          <Text fontWeight="semibold" cursor="pointer" _hover={{ color: 'gray.600' }}>
+            Homa
+          </Text>
+          <Text color="gray.500" cursor="pointer" _hover={{ color: 'gray.700' }}>
+            Team Directory
+          </Text>
+          <Text color="gray.500" cursor="pointer" _hover={{ color: 'gray.700' }}>
+            Activities
+          </Text>
+        </HStack>
+
+        {/* 使用者頭像 */}
+        <Avatar.Root size="md">
+          <Avatar.Image src="https://bit.ly/broken-link" />
+          <Avatar.Fallback>U</Avatar.Fallback>
+        </Avatar.Root>
+      </HStack>
+    </Box>
+  )
+}
+
+export default HomeHeader
