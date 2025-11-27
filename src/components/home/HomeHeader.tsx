@@ -149,7 +149,7 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => { dialog.login.status.value = true }}
+                  onClick={() => { navigate(CRoutes.Register) }}
                 >
                   Register
                 </Button>
