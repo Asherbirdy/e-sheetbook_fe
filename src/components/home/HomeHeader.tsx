@@ -97,41 +97,38 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
 
           {/* 使用者頭像 */}
           <Box display="flex" alignItems="center" gap={2}>
-
             {!feature.isLogin.value && (
-              <Button
-                size="sm"
-                variant="subtle"
-                onClick={() => { feature.dialog.login.status.value = true }}
-              >
-                Login
-              </Button>
-            )}
-
-            {!feature.isLogin.value && (
-              <Button
-                size="sm"
-                onClick={() => { feature.dialog.login.status.value = true }}
-              >
-                Register
-              </Button>
+              <>
+                <Button
+                  size="sm"
+                  variant="subtle"
+                  onClick={() => { feature.dialog.login.status.value = true }}
+                >
+                  Login
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => { feature.dialog.login.status.value = true }}
+                >
+                  Register
+                </Button>
+              </>
             )}
 
             {feature.isLogin.value && (
-              <Avatar.Root size="md">
-                <Avatar.Image src="https://bit.ly/broken-link" />
-                <Avatar.Fallback>U</Avatar.Fallback>
-              </Avatar.Root>
-            )}
-
-            {feature.isLogin.value && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => { feature.dialog.login.status.value = true }}
-              >
-                Logout
-              </Button>
+              <>
+                <Avatar.Root size="md">
+                  <Avatar.Image src="https://bit.ly/broken-link" />
+                  <Avatar.Fallback>U</Avatar.Fallback>
+                </Avatar.Root>
+                <Button
+                  variant="subtle"
+                  size="sm"
+                  onClick={() => { feature.dialog.login.status.value = true }}
+                >
+                  Logout
+                </Button>
+              </>
             )}
           </Box>
         </HStack>
