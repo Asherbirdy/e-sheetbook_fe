@@ -98,6 +98,16 @@ const HomeHeader: FunctionComponent = (): ReactElement => {
             >
               Login
             </Text>
+            <Text
+              color="gray.500"
+              cursor="pointer"
+              _hover={{ color: 'gray.700' }}
+              onClick={() => { feature.dialog.login.status.value = true }}
+            >
+              狀態:
+              {' '}
+              { feature.isLogin.value ? '已登入' : '未登入'}
+            </Text>
           </Box>
         </HStack>
       </Box>

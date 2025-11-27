@@ -1,7 +1,11 @@
 
+export enum PublicApiRoute {
+    AuthLogin = '/auth/login',
+  AuthCheckLogin = '/auth/checkValidToken',
+}
+
 export enum PrivateApiRoute {
   // ** Auth API 路由
-  AuthLogin = '/auth/login',
   AuthSendOTP = '/auth/sendOTP',
   AuthRegister = '/auth/userRegister',
 
