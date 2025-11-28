@@ -54,7 +54,10 @@ const DeleteFileAlert: FunctionComponent<DeleteFileAlertProps> = ({
               </Text>
             </Dialog.Body>
             <Dialog.Footer>
-              <Stack direction="row" gap={2} justify="flex-end" w="full">
+              <Stack
+                direction="row" gap={2} justify="flex-end"
+                w="full"
+              >
                 <Button
                   variant="outline"
                   onClick={onClose}

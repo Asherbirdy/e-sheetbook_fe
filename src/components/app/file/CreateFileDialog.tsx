@@ -42,13 +42,14 @@ const CreateFileDialog: FunctionComponent<CreateFileDialogProps> = ({
   return (
     <Dialog.Root
       open={open}
-      onOpenChange={(e) => { if (!e.open) handleClose() }}
+      onOpenChange={(details) => { if (!details.open) handleClose() }}
+      closeOnInteractOutside
       size="md"
     >
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content>
+          <Dialog.Content onClick={(e) => e.stopPropagation()}>
             <Dialog.Header>
               <Dialog.Title>新增檔案</Dialog.Title>
             </Dialog.Header>
