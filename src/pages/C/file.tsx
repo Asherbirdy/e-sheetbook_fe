@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Grid,
   Heading,
   HStack,
@@ -8,6 +7,7 @@ import {
   Spinner,
   Center,
   EmptyState,
+  Button,
 } from '@chakra-ui/react'
 import { LuPlus, LuFolderOpen } from 'react-icons/lu'
 import { useFileApi } from '@/api/useFileApi'
@@ -17,6 +17,7 @@ import {
   CreateFileDialog,
   EditFileDialog,
   DeleteFileAlert,
+  FileCard,
 } from '@/components'
 
 const FilePage = () => {
@@ -151,44 +152,25 @@ const FilePage = () => {
             base: '1fr',
             md: 'repeat(2, 1fr)',
             lg: 'repeat(3, 1fr)',
+            xl: 'repeat(4, 1fr)',
           }}
-          gap={4}
+          gap={6}
         >
           {files.map((file) => (
-            <Box
+            <FileCard
               key={file._id}
-              p={4}
-              borderWidth="1px"
-              borderRadius="md"
-              bg="white"
-              _hover={{ shadow: 'md' }}
-              cursor="pointer"
-            >
-              <Text fontSize="lg" fontWeight="semibold" mb={2}>
-                {file.name}
-              </Text>
-              <HStack gap={2}>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    editDialog.value = { open: true, file }
-                  }}
-                >
-                  編輯
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  colorPalette="red"
-                  onClick={() => {
-                    deleteAlert.value = { open: true, file }
-                  }}
-                >
-                  刪除
-                </Button>
-              </HStack>
-            </Box>
+              file={file}
+              onEdit={(file) => {
+                editDialog.value = { open: true, file }
+              }}
+              onDelete={(file) => {
+                deleteAlert.value = { open: true, file }
+              }}
+              onClick={(file) => {
+                // TODO: 導航到試算表頁面
+                console.log('Opening file:', file.name)
+              }}
+            />
           ))}
         </Grid>
       )}

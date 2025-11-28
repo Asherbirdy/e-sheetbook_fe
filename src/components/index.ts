@@ -14,5 +14,5 @@ export { default as TeamCalendar } from './home/TeamCalendar'
 export { default as CreateFileDialog } from './app/file/CreateFileDialog'
 export { default as DeleteFileAlert } from './app/file/DeleteFileAlert'
 export { default as EditFileDialog } from './app/file/EditFileDialog'
-
+export * from './app/file/FileCard'
 
