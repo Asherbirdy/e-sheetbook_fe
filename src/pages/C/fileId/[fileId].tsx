@@ -1,5 +1,5 @@
 import {
-  Box, Heading, VStack, Spinner, Center, Text, EmptyState, Button, HStack,
+  Box, Heading, Grid, Spinner, Center, Text, EmptyState, Button, HStack,
 } from '@chakra-ui/react'
 import {
   LuPlus, LuFolderOpen, LuArrowLeft,
@@ -87,7 +87,13 @@ const FileIdPage = () => {
           </EmptyState.Content>
         </EmptyState.Root>
       ) : (
-        <VStack gap={4} align="stretch">
+        <Grid
+          templateColumns={{
+            base: '1fr',
+            md: 'repeat(2, 1fr)',
+          }}
+          gap={4}
+        >
           {sheets.map((sheet) => (
             <SheetCard
               key={sheet._id}
@@ -106,7 +112,7 @@ const FileIdPage = () => {
               }}
             />
           ))}
-        </VStack>
+        </Grid>
       )}
     </Box>
   )
