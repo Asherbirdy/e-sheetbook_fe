@@ -13,6 +13,7 @@ import { LuPlus, LuFolderOpen } from 'react-icons/lu'
 import { useFileApi } from '@/api/useFileApi'
 import { GetFile } from '@/types'
 import { toaster } from '@/components/ui/toaster'
+import { CRoutes } from '@/enums/RoutesEnum'
 import {
   CreateFileDialog,
   EditFileDialog,
@@ -21,6 +22,8 @@ import {
 } from '@/components'
 
 const FilePage = () => {
+  const navigate = useNavigate()
+
   // 狀態管理
   const createDialog = useSignal(false)
   const editDialog = useSignal<{ open: boolean; file: GetFile | null }>({
@@ -167,8 +170,7 @@ const FilePage = () => {
                 deleteAlert.value = { open: true, file }
               }}
               onClick={(file) => {
-                // TODO: 導航到試算表頁面
-                console.log('Opening file:', file.name)
+                navigate(`${CRoutes.FileId}/${file._id}`)
               }}
             />
           ))}
