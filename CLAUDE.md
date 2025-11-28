@@ -199,6 +199,47 @@ The following are auto-imported via `unplugin-auto-import` (configured in `vite.
 
 **Important**: The `auto-imports.d.ts` file is generated automatically and must be included in `tsconfig.json` for TypeScript to recognize these globals. No manual imports needed for any of the above.
 
+### View Transition API (React Router)
+
+**IMPORTANT**: The project uses React Router's experimental View Transition API to provide smooth page transitions. Since these are unstable APIs in React Router v6.26.2, they require the `unstable_` prefix.
+
+**Usage in Route Components**:
+```tsx
+import { Outlet, useLocation, unstable_useViewTransitionState } from 'react-router-dom'
+
+const CRoute = () => {
+  const location = useLocation()
+  unstable_useViewTransitionState(location.pathname)
+
+  return (
+    <Box minH="100vh" bg="gray.50">
+      <Outlet />
+    </Box>
+  )
+}
+```
+
+**Usage in Link Components**:
+```tsx
+import { Link } from 'react-router-dom'
+
+// Add unstable_viewTransition prop to enable transitions
+<Link to={CRoutes.Home} unstable_viewTransition>
+  <Text>Home</Text>
+</Link>
+
+<Link to={CRoutes.File} unstable_viewTransition>
+  <Text>Files</Text>
+</Link>
+```
+
+**Key Points**:
+- Always use `unstable_useViewTransitionState` (not `useViewTransitionState`)
+- Always use `unstable_viewTransition` prop on `<Link>` components (not `viewTransition`)
+- These are experimental APIs and may change in future React Router versions
+- The `unstable_useViewTransitionState` hook tracks transition state for the given pathname
+- Enables native browser View Transition API for smooth route changes
+
 ## Component Patterns
 ### UI Styling Best Practices
 **Priority order for styling:**
