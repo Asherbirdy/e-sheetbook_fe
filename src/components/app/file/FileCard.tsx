@@ -52,6 +52,22 @@ export const FileCard = ({
           {/* 操作按鈕 - 滑鼠移入時顯示 */}
           {showActions.value && (
             <HStack gap={1}>
+              NEW:
+              <IconButton
+                variant="ghost"
+                size="sm"
+                color="gray.500"
+                _hover={{ bg: 'gray.100' }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onEdit(file)
+                }}
+                aria-label="編輯檔案"
+              >
+                <LuPencil size={16} />
+              </IconButton>
+
+              OLD:
               <IconButton
                 variant="ghost"
                 size="sm"
