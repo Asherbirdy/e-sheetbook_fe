@@ -7,7 +7,7 @@ import { GetFile } from '@/types'
 import { toaster } from '@/components/ui/toaster'
 import { CRoutes } from '@/enums/RoutesEnum'
 import {
-  CreateFileDialog, EditFileDialog, DeleteFileAlert, FileCard,
+  CreateFileDialog, DeleteFileAlert, FileCard,
 } from '@/components'
 
 const FilePage = () => {
@@ -15,10 +15,7 @@ const FilePage = () => {
 
   // 狀態管理
   const createDialog = useSignal(false)
-  const editDialog = useSignal<{ open: boolean; file: GetFile | null }>({
-    open: false,
-    file: null,
-  })
+
   const deleteAlert = useSignal<{ open: boolean; file: GetFile | null }>({
     open: false,
     file: null,
@@ -48,26 +45,6 @@ const FilePage = () => {
       toaster.error({
         title: '錯誤',
         description: '建立檔案失敗',
-      })
-    },
-  })
-
-  // 編輯檔案
-  const editMutation = useMutation({
-    mutationFn: ({ name, fileId }: { name: string; fileId: string }) =>
-      useFileApi.edit({ name, fileId }),
-    onSuccess: () => {
-      filesQuery.refetch()
-      editDialog.value = { open: false, file: null }
-      toaster.success({
-        title: '成功',
-        description: '檔案已更新',
-      })
-    },
-    onError: () => {
-      toaster.error({
-        title: '錯誤',
-        description: '更新檔案失敗',
       })
     },
   })
@@ -149,9 +126,6 @@ const FilePage = () => {
             <FileCard
               key={file._id}
               file={file}
-              onEdit={(file) => {
-                editDialog.value = { open: true, file }
-              }}
               onDelete={(file) => {
                 deleteAlert.value = { open: true, file }
               }}
@@ -172,15 +146,6 @@ const FilePage = () => {
         onClose={() => { createDialog.value = false }}
         onSubmit={(name) => createMutation.mutate(name)}
         isLoading={createMutation.isPending}
-      />
-
-      {/* 編輯檔案對話框 */}
-      <EditFileDialog
-        open={editDialog.value.open}
-        file={editDialog.value.file}
-        onClose={() => { editDialog.value = { open: false, file: null } }}
-        onSubmit={(name, fileId) => editMutation.mutate({ name, fileId })}
-        isLoading={editMutation.isPending}
       />
 
       {/* 刪除檔案確認對話框 */}
