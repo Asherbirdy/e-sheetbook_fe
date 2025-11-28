@@ -24,4 +24,4 @@ export * from './app/sheet/DeleteSheetIcon'
 export { default as EditSheetDialog } from './app/sheet/EditSheetDialog'
 export * from './app/sheet/EditSheetIcon'
 export * from './app/sheet/SheetCard'
-
+export * from './app/file/EditFileIcon'

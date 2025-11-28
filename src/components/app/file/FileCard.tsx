@@ -5,6 +5,7 @@ import {
   LuFolder, LuPencil, LuTrash2,
 } from 'react-icons/lu'
 import { GetFile } from '@/types'
+import { EditFileIcon } from '@/components'
 
 interface FileCardProps {
   file: GetFile
@@ -53,19 +54,7 @@ export const FileCard = ({
           {showActions.value && (
             <HStack gap={1}>
               NEW:
-              <IconButton
-                variant="ghost"
-                size="sm"
-                color="gray.500"
-                _hover={{ bg: 'gray.100' }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onEdit(file)
-                }}
-                aria-label="編輯檔案"
-              >
-                <LuPencil size={16} />
-              </IconButton>
+              <EditFileIcon />
 
               OLD:
               <IconButton
