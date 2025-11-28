@@ -19,6 +19,7 @@ export const SheetCard = ({
   onEdit,
   onDelete,
 }: SheetCardProps) => {
+  const { fileId } = useParams<{ fileId: string }>()
   const showActions = useSignal(false)
   const drawerOpen = useSignal(false)
 
@@ -89,23 +90,7 @@ export const SheetCard = ({
                 >
                   <LuExternalLink size={16} />
                 </IconButton>
-                <p>new:</p>
-
-                <p>old</p>
-                <EditSheetIcon />
-                <IconButton
-                  variant="ghost"
-                  size="sm"
-                  color="gray.600"
-                  _hover={{ bg: 'gray.100' }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onEdit(sheet)
-                  }}
-                  aria-label="編輯試算表"
-                >
-                  <LuPencil size={16} />
-                </IconButton>
+                <EditSheetIcon sheet={sheet} fileId={fileId!} />
                 <IconButton
                   variant="ghost"
                   size="sm"
