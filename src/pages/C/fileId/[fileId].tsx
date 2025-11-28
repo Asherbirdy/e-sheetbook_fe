@@ -5,15 +5,23 @@ import {
   LuPlus, LuFolderOpen, LuArrowLeft,
 } from 'react-icons/lu'
 import { useSheetApi } from '@/api/useSheetApi'
-import { SheetCard } from '@/components'
+import {
+  SheetCard, EditSheetDialog, DeleteSheetAlert,
+} from '@/components'
 import { CRoutes } from '@/enums/RoutesEnum'
+import { Sheet } from '@/types'
+import { toaster } from '@/components/ui/toaster'
 
 const FileIdPage = () => {
   const { fileId } = useParams<{ fileId: string }>()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
-  // 新增 Sheet 對話框狀態
+  // 對話框狀態
   const createDialog = useSignal(false)
+  const editDialog = useSignal(false)
+  const deleteAlert = useSignal(false)
+  const selectedSheet = useSignal<Sheet | null>(null)
 
   // 取得該檔案的所有 Sheet
   const sheetsQuery = useQuery({
@@ -27,6 +35,87 @@ const FileIdPage = () => {
   })
 
   const sheets = sheetsQuery.data?.sheets || []
+
+  // 編輯 Sheet Mutation
+  const editSheetMutation = useMutation({
+    mutationFn: async ({
+      name, url, sheetId,
+    }: { name: string, url: string, sheetId: string }) => {
+      if (!fileId) throw new Error('File ID is required')
+      return useSheetApi.edit({
+        name,
+        url,
+        api: [],
+        fileId,
+        sheetId,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sheets', fileId] })
+      editDialog.value = false
+      selectedSheet.value = null
+      toaster.create({
+        title: '更新成功',
+        description: '試算表已成功更新',
+        type: 'success',
+      })
+    },
+    onError: () => {
+      toaster.create({
+        title: '更新失敗',
+        description: '試算表更新失敗,請稍後再試',
+        type: 'error',
+      })
+    },
+  })
+
+  // 刪除 Sheet Mutation
+  const deleteSheetMutation = useMutation({
+    mutationFn: async (sheetId: string) => {
+      return useSheetApi.delete({ sheetId })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sheets', fileId] })
+      deleteAlert.value = false
+      selectedSheet.value = null
+      toaster.create({
+        title: '刪除成功',
+        description: '試算表已成功刪除',
+        type: 'success',
+      })
+    },
+    onError: () => {
+      toaster.create({
+        title: '刪除失敗',
+        description: '試算表刪除失敗,請稍後再試',
+        type: 'error',
+      })
+    },
+  })
+
+  // 處理編輯
+  const handleEdit = (sheet: Sheet) => {
+    selectedSheet.value = sheet
+    editDialog.value = true
+  }
+
+  // 處理刪除
+  const handleDelete = (sheet: Sheet) => {
+    selectedSheet.value = sheet
+    deleteAlert.value = true
+  }
+
+  // 處理編輯提交
+  const handleEditSubmit = (name: string, url: string, sheetId: string) => {
+    editSheetMutation.mutate({
+      name, url, sheetId,
+    })
+  }
+
+  // 處理刪除確認
+  const handleDeleteConfirm = (sheetId: string) => {
+    deleteSheetMutation.mutate(sheetId)
+  }
 
   // 載入中狀態
   if (sheetsQuery.isLoading) {
@@ -98,22 +187,36 @@ const FileIdPage = () => {
             <SheetCard
               key={sheet._id}
               sheet={sheet}
-              onEdit={() => {
-                // TODO: 編輯 Sheet
-                console.log('Edit sheet:', sheet.name)
-              }}
-              onDelete={() => {
-                // TODO: 刪除 Sheet
-                console.log('Delete sheet:', sheet.name)
-              }}
-              onClick={() => {
-                // TODO: 導航到 Sheet 詳細頁面
-                console.log('Open sheet:', sheet.name)
-              }}
+              onEdit={() => handleEdit(sheet)}
+              onDelete={() => handleDelete(sheet)}
             />
           ))}
         </Grid>
       )}
+
+      {/* 編輯對話框 */}
+      <EditSheetDialog
+        open={editDialog.value}
+        sheet={selectedSheet.value}
+        onClose={() => {
+          editDialog.value = false
+          selectedSheet.value = null
+        }}
+        onSubmit={handleEditSubmit}
+        isLoading={editSheetMutation.isPending}
+      />
+
+      {/* 刪除警告對話框 */}
+      <DeleteSheetAlert
+        open={deleteAlert.value}
+        sheet={selectedSheet.value}
+        onClose={() => {
+          deleteAlert.value = false
+          selectedSheet.value = null
+        }}
+        onConfirm={handleDeleteConfirm}
+        isLoading={deleteSheetMutation.isPending}
+      />
     </Box>
   )
 }

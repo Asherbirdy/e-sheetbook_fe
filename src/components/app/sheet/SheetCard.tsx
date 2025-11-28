@@ -23,14 +23,12 @@ interface SheetCardProps {
   sheet: Sheet
   onEdit: (sheet: Sheet) => void
   onDelete: (sheet: Sheet) => void
-  onClick?: (sheet: Sheet) => void
 }
 
 export const SheetCard = ({
   sheet,
   onEdit,
   onDelete,
-  onClick,
 }: SheetCardProps) => {
   const showActions = useSignal(false)
   const drawerOpen = useSignal(false)
@@ -38,6 +36,11 @@ export const SheetCard = ({
   const handleQuickView = (e: React.MouseEvent) => {
     e.stopPropagation()
     drawerOpen.value = true
+  }
+
+  const handleOpenInNewTab = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    window.open(sheet.url, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -56,7 +59,6 @@ export const SheetCard = ({
         }}
         transition="all 0.2s"
         cursor="pointer"
-        onClick={() => onClick?.(sheet)}
         onMouseEnter={() => { showActions.value = true }}
         onMouseLeave={() => { showActions.value = false }}
         h="full"
@@ -87,6 +89,16 @@ export const SheetCard = ({
                   aria-label="快速瀏覽"
                 >
                   <LuEye size={16} />
+                </IconButton>
+                <IconButton
+                  variant="ghost"
+                  size="sm"
+                  color="gray.600"
+                  _hover={{ bg: 'green.50', color: 'green.500' }}
+                  onClick={handleOpenInNewTab}
+                  aria-label="在新分頁開啟"
+                >
+                  <LuExternalLink size={16} />
                 </IconButton>
                 <IconButton
                   variant="ghost"
