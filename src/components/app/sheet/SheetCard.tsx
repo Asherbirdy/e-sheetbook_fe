@@ -123,7 +123,10 @@ export const SheetCard = ({
             {sheet.url && (
               <HStack gap={2} w="full">
                 <LuExternalLink size={14} color="gray" />
-                <Text fontSize="sm" color="gray.600" lineClamp={1} flex={1}>
+                <Text
+                  fontSize="sm" color="gray.600" lineClamp={1}
+                  flex={1}
+                >
                   {sheet.url}
                 </Text>
               </HStack>
