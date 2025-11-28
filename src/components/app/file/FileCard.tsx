@@ -2,7 +2,7 @@ import {
   Box, HStack, Text, IconButton,
 } from '@chakra-ui/react'
 import {
-  LuFileText, LuPencil, LuTrash2,
+  LuFolder, LuPencil, LuTrash2,
 } from 'react-icons/lu'
 import { GetFile } from '@/types'
 
@@ -44,7 +44,7 @@ export const FileCard = ({
             borderRadius="lg"
             backdropFilter="blur(10px)"
           >
-            <LuFileText size={24} color="white" />
+            <LuFolder size={24} color="white" />
           </Box>
 
           {/* 操作按鈕 - 滑鼠移入時顯示 */}
@@ -92,7 +92,7 @@ export const FileCard = ({
 
         {/* 副標題 */}
         <Text fontSize="sm" color="whiteAlpha.700">
-          試算表文件
+          資料夾
         </Text>
       </Box>
     </Box>
