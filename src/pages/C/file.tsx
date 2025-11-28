@@ -7,10 +7,7 @@ import { GetFile } from '@/types'
 import { toaster } from '@/components/ui/toaster'
 import { CRoutes } from '@/enums/RoutesEnum'
 import {
-  CreateFileDialog,
-  EditFileDialog,
-  DeleteFileAlert,
-  FileCard,
+  CreateFileDialog, EditFileDialog, DeleteFileAlert, FileCard,
 } from '@/components'
 
 const FilePage = () => {
@@ -119,10 +116,7 @@ const FilePage = () => {
       {/* 標題列 */}
       <HStack justify="space-between" mb={6}>
         <Heading size="lg">我的檔案</Heading>
-        <Button
-          colorPalette="blue"
-          onClick={() => { createDialog.value = true }}
-        >
+        <Button onClick={() => { createDialog.value = true }}>
           <LuPlus />
           新增檔案
         </Button>

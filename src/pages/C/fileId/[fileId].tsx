@@ -1,19 +1,14 @@
 import {
   Box, Heading, Grid, Spinner, Center, Text, EmptyState, Button, HStack,
 } from '@chakra-ui/react'
-import {
-  LuPlus, LuFolderOpen, LuArrowLeft,
-} from 'react-icons/lu'
+import { LuFolderOpen, LuArrowLeft } from 'react-icons/lu'
 import { useSheetApi } from '@/api/useSheetApi'
-import { SheetCard } from '@/components'
+import { AddSheetButton, SheetCard } from '@/components'
 import { CRoutes } from '@/enums/RoutesEnum'
 
 const FileIdPage = () => {
   const { fileId } = useParams<{ fileId: string }>()
   const navigate = useNavigate()
-
-  // 新增 Sheet 對話框狀態
-  const createDialog = useSignal(false)
 
   // 取得該檔案的所有 Sheet
   const sheetsQuery = useQuery({
@@ -63,18 +58,11 @@ const FileIdPage = () => {
       {/* 標題列 */}
       <HStack justify="space-between" mb={6}>
         <Heading size="lg" color="gray.900">試算表列表</Heading>
-        <Button
-          variant="outline"
-          colorPalette="gray"
-          onClick={() => { createDialog.value = true }}
-        >
-          <LuPlus />
-          新增試算表
-        </Button>
+        <AddSheetButton fileId={fileId!} />
       </HStack>
 
       {/* Sheet 列表 */}
-      {sheets.length === 0 ? (
+      {sheets.length === 0 && (
         <EmptyState.Root>
           <EmptyState.Content>
             <EmptyState.Indicator>
@@ -86,7 +74,9 @@ const FileIdPage = () => {
             </EmptyState.Description>
           </EmptyState.Content>
         </EmptyState.Root>
-      ) : (
+      )}
+
+      {sheets.length > 0 && (
         <Grid
           templateColumns={{
             base: '1fr',
@@ -98,18 +88,6 @@ const FileIdPage = () => {
             <SheetCard
               key={sheet._id}
               sheet={sheet}
-              onEdit={() => {
-                // TODO: 編輯 Sheet
-                console.log('Edit sheet:', sheet.name)
-              }}
-              onDelete={() => {
-                // TODO: 刪除 Sheet
-                console.log('Delete sheet:', sheet.name)
-              }}
-              onClick={() => {
-                // TODO: 導航到 Sheet 詳細頁面
-                console.log('Open sheet:', sheet.name)
-              }}
             />
           ))}
         </Grid>

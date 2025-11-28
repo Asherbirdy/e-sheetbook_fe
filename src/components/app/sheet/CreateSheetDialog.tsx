@@ -8,41 +8,44 @@ import {
   Field,
 } from '@chakra-ui/react'
 
-interface CreateFileDialogProps {
+interface CreateSheetDialogProps {
   open: boolean
   onClose: () => void
-  onSubmit: (name: string) => void
+  onSubmit: (name: string, url: string) => void
   isLoading?: boolean
 }
 
-const CreateFileDialog: FunctionComponent<CreateFileDialogProps> = ({
+const CreateSheetDialog: FunctionComponent<CreateSheetDialogProps> = ({
   open,
   onClose,
   onSubmit,
   isLoading = false,
 }): ReactElement => {
   // 表單狀態
-  const fileName = useSignal('')
+  const data = {
+    name: useSignal(''),
+    url: useSignal(''),
+  }
 
   // 處理提交
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (fileName.value.trim()) {
-      onSubmit(fileName.value.trim())
-      fileName.value = ''
+    if (data.name.value.trim() && data.url.value.trim()) {
+      onSubmit(data.name.value.trim(), data.url.value.trim())
     }
   }
 
   // 處理關閉
   const handleClose = () => {
-    fileName.value = ''
+    data.name.value = ''
+    data.url.value = ''
     onClose()
   }
 
   return (
     <Dialog.Root
       open={open}
-      onOpenChange={(e) => { if (!e.open) handleClose() }}
+      onOpenChange={(e: { open: boolean }) => { if (!e.open) handleClose() }}
       size="md"
     >
       <Portal>
@@ -50,18 +53,26 @@ const CreateFileDialog: FunctionComponent<CreateFileDialogProps> = ({
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>新增檔案</Dialog.Title>
+              <Dialog.Title>新增試算表</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <form onSubmit={handleSubmit}>
                 <Stack gap={4}>
                   <Field.Root required>
-                    <Field.Label>檔案名稱</Field.Label>
+                    <Field.Label>試算表名稱</Field.Label>
                     <Input
-                      placeholder="輸入檔案名稱"
-                      value={fileName.value}
-                      onChange={(e) => { fileName.value = e.target.value }}
+                      placeholder="輸入試算表名稱"
+                      value={data.name.value}
+                      onChange={(e) => { data.name.value = e.target.value }}
                       autoFocus
+                    />
+                  </Field.Root>
+                  <Field.Root required>
+                    <Field.Label>試算表 URL</Field.Label>
+                    <Input
+                      placeholder="輸入試算表 URL"
+                      value={data.url.value}
+                      onChange={(e) => { data.url.value = e.target.value }}
                     />
                   </Field.Root>
                   <Stack direction="row" gap={2} justify="flex-end">
@@ -74,10 +85,11 @@ const CreateFileDialog: FunctionComponent<CreateFileDialogProps> = ({
                     </Button>
                     <Button
                       type="submit"
-                      disabled={!fileName.value.trim()}
+                      colorPalette="blue"
+                      disabled={!data.name.value.trim() || !data.url.value.trim()}
                       loading={isLoading}
                     >
-                      建立
+                      新增
                     </Button>
                   </Stack>
                 </Stack>
@@ -91,4 +103,4 @@ const CreateFileDialog: FunctionComponent<CreateFileDialogProps> = ({
   )
 }
 
-export default CreateFileDialog
+export default CreateSheetDialog
