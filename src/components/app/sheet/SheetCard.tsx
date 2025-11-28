@@ -2,7 +2,7 @@ import {
   Box, HStack, Text, IconButton,  VStack, Badge, Portal, Drawer, CloseButton,
 } from '@chakra-ui/react'
 import {
-  LuFileSpreadsheet, LuTrash2, LuExternalLink, LuEye,
+  LuFileSpreadsheet, LuExternalLink, LuEye,
 } from 'react-icons/lu'
 import { Sheet } from '@/types'
 import dayjs from 'dayjs'
@@ -10,13 +10,9 @@ import { DeleteSheetIcon, EditSheetIcon } from '@/components'
 
 interface SheetCardProps {
   sheet: Sheet
-  onDelete: (sheet: Sheet) => void
 }
 
-export const SheetCard = ({
-  sheet,
-  onDelete,
-}: SheetCardProps) => {
+export const SheetCard = ({ sheet }: SheetCardProps) => {
   const { fileId } = useParams<{ fileId: string }>()
   const showActions = useSignal(false)
   const drawerOpen = useSignal(false)
