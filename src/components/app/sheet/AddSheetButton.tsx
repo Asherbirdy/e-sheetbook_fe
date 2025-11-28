@@ -7,10 +7,9 @@ import { toaster } from '@/components/ui/toaster'
 
 interface AddSheetButtonProps {
   fileId: string
-  onSuccess?: () => void
 }
 
-export const AddSheetButton = ({ fileId, onSuccess }: AddSheetButtonProps) => {
+export const AddSheetButton = ({ fileId }: AddSheetButtonProps) => {
   const queryClient = useQueryClient()
   const open = useSignal(false)
 
@@ -39,7 +38,6 @@ export const AddSheetButton = ({ fileId, onSuccess }: AddSheetButtonProps) => {
         description: '試算表已成功新增',
         type: 'success',
       })
-      onSuccess?.()
     },
     onError: () => {
       toaster.create({
