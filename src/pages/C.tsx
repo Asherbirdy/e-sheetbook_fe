@@ -1,11 +1,15 @@
-import { Outlet, useLocation, useViewTransitionState } from 'react-router-dom'
+import {
+  Outlet, useLocation, unstable_useViewTransitionState,
+} from 'react-router-dom'
 import { HomeHeader } from '@/components'
-import { Box, Center, Spinner } from '@chakra-ui/react'
+import {
+  Box, Center, Spinner,
+} from '@chakra-ui/react'
 import { Suspense } from 'react'
 
 const CRoute = () => {
   const location = useLocation()
-  const isTransitioning = useViewTransitionState(location.pathname)
+  unstable_useViewTransitionState(location.pathname)
 
   return (
     <Box minH="100vh" bg="gray.50">
