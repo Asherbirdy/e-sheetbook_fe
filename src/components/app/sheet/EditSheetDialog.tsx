@@ -58,13 +58,14 @@ const EditSheetDialog: FunctionComponent<EditSheetDialogProps> = ({
   return (
     <Dialog.Root
       open={open}
-      onOpenChange={(e: { open: boolean }) => { if (!e.open) handleClose() }}
+      onOpenChange={(details) => { if (!details.open) handleClose() }}
+      closeOnInteractOutside
       size="md"
     >
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content>
+          <Dialog.Content onClick={(e) => e.stopPropagation()}>
             <Dialog.Header>
               <Dialog.Title>編輯試算表</Dialog.Title>
             </Dialog.Header>
@@ -98,7 +99,6 @@ const EditSheetDialog: FunctionComponent<EditSheetDialogProps> = ({
                     </Button>
                     <Button
                       type="submit"
-                      colorPalette="blue"
                       disabled={!data.name.value.trim() || !data.url.value.trim()}
                       loading={isLoading}
                     >

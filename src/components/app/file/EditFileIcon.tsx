@@ -67,13 +67,14 @@ export const EditFileIcon = ({ file }: EditFileIconProps) => {
 
       <Dialog.Root
         open={open.value}
-        onOpenChange={(e) => { if (!e.open) handleClose() }}
+        onOpenChange={(details) => { if (!details.open) handleClose() }}
+        closeOnInteractOutside
         size="md"
       >
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content onClick={(e) => e.stopPropagation()}>
               <Dialog.Header>
                 <Dialog.Title>編輯檔案</Dialog.Title>
               </Dialog.Header>
