@@ -23,7 +23,7 @@ export const FileCard = ({
       position="relative"
       borderRadius="2xl"
       overflow="hidden"
-      bg="blue.500"
+      bg="gray.500"
       _hover={{
         transform: 'translateY(-4px)',
         shadow: 'lg',
