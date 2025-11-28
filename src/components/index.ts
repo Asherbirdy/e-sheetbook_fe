@@ -19,5 +19,6 @@ export * from './app/file/FileCard'
 // ** app/sheet
 export { default as DeleteSheetAlert } from './app/sheet/DeleteSheetAlert'
 export { default as EditSheetDialog } from './app/sheet/EditSheetDialog'
+export * from './app/sheet/EditSheetIcon'
 export * from './app/sheet/SheetCard'
 
