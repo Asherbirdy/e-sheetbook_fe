@@ -1,11 +1,5 @@
 import {
-  IconButton,
-  Dialog,
-  Portal,
-  Button,
-  Stack,
-  Input,
-  Field,
+  IconButton, Dialog, Portal, Button, Stack, Input, Field,
 } from '@chakra-ui/react'
 import { LuPencil } from 'react-icons/lu'
 import { Sheet } from '@/types'
@@ -15,12 +9,9 @@ import { toaster } from '@/components/ui/toaster'
 interface EditSheetIconProps {
   sheet: Sheet
   fileId: string
-  onSuccess?: () => void
 }
 
-export const EditSheetIcon = ({
-  sheet, fileId, onSuccess,
-}: EditSheetIconProps) => {
+export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
   const queryClient = useQueryClient()
   const editDialog = useSignal(false)
 
@@ -40,15 +31,13 @@ export const EditSheetIcon = ({
 
   // 編輯 Sheet Mutation
   const editSheetMutation = useMutation({
-    mutationFn: async ({
-      name, url, sheetId,
-    }: { name: string, url: string, sheetId: string }) => {
+    mutationFn: async (payload: { name: string, url: string, sheetId: string }) => {
       return useSheetApi.edit({
-        name,
-        url,
+        name: payload.name,
+        url: payload.url,
         api: [],
         fileId,
-        sheetId,
+        sheetId: payload.sheetId,
       })
     },
     onSuccess: () => {
@@ -61,7 +50,6 @@ export const EditSheetIcon = ({
         description: '試算表已成功更新',
         type: 'success',
       })
-      onSuccess?.()
     },
     onError: () => {
       toaster.create({
