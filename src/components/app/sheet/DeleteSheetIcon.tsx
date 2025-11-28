@@ -1,19 +1,17 @@
-import { IconButton } from '@chakra-ui/react'
+import {
+  IconButton, Dialog, Portal, Button, Stack, Text,
+} from '@chakra-ui/react'
 import { LuTrash2 } from 'react-icons/lu'
 import { Sheet } from '@/types'
-import { DeleteSheetAlert } from '@/components'
 import { useSheetApi } from '@/api/useSheetApi'
 import { toaster } from '@/components/ui/toaster'
 
 interface DeleteSheetIconProps {
   sheet: Sheet
   fileId: string
-  onSuccess?: () => void
 }
 
-export const DeleteSheetIcon = ({
-  sheet, fileId, onSuccess,
-}: DeleteSheetIconProps) => {
+export const DeleteSheetIcon = ({ sheet, fileId }: DeleteSheetIconProps) => {
   const queryClient = useQueryClient()
   const deleteAlert = useSignal(false)
 
@@ -30,7 +28,6 @@ export const DeleteSheetIcon = ({
         description: '試算表已成功刪除',
         type: 'success',
       })
-      onSuccess?.()
     },
     onError: () => {
       toaster.create({
@@ -41,9 +38,9 @@ export const DeleteSheetIcon = ({
     },
   })
 
-  // 處理刪除確認
-  const handleDeleteConfirm = (sheetId: string) => {
-    deleteSheetMutation.mutate(sheetId)
+  // 處理確認刪除
+  const handleConfirm = () => {
+    deleteSheetMutation.mutate(sheet._id)
   }
 
   return (
@@ -63,13 +60,54 @@ export const DeleteSheetIcon = ({
       </IconButton>
 
       {/* 刪除警告對話框 */}
-      <DeleteSheetAlert
+      <Dialog.Root
         open={deleteAlert.value}
-        sheet={sheet}
-        onClose={() => { deleteAlert.value = false }}
-        onConfirm={handleDeleteConfirm}
-        isLoading={deleteSheetMutation.isPending}
-      />
+        onOpenChange={(e: { open: boolean }) => { if (!e.open) deleteAlert.value = false }}
+        size="sm"
+        role="alertdialog"
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>確認刪除</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Text>
+                  確定要刪除試算表「
+                  <strong>{sheet.name}</strong>
+                  」嗎?此操作無法復原。
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Stack
+                  direction="row"
+                  gap={2}
+                  justify="flex-end"
+                  w="full"
+                >
+                  <Button
+                    variant="outline"
+                    onClick={() => { deleteAlert.value = false }}
+                    disabled={deleteSheetMutation.isPending}
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    colorPalette="red"
+                    onClick={handleConfirm}
+                    loading={deleteSheetMutation.isPending}
+                  >
+                    刪除
+                  </Button>
+                </Stack>
+              </Dialog.Footer>
+              <Dialog.CloseTrigger />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </>
   )
 }
