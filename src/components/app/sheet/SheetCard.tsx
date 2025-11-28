@@ -6,7 +6,7 @@ import {
 } from 'react-icons/lu'
 import { Sheet } from '@/types'
 import dayjs from 'dayjs'
-import { EditSheetIcon } from '@/components'
+import { DeleteSheetIcon, EditSheetIcon } from '@/components'
 
 interface SheetCardProps {
   sheet: Sheet
@@ -89,19 +89,7 @@ export const SheetCard = ({
                   <LuExternalLink size={16} />
                 </IconButton>
                 <EditSheetIcon sheet={sheet} fileId={fileId!} />
-                <IconButton
-                  variant="ghost"
-                  size="sm"
-                  color="gray.600"
-                  _hover={{ bg: 'red.50', color: 'red.500' }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDelete(sheet)
-                  }}
-                  aria-label="刪除試算表"
-                >
-                  <LuTrash2 size={16} />
-                </IconButton>
+                <DeleteSheetIcon sheet={sheet} fileId={fileId!} />
               </HStack>
             )}
           </HStack>
