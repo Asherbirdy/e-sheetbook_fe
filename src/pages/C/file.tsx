@@ -3,23 +3,15 @@ import {
 } from '@chakra-ui/react'
 import { LuPlus, LuFolderOpen } from 'react-icons/lu'
 import { useFileApi } from '@/api/useFileApi'
-import { GetFile } from '@/types'
 import { toaster } from '@/components/ui/toaster'
 import { CRoutes } from '@/enums/RoutesEnum'
-import {
-  CreateFileDialog, DeleteFileAlert, FileCard,
-} from '@/components'
+import { CreateFileDialog, FileCard } from '@/components'
 
 const FilePage = () => {
   const navigate = useNavigate()
 
   // 狀態管理
   const createDialog = useSignal(false)
-
-  const deleteAlert = useSignal<{ open: boolean; file: GetFile | null }>({
-    open: false,
-    file: null,
-  })
 
   // 取得所有檔案
   const filesQuery = useQuery({
@@ -45,25 +37,6 @@ const FilePage = () => {
       toaster.error({
         title: '錯誤',
         description: '建立檔案失敗',
-      })
-    },
-  })
-
-  // 刪除檔案
-  const deleteMutation = useMutation({
-    mutationFn: (fileId: string) => useFileApi.delete({ fileId }),
-    onSuccess: () => {
-      filesQuery.refetch()
-      deleteAlert.value = { open: false, file: null }
-      toaster.success({
-        title: '成功',
-        description: '檔案已刪除',
-      })
-    },
-    onError: () => {
-      toaster.error({
-        title: '錯誤',
-        description: '刪除檔案失敗',
       })
     },
   })
@@ -126,9 +99,6 @@ const FilePage = () => {
             <FileCard
               key={file._id}
               file={file}
-              onDelete={(file) => {
-                deleteAlert.value = { open: true, file }
-              }}
               onClick={(file) => {
                 navigate(
                   `${CRoutes.FileId}/${file._id}`,
@@ -146,15 +116,6 @@ const FilePage = () => {
         onClose={() => { createDialog.value = false }}
         onSubmit={(name) => createMutation.mutate(name)}
         isLoading={createMutation.isPending}
-      />
-
-      {/* 刪除檔案確認對話框 */}
-      <DeleteFileAlert
-        open={deleteAlert.value.open}
-        file={deleteAlert.value.file}
-        onClose={() => { deleteAlert.value = { open: false, file: null } }}
-        onConfirm={(fileId) => deleteMutation.mutate(fileId)}
-        isLoading={deleteMutation.isPending}
       />
     </Box>
   )

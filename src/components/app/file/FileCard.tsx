@@ -1,19 +1,16 @@
 import {
-  Box, HStack, Text, IconButton,
+  Box, HStack, Text,
 } from '@chakra-ui/react'
-import { LuFolder, LuTrash2 } from 'react-icons/lu'
+import { LuFolder } from 'react-icons/lu'
 import { GetFile } from '@/types'
-import { EditFileIcon } from '@/components'
+import { EditFileIcon, DeleteFileIcon } from '@/components'
 
 interface FileCardProps {
   file: GetFile
-  onDelete: (file: GetFile) => void
   onClick?: (file: GetFile) => void
 }
 
-export const FileCard = ({
-  file, onDelete, onClick,
-}: FileCardProps) => {
+export const FileCard = ({ file, onClick }: FileCardProps) => {
   const showActions = useSignal(false)
 
   return (
@@ -51,19 +48,7 @@ export const FileCard = ({
           {showActions.value && (
             <HStack gap={1}>
               <EditFileIcon file={file} />
-              <IconButton
-                variant="ghost"
-                size="sm"
-                color="gray.500"
-                _hover={{ bg: 'red.50', color: 'red.500' }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDelete(file)
-                }}
-                aria-label="刪除檔案"
-              >
-                <LuTrash2 size={16} />
-              </IconButton>
+              <DeleteFileIcon file={file} />
             </HStack>
           )}
         </HStack>
