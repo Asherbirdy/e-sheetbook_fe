@@ -13,20 +13,21 @@ interface EditSheetIconProps {
 
 export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
   const queryClient = useQueryClient()
-  const editDialog = useSignal(false)
 
   // 表單狀態
-  const formData = {
+  const data = {
     name: useSignal(''),
     url: useSignal(''),
   }
 
+  const dialog = useSignal(false)
+
   // 當對話框開啟時初始化表單(只在開啟時執行一次)
   const handleOpenDialog = (e: React.MouseEvent) => {
     e.stopPropagation()
-    formData.name.value = sheet.name
-    formData.url.value = sheet.url
-    editDialog.value = true
+    data.name.value = sheet.name
+    data.url.value = sheet.url
+    dialog.value = true
   }
 
   // 編輯 Sheet Mutation
@@ -42,9 +43,9 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sheets', fileId] })
-      editDialog.value = false
-      formData.name.value = ''
-      formData.url.value = ''
+      dialog.value = false
+      data.name.value = ''
+      data.url.value = ''
       toaster.create({
         title: '更新成功',
         description: '試算表已成功更新',
@@ -63,10 +64,10 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
   // 處理提交
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData.name.value.trim() && formData.url.value.trim()) {
+    if (data.name.value.trim() && data.url.value.trim()) {
       editSheetMutation.mutate({
-        name: formData.name.value.trim(),
-        url: formData.url.value.trim(),
+        name: data.name.value.trim(),
+        url: data.url.value.trim(),
         sheetId: sheet._id,
       })
     }
@@ -74,9 +75,9 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
 
   // 處理關閉
   const handleClose = () => {
-    formData.name.value = ''
-    formData.url.value = ''
-    editDialog.value = false
+    data.name.value = ''
+    data.url.value = ''
+    dialog.value = false
   }
 
   return (
@@ -94,7 +95,7 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
 
       {/* 編輯對話框 */}
       <Dialog.Root
-        open={editDialog.value}
+        open={dialog.value}
         onOpenChange={(e: { open: boolean }) => { if (!e.open) handleClose() }}
         size="md"
       >
@@ -112,8 +113,8 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
                       <Field.Label>試算表名稱</Field.Label>
                       <Input
                         placeholder="輸入試算表名稱"
-                        value={formData.name.value}
-                        onChange={(e) => { formData.name.value = e.target.value }}
+                        value={data.name.value}
+                        onChange={(e) => { data.name.value = e.target.value }}
                         autoFocus
                       />
                     </Field.Root>
@@ -121,8 +122,8 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
                       <Field.Label>試算表 URL</Field.Label>
                       <Input
                         placeholder="輸入試算表 URL"
-                        value={formData.url.value}
-                        onChange={(e) => { formData.url.value = e.target.value }}
+                        value={data.url.value}
+                        onChange={(e) => { data.url.value = e.target.value }}
                       />
                     </Field.Root>
                     <Stack direction="row" gap={2} justify="flex-end">
@@ -136,7 +137,7 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
                       <Button
                         type="submit"
                         colorPalette="blue"
-                        disabled={!formData.name.value.trim() || !formData.url.value.trim()}
+                        disabled={!data.name.value.trim() || !data.url.value.trim()}
                         loading={editSheetMutation.isPending}
                       >
                         更新
