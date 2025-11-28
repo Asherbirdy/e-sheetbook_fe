@@ -74,7 +74,6 @@ const CreateFileDialog: FunctionComponent<CreateFileDialogProps> = ({
                     </Button>
                     <Button
                       type="submit"
-                      colorPalette="blue"
                       disabled={!fileName.value.trim()}
                       loading={isLoading}
                     >

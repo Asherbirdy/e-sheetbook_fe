@@ -136,7 +136,6 @@ export const EditSheetIcon = ({ sheet, fileId }: EditSheetIconProps) => {
                       </Button>
                       <Button
                         type="submit"
-                        colorPalette="blue"
                         disabled={!data.name.value.trim() || !data.url.value.trim()}
                         loading={editSheetMutation.isPending}
                       >

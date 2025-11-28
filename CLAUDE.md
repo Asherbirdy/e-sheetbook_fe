@@ -267,6 +267,34 @@ import { Link } from 'react-router-dom'
 
 This ensures consistency with Chakra's theming system, responsive design, and color mode support.
 
+### Button Basic Settings
+**IMPORTANT**: When using Chakra UI `Button` components, especially for submit actions:
+1. **Avoid hardcoding colors**: Do not use `colorPalette="blue"` or similar props unless specifically required by the design system.
+2. **Use default styling**: Rely on the theme's default button styles to ensure consistency across the application.
+3. **Standard props**: Common props like `type="submit"`, `disabled`, and `loading` should be used as needed, but visual styling should remain minimal and theme-driven.
+
+**Example**:
+```tsx
+// ✅ Good - Clean, theme-driven
+<Button
+  type="submit"
+  disabled={!isValid}
+  loading={isLoading}
+>
+  Submit
+</Button>
+
+// ❌ Avoid - Hardcoded colors
+<Button
+  type="submit"
+  colorPalette="blue" // Avoid this
+  disabled={!isValid}
+  loading={isLoading}
+>
+  Submit
+</Button>
+```
+
 ### Component Export Convention (REQUIRED)
 
 **IMPORTANT**: All reusable components MUST be exported through `src/components/index.ts` for centralized imports.

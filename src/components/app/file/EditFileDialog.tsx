@@ -85,7 +85,6 @@ const EditFileDialog: FunctionComponent<EditFileDialogProps> = ({
                     </Button>
                     <Button
                       type="submit"
-                      colorPalette="blue"
                       disabled={!fileName.value.trim()}
                       loading={isLoading}
                     >
