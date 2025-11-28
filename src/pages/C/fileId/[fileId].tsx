@@ -1,12 +1,16 @@
 import {
   Box, Heading, VStack, Spinner, Center, Text, EmptyState, Button, HStack,
 } from '@chakra-ui/react'
-import { LuPlus, LuFolderOpen } from 'react-icons/lu'
+import {
+  LuPlus, LuFolderOpen, LuArrowLeft,
+} from 'react-icons/lu'
 import { useSheetApi } from '@/api/useSheetApi'
 import { SheetCard } from '@/components'
+import { CRoutes } from '@/enums/RoutesEnum'
 
 const FileIdPage = () => {
   const { fileId } = useParams<{ fileId: string }>()
+  const navigate = useNavigate()
 
   // 新增 Sheet 對話框狀態
   const createDialog = useSignal(false)
@@ -21,6 +25,8 @@ const FileIdPage = () => {
     },
     enabled: !!fileId,
   })
+
+  const sheets = sheetsQuery.data?.sheets || []
 
   // 載入中狀態
   if (sheetsQuery.isLoading) {
@@ -40,10 +46,20 @@ const FileIdPage = () => {
     )
   }
 
-  const sheets = sheetsQuery.data?.sheets || []
-
   return (
     <Box>
+      {/* 返回按鈕 */}
+      <Button
+        variant="ghost"
+        colorPalette="gray"
+        size="sm"
+        mb={4}
+        onClick={() => navigate(CRoutes.File, { unstable_viewTransition: true })}
+      >
+        <LuArrowLeft />
+        返回檔案列表
+      </Button>
+
       {/* 標題列 */}
       <HStack justify="space-between" mb={6}>
         <Heading size="lg" color="gray.900">試算表列表</Heading>
@@ -92,8 +108,6 @@ const FileIdPage = () => {
           ))}
         </VStack>
       )}
-
-      {/* TODO: 新增 CreateSheetDialog 元件 */}
     </Box>
   )
 }

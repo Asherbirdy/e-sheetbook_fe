@@ -1,13 +1,5 @@
 import {
-  Box,
-  Grid,
-  Heading,
-  HStack,
-  Text,
-  Spinner,
-  Center,
-  EmptyState,
-  Button,
+  Box, Grid, Heading, HStack, Text, Spinner, Center, EmptyState, Button,
 } from '@chakra-ui/react'
 import { LuPlus, LuFolderOpen } from 'react-icons/lu'
 import { useFileApi } from '@/api/useFileApi'
@@ -170,7 +162,10 @@ const FilePage = () => {
                 deleteAlert.value = { open: true, file }
               }}
               onClick={(file) => {
-                navigate(`${CRoutes.FileId}/${file._id}`)
+                navigate(
+                  `${CRoutes.FileId}/${file._id}`,
+                  { unstable_viewTransition: true },
+                )
               }}
             />
           ))}
