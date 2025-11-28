@@ -5,9 +5,7 @@ import {
   LuPlus, LuFolderOpen, LuArrowLeft,
 } from 'react-icons/lu'
 import { useSheetApi } from '@/api/useSheetApi'
-import {
-  SheetCard, EditSheetDialog, DeleteSheetAlert,
-} from '@/components'
+import { SheetCard, DeleteSheetAlert } from '@/components'
 import { CRoutes } from '@/enums/RoutesEnum'
 import { Sheet } from '@/types'
 import { toaster } from '@/components/ui/toaster'
@@ -19,7 +17,6 @@ const FileIdPage = () => {
 
   // 對話框狀態
   const createDialog = useSignal(false)
-  const editDialog = useSignal(false)
   const deleteAlert = useSignal(false)
   const selectedSheet = useSignal<Sheet | null>(null)
 
@@ -35,39 +32,6 @@ const FileIdPage = () => {
   })
 
   const sheets = sheetsQuery.data?.sheets || []
-
-  // 編輯 Sheet Mutation
-  const editSheetMutation = useMutation({
-    mutationFn: async ({
-      name, url, sheetId,
-    }: { name: string, url: string, sheetId: string }) => {
-      if (!fileId) throw new Error('File ID is required')
-      return useSheetApi.edit({
-        name,
-        url,
-        api: [],
-        fileId,
-        sheetId,
-      })
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sheets', fileId] })
-      editDialog.value = false
-      selectedSheet.value = null
-      toaster.create({
-        title: '更新成功',
-        description: '試算表已成功更新',
-        type: 'success',
-      })
-    },
-    onError: () => {
-      toaster.create({
-        title: '更新失敗',
-        description: '試算表更新失敗,請稍後再試',
-        type: 'error',
-      })
-    },
-  })
 
   // 刪除 Sheet Mutation
   const deleteSheetMutation = useMutation({
@@ -93,23 +57,10 @@ const FileIdPage = () => {
     },
   })
 
-  // 處理編輯
-  const handleEdit = (sheet: Sheet) => {
-    selectedSheet.value = sheet
-    editDialog.value = true
-  }
-
   // 處理刪除
   const handleDelete = (sheet: Sheet) => {
     selectedSheet.value = sheet
     deleteAlert.value = true
-  }
-
-  // 處理編輯提交
-  const handleEditSubmit = (name: string, url: string, sheetId: string) => {
-    editSheetMutation.mutate({
-      name, url, sheetId,
-    })
   }
 
   // 處理刪除確認
@@ -187,24 +138,11 @@ const FileIdPage = () => {
             <SheetCard
               key={sheet._id}
               sheet={sheet}
-              onEdit={() => handleEdit(sheet)}
               onDelete={() => handleDelete(sheet)}
             />
           ))}
         </Grid>
       )}
-
-      {/* 編輯對話框 */}
-      <EditSheetDialog
-        open={editDialog.value}
-        sheet={selectedSheet.value}
-        onClose={() => {
-          editDialog.value = false
-          selectedSheet.value = null
-        }}
-        onSubmit={handleEditSubmit}
-        isLoading={editSheetMutation.isPending}
-      />
 
       {/* 刪除警告對話框 */}
       <DeleteSheetAlert
