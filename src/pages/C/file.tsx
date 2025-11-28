@@ -1,17 +1,13 @@
 import {
-  Box, Grid, Heading, HStack, Text, Spinner, Center, EmptyState, Button,
+  Box, Grid, Heading, HStack, Text, Spinner, Center, EmptyState,
 } from '@chakra-ui/react'
-import { LuPlus, LuFolderOpen } from 'react-icons/lu'
+import { LuFolderOpen } from 'react-icons/lu'
 import { useFileApi } from '@/api/useFileApi'
-import { toaster } from '@/components/ui/toaster'
 import { CRoutes } from '@/enums/RoutesEnum'
-import { CreateFileDialog, FileCard } from '@/components'
+import { CreateFileButton, FileCard } from '@/components'
 
 const FilePage = () => {
   const navigate = useNavigate()
-
-  // 狀態管理
-  const createDialog = useSignal(false)
 
   // 取得所有檔案
   const filesQuery = useQuery({
@@ -19,25 +15,6 @@ const FilePage = () => {
     queryFn: async () => {
       const response = await useFileApi.get()
       return response.data
-    },
-  })
-
-  // 新增檔案
-  const createMutation = useMutation({
-    mutationFn: (name: string) => useFileApi.create({ name }),
-    onSuccess: () => {
-      filesQuery.refetch()
-      createDialog.value = false
-      toaster.success({
-        title: '成功',
-        description: '檔案已建立',
-      })
-    },
-    onError: () => {
-      toaster.error({
-        title: '錯誤',
-        description: '建立檔案失敗',
-      })
     },
   })
 
@@ -66,10 +43,7 @@ const FilePage = () => {
       {/* 標題列 */}
       <HStack justify="space-between" mb={6}>
         <Heading size="lg">我的檔案</Heading>
-        <Button onClick={() => { createDialog.value = true }}>
-          <LuPlus />
-          新增檔案
-        </Button>
+        <CreateFileButton />
       </HStack>
 
       {/* 檔案列表 */}
@@ -109,14 +83,6 @@ const FilePage = () => {
           ))}
         </Grid>
       )}
-
-      {/* 新增檔案對話框 */}
-      <CreateFileDialog
-        open={createDialog.value}
-        onClose={() => { createDialog.value = false }}
-        onSubmit={(name) => createMutation.mutate(name)}
-        isLoading={createMutation.isPending}
-      />
     </Box>
   )
 }

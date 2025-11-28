@@ -11,6 +11,7 @@ export { default as MeasurableSection } from './home/MeasurableSection'
 export { default as TeamCalendar } from './home/TeamCalendar'
 
 // ** app/file
+export * from './app/file/CreateFileButton'
 export { default as CreateFileDialog } from './app/file/CreateFileDialog'
 export { default as DeleteFileAlert } from './app/file/DeleteFileAlert'
 export * from './app/file/DeleteFileIcon'
