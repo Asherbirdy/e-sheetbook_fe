@@ -54,7 +54,7 @@ export const FileCard = ({
           {showActions.value && (
             <HStack gap={1}>
               NEW:
-              <EditFileIcon />
+              <EditFileIcon file={file} />
 
               OLD:
               <IconButton
