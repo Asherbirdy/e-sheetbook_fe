@@ -10,4 +10,9 @@ export { default as HomeHeader } from './home/HomeHeader'
 export { default as MeasurableSection } from './home/MeasurableSection'
 export { default as TeamCalendar } from './home/TeamCalendar'
 
+// ** app/file
+export { default as CreateFileDialog } from './app/file/CreateFileDialog'
+export { default as DeleteFileAlert } from './app/file/DeleteFileAlert'
+export { default as EditFileDialog } from './app/file/EditFileDialog'
+
 
