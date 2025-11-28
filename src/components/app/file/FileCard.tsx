@@ -23,10 +23,13 @@ export const FileCard = ({
       position="relative"
       borderRadius="2xl"
       overflow="hidden"
-      bg="gray.500"
+      bg="white"
+      border="1px"
+      borderColor="gray.200"
       _hover={{
         transform: 'translateY(-4px)',
         shadow: 'lg',
+        borderColor: 'gray.300',
       }}
       transition="all 0.2s"
       cursor="pointer"
@@ -40,11 +43,10 @@ export const FileCard = ({
         <HStack justify="space-between" mb={12} align="start">
           <Box
             p={3}
-            bg="whiteAlpha.200"
+            bg="gray.100"
             borderRadius="lg"
-            backdropFilter="blur(10px)"
           >
-            <LuFolder size={24} color="white" />
+            <LuFolder size={24} color="#718096" />
           </Box>
 
           {/* 操作按鈕 - 滑鼠移入時顯示 */}
@@ -53,8 +55,8 @@ export const FileCard = ({
               <IconButton
                 variant="ghost"
                 size="sm"
-                color="white"
-                _hover={{ bg: 'whiteAlpha.300' }}
+                color="gray.500"
+                _hover={{ bg: 'gray.100' }}
                 onClick={(e) => {
                   e.stopPropagation()
                   onEdit(file)
@@ -66,8 +68,8 @@ export const FileCard = ({
               <IconButton
                 variant="ghost"
                 size="sm"
-                color="white"
-                _hover={{ bg: 'red.400' }}
+                color="gray.500"
+                _hover={{ bg: 'red.50', color: 'red.500' }}
                 onClick={(e) => {
                   e.stopPropagation()
                   onDelete(file)
@@ -84,14 +86,14 @@ export const FileCard = ({
         <Text
           fontSize="lg"
           fontWeight="semibold"
-          color="white"
+          color="gray.700"
           mb={1}
         >
           {file.name}
         </Text>
 
         {/* 副標題 */}
-        <Text fontSize="sm" color="whiteAlpha.700">
+        <Text fontSize="sm" color="gray.500">
           資料夾
         </Text>
       </Box>
