@@ -18,9 +18,6 @@ export * from './app/file/FileCard'
 
 // ** app/sheet
 export * from './app/sheet/AddSheetButton'
-export { default as CreateSheetDialog } from './app/sheet/CreateSheetDialog'
-
 export * from './app/sheet/DeleteSheetIcon'
-export { default as EditSheetDialog } from './app/sheet/EditSheetDialog'
 export * from './app/sheet/EditSheetIcon'
 export * from './app/sheet/SheetCard'
