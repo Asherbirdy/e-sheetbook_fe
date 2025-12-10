@@ -19,4 +19,11 @@ export enum PrivateApiRoute {
   // ** Sheet API 路由
   Sheet = '/sheet',
   SheetGetFromFile = '/sheet/file',
+
+  // ** Website API 路由
+  WebsiteCreate = '/website/create',
+  WebsiteGetAll = '/website/all',
+  WebsiteDelete = '/website/delete',
+  WebsiteEditSheet = '/website/edit-sheet',
+  WebsiteEditDetail = '/website/edit-detail',
 }
