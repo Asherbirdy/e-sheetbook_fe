@@ -2,7 +2,7 @@ import { AxiosPromise } from 'axios'
 import { useApiRequest } from './http'
 import { PrivateApiRoute } from '@/enums'
 import {
-  CreateWebsitePayload, CreateWebsiteData, GetAllWebsiteResponse,
+  CreateWebsitePayload, CreateWebsiteData, GetAllWebsiteResponse, DeleteWebsitePayload, DeleteWebsiteResponse,
 } from '@/types'
 
 export const useWebsiteApi = {
@@ -18,11 +18,14 @@ export const useWebsiteApi = {
     return useApiRequest.get({ url: PrivateApiRoute.WebsiteGetAll })
   },
   // DeleteWebsite
-  deleteWebsite: (): AxiosPromise<any> => {
-    return useApiRequest.delete({ url: PrivateApiRoute.WebsiteDelete })
+  deleteWebsite: (payload: DeleteWebsitePayload): AxiosPromise<DeleteWebsiteResponse> => {
+    return useApiRequest.delete({
+      url: PrivateApiRoute.WebsiteDelete,
+      data: payload,
+    })
   },
   // editWebsiteSheet
-  editWebsiteSheet: (): AxiosPromise<any> => {
+  editWebsiteSheet: (): AxiosPromise<DeleteWebsiteResponse> => {
     return useApiRequest.put({ url: PrivateApiRoute.WebsiteEditSheet })
   },
   // editWebsiteDetail
