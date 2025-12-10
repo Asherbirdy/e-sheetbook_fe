@@ -25,7 +25,7 @@ export const useWebsiteApi = {
     })
   },
   // editWebsiteSheet
-  editWebsiteSheet: (): AxiosPromise<DeleteWebsiteResponse> => {
+  editWebsiteSheet: (): AxiosPromise<any> => {
     return useApiRequest.put({ url: PrivateApiRoute.WebsiteEditSheet })
   },
   // editWebsiteDetail
