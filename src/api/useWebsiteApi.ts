@@ -3,6 +3,8 @@ import { useApiRequest } from './http'
 import { PrivateApiRoute } from '@/enums'
 import {
   CreateWebsitePayload, CreateWebsiteData, GetAllWebsiteResponse, DeleteWebsitePayload, DeleteWebsiteResponse,
+  EditWebsiteSheetPayload,
+  EditWebsiteSheetResponse,
 } from '@/types'
 
 export const useWebsiteApi = {
@@ -25,8 +27,11 @@ export const useWebsiteApi = {
     })
   },
   // editWebsiteSheet
-  editWebsiteSheet: (): AxiosPromise<any> => {
-    return useApiRequest.put({ url: PrivateApiRoute.WebsiteEditSheet })
+  editWebsiteSheet: (payload: EditWebsiteSheetPayload): AxiosPromise<EditWebsiteSheetResponse> => {
+    return useApiRequest.put({
+      url: PrivateApiRoute.WebsiteEditSheet,
+      data: payload,
+    })
   },
   // editWebsiteDetail
   editWebsiteDetail: (): AxiosPromise<any> => {
