@@ -4,7 +4,11 @@ import {
 import { useAuthApi } from '@/api/useAuthApi'
 import { toaster } from '@/components/ui/toaster'
 
-export const RegisterForm = () => {
+interface RegisterFormProps {
+  onSuccess?: () => void
+}
+
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const data = {
     name: useSignal(''),
     email: useSignal(''),
@@ -48,6 +52,9 @@ export const RegisterForm = () => {
       data.confirmPassword.value = ''
       data.otp.value = ''
       features.step.value = 'form'
+
+      // 呼叫 onSuccess callback
+      onSuccess?.()
     },
     onError: () => {
       toaster.error({ title: '註冊失敗', description: '驗證碼錯誤或已過期' })

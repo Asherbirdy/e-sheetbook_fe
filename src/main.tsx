@@ -30,7 +30,7 @@ const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider value={defaultSystem}>
-      <ColorModeProvider>
+      <ColorModeProvider forcedTheme="light">
         <Toaster />
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
