@@ -1,14 +1,8 @@
+import { SheetField } from '@/types/model/Website'
+
 export interface GetAllWebsiteResponse {
   message: string
   websites: GetAllWebsite[]
-}
-
-export interface SheetField {
-  index: number
-  name: string
-  description: string
-  type: 'text' | 'number' | 'date' | 'boolean' | 'blank'
-  options?: string[]
 }
 
 export interface GetAllWebsite {

@@ -1,10 +1,12 @@
+import { SheetField } from '../../model/Website'
+
 export interface EditWebsiteSheetPayload {
   websiteId: string
   googleSheetName: string
   googleSheetApiUrl: string
   googleSheetId: string
   googleSheetStartRow: number
-  googleSheetFields: any[]
+  googleSheetFields: SheetField[]
 }
 
 export interface EditWebsiteSheetResponse {
@@ -19,7 +21,7 @@ export interface EditWebsiteSheet {
   googleSheetId: string
   websiteStatus: string
   user: string
-  googleSheetFields: any[]
+  googleSheetFields: SheetField[]
   createdAt: string
   updatedAt: string
   __v: number
